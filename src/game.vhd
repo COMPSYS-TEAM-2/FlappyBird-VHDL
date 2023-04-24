@@ -21,6 +21,7 @@ end game;
 
 architecture behavior of game is
     signal S_RGB : std_logic_vector(11 downto 0);
+    signal S_ON : std_logic;
 
     signal V_V_SYNC : std_logic;
     signal V_PIXEL_ROW : std_logic_vector(9 downto 0);
@@ -32,6 +33,7 @@ architecture behavior of game is
     signal M_CURSOR_COL : std_logic_vector(9 downto 0);
 
     signal L_CLK : std_logic := '1';
+    signal L_RGB : std_logic_vector(11 downto 0);
 
 begin
     square : entity work.square
@@ -40,13 +42,14 @@ begin
             I_PIXEL_ROW => V_PIXEL_ROW,
             I_PIXEL_COL => V_PIXEL_COL,
             I_CLICK => M_LEFT,
-            O_RGB => S_RGB
+            O_RGB => S_RGB,
+            O_ON => S_ON
         );
 
     video : entity work.VGA_SYNC
         port map(
             I_CLK_25Mhz => L_CLK,
-            I_RGB => S_RGB,
+            I_RGB => L_RGB,
 
             O_RED => O_RED,
             O_GREEN => O_GREEN,
@@ -76,6 +79,10 @@ begin
         end if;
     end process;
 
+    L_RGB <= S_RGB when (S_ON = '1') else
+        x"2AC";
+
     O_V_SYNC <= V_V_SYNC;
     O_LED <= M_LEFT or M_RIGHT;
+
 end architecture;
