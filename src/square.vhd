@@ -5,9 +5,10 @@ use IEEE.STD_LOGIC_SIGNED.all;
 
 entity square is
 	port (
-		I_PB1, I_PB2, I_V_SYNC, I_CLICK : in std_logic;
+		I_V_SYNC, I_CLICK : in std_logic;
 		I_PIXEL_ROW, I_PIXEL_COL : in std_logic_vector(9 downto 0);
-		O_RED, O_GREEN, O_BLUE : out std_logic);
+		O_RGB : out std_logic(11 downto 0)
+	);
 end square;
 
 architecture behavior of square is
@@ -45,20 +46,13 @@ begin
 		end if;
 	end process Move_Ball;
 
-	-- click : process (I_CLICK)
-	-- begin
-	-- 	if (rising_edge(I_CLICK)) then
-	-- 		L_CLICK <= '1';
-	-- 	end if;
-	-- end process;
-
 	L_ON <= '1' when (('0' & L_X_POS <= '0' & I_PIXEL_COL + SIZE) and ('0' & I_PIXEL_COL <= '0' & L_X_POS + SIZE) -- x_pos - size <= pixel_column <= x_pos + size
 		and ('0' & L_Y_POS <= I_PIXEL_ROW + SIZE) and ('0' & I_PIXEL_ROW <= L_Y_POS + SIZE)) else -- y_pos - size <= pixel_row <= y_pos + size
 		'0';
+
 	-- Colours for pixel data on video signal
 	-- Changing the background and ball colour by pushbuttons
-	O_RED <= L_ON;
-	O_GREEN <= L_ON;
-	O_BLUE <= not L_ON;
+	O_RGB <= x"ED2" when L_ON else
+		x"2AC";
 
 end behavior;

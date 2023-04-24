@@ -6,9 +6,11 @@ use IEEE.STD_LOGIC_UNSIGNED.all;
 
 entity VGA_SYNC is
 	port (
-		clock_25Mhz, red, green, blue : in std_logic;
-		red_out, green_out, blue_out, horiz_sync_out, vert_sync_out : out std_logic;
-		pixel_row, pixel_column : out std_logic_vector(9 downto 0));
+		I_CLK_25Mhz : in std_logic;
+		I_RGB : in std_logic_vector(11 downto 0);
+		O_RED, O_GREEN, O_BLUE : out std_logic_vector(3 downto 0);
+		O_H_SYNC, O_V_SYNC : out std_logic;
+		O_PIXEL_ROW, O_PIXEL_COL : out std_logic_vector(9 downto 0));
 end VGA_SYNC;
 
 architecture a of VGA_SYNC is
@@ -23,7 +25,7 @@ begin
 
 	process
 	begin
-		wait until(clock_25Mhz'EVENT) and (clock_25Mhz = '1');
+		wait until(I_CLK_25Mhz'EVENT) and (I_CLK_25Mhz = '1');
 
 		--Generate Horizontal and Vertical Timing Signals for Video Signal
 		-- H_count counts pixels (640 + extra time for sync signals)
@@ -65,24 +67,24 @@ begin
 		-- Generate Video on Screen Signals for Pixel Data
 		if (h_count <= 639) then
 			video_on_h <= '1';
-			pixel_column <= h_count;
+			O_PIXEL_COL <= h_count;
 		else
 			video_on_h <= '0';
 		end if;
 
 		if (v_count <= 479) then
 			video_on_v <= '1';
-			pixel_row <= v_count;
+			O_PIXEL_ROW <= v_count;
 		else
 			video_on_v <= '0';
 		end if;
 
 		-- Put all video signals through DFFs to elminate any delays that cause a blurry image
-		red_out <= red and video_on;
-		green_out <= green and video_on;
-		blue_out <= blue and video_on;
-		horiz_sync_out <= horiz_sync;
-		vert_sync_out <= vert_sync;
+		O_RED <= I_RGB(11 downto 8) and video_on;
+		O_GREEN <= I_RGB(7 downto 4) and video_on;
+		O_BLUE <= I_RGB(3 downto 0) and video_on;
+		O_H_SYNC <= horiz_sync;
+		O_V_SYNC <= vert_sync;
 
 	end process;
 end a;
