@@ -80,9 +80,16 @@ begin
 		end if;
 
 		-- Put all video signals through DFFs to elminate any delays that cause a blurry image
-		O_RED <= I_RGB(11 downto 8) and video_on;
-		O_GREEN <= I_RGB(7 downto 4) and video_on;
-		O_BLUE <= I_RGB(3 downto 0) and video_on;
+		if (video_on = '1') then
+			O_RED <= I_RGB(11 downto 8);
+			O_GREEN <= I_RGB(7 downto 4);
+			O_BLUE <= I_RGB(3 downto 0);
+		else
+			O_RED <= (others => '0');
+			O_GREEN <= (others => '0');
+			O_BLUE <= (others => '0');
+		end if;
+
 		O_H_SYNC <= horiz_sync;
 		O_V_SYNC <= vert_sync;
 

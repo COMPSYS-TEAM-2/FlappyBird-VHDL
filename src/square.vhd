@@ -7,7 +7,7 @@ entity square is
 	port (
 		I_V_SYNC, I_CLICK : in std_logic;
 		I_PIXEL_ROW, I_PIXEL_COL : in std_logic_vector(9 downto 0);
-		O_RGB : out std_logic(11 downto 0);
+		O_RGB : out std_logic_vector(11 downto 0);
 		O_ON : out std_logic
 	);
 end square;
