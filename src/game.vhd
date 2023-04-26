@@ -23,6 +23,9 @@ architecture behavior of game is
     signal S_RGB : std_logic_vector(11 downto 0);
     signal S_ON : std_logic;
 
+    signal P_RGB : std_logic_vector(11 downto 0);
+    signal P_ON : std_logic;
+
     signal V_V_SYNC : std_logic;
     signal V_PIXEL_ROW : std_logic_vector(9 downto 0);
     signal V_PIXEL_COL : std_logic_vector(9 downto 0);
@@ -44,6 +47,15 @@ begin
             I_CLICK => M_LEFT,
             O_RGB => S_RGB,
             O_ON => S_ON
+        );
+    
+    pipes : entity work.pipes
+        port map(
+            I_V_SYNC => V_V_SYNC,
+            I_PIXEL_ROW => V_PIXEL_ROW,
+            I_PIXEL_COL => V_PIXEL_COL,
+            O_RGB => P_RGB,
+            O_ON => P_ON
         );
 
     video : entity work.VGA_SYNC
@@ -80,6 +92,7 @@ begin
     end process;
 
     L_RGB <= S_RGB when (S_ON = '1') else
+        P_RGB when (P_ON = '1') else
         x"2AC";
 
     O_V_SYNC <= V_V_SYNC;
