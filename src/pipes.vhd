@@ -5,7 +5,7 @@ use IEEE.STD_LOGIC_SIGNED.all;
 
 entity pipes is
 	port (
-		I_V_SYNC : in std_logic;
+		I_CLK, I_V_SYNC : in std_logic;
 		I_PIXEL_ROW, I_PIXEL_COL : in std_logic_vector(9 downto 0);
 		O_RGB : out std_logic_vector(11 downto 0);
 		O_ON : out std_logic
@@ -23,6 +23,12 @@ architecture behavior of pipes is
 	signal L_X_POS_B : std_logic_vector(10 downto 0) := CONV_STD_LOGIC_VECTOR(960, 11);
 
 begin
+	-- Define the Linear Feeback Shift Register
+	lfsr : entity lfsr
+	port map(
+		I_CLK => I_CLK,
+		O_VAL => PIPE_GAP 
+	);
 	Move_pipes : process (I_V_SYNC)
 		variable X_POS_A : std_logic_vector(10 downto 0) := CONV_STD_LOGIC_VECTOR(640, 11);
 		variable X_POS_B : std_logic_vector(10 downto 0) := CONV_STD_LOGIC_VECTOR(960, 11);

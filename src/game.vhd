@@ -51,6 +51,7 @@ begin
     
     pipes : entity work.pipes
         port map(
+            I_CLK => I_CLK,
             I_V_SYNC => V_V_SYNC,
             I_PIXEL_ROW => V_PIXEL_ROW,
             I_PIXEL_COL => V_PIXEL_COL,
