@@ -76,13 +76,15 @@ set_location_assignment PIN_G8 -to O_V_SYNC
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
+set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name VHDL_FILE src/lfsr.vhd
 set_global_assignment -name VHDL_FILE src/pipes.vhd
 set_global_assignment -name VHDL_FILE src/vga_sync.vhd
 set_global_assignment -name VHDL_FILE src/square.vhd
 set_global_assignment -name VHDL_FILE src/mouse.vhd
 set_global_assignment -name VHDL_FILE src/game.vhd
-set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
-set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
-set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
-set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name SOURCE_FILE db/game.cmp.rdb
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
