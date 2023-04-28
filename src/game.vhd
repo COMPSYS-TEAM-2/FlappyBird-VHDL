@@ -28,6 +28,8 @@ architecture behavior of game is
 
     signal LF_PIPE_GAP : std_logic_vector(7 downto 0);
 
+    signal C_ON : std_logic;
+
     signal V_V_SYNC : std_logic;
     signal V_PIXEL_ROW : std_logic_vector(9 downto 0);
     signal V_PIXEL_COL : std_logic_vector(9 downto 0);
@@ -68,19 +70,27 @@ begin
             O_VAL => LF_PIPE_GAP
         );
 
-    video : entity work.VGA_SYNC
+    collision : entity.collision
         port map(
-            I_CLK_25Mhz => L_CLK,
-            I_RGB => L_RGB,
+            I_CLK => I_CLK,
+            I_S_ON => S_ON,
+            I_P_ON => P_ON,
+            O_COL => C_ON
+        )
 
-            O_RED => O_RED,
-            O_GREEN => O_GREEN,
-            O_BLUE => O_BLUE,
-            O_H_SYNC => O_H_SYNC,
-            O_V_SYNC => V_V_SYNC,
-            O_PIXEL_ROW => V_PIXEL_ROW,
-            O_PIXEL_COL => V_PIXEL_COL
-        );
+        video : entity work.VGA_SYNC
+            port map(
+                I_CLK_25Mhz => L_CLK,
+                I_RGB => L_RGB,
+
+                O_RED => O_RED,
+                O_GREEN => O_GREEN,
+                O_BLUE => O_BLUE,
+                O_H_SYNC => O_H_SYNC,
+                O_V_SYNC => V_V_SYNC,
+                O_PIXEL_ROW => V_PIXEL_ROW,
+                O_PIXEL_COL => V_PIXEL_COL
+            );
 
     mouse : entity work.mouse
         port map(
