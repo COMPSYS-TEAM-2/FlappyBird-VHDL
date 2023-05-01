@@ -69,12 +69,13 @@ begin
     lfsr : entity work.lfsr
         port map(
             I_CLK => I_CLK,
+            I_RVAL => M_LEFT,
             O_VAL => LF_PIPE_GAP
         );
 
     collision : entity work.collision
         port map(
-            I_CLK => I_CLK,
+            I_VSYNC => V_V_SYNC,
             I_S_ON => S_ON,
             I_P_ON => P_ON,
             O_COL => C_ON
@@ -118,6 +119,6 @@ begin
         B_COLOUR;
 
     O_V_SYNC <= V_V_SYNC;
-    O_LED <= M_LEFT or M_RIGHT;
+    O_LED <= C_ON;
 
 end architecture;

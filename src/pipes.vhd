@@ -14,7 +14,7 @@ entity pipes is
 end pipes;
 
 architecture behavior of pipes is
-	constant PIPE_GAP : std_logic_vector(9 downto 0) := conv_std_logic_vector(50, 10); -- Define the size of the gap between the pipes
+	constant PIPE_GAP : std_logic_vector(9 downto 0) := conv_std_logic_vector(75, 10); -- Define the size of the gap between the pipes
 	constant PIPE_WIDTH : std_logic_vector(9 downto 0) := conv_std_logic_vector(20, 10);
 	-- constant ACCELLERATION : std_logic_vector(9 downto 0) := conv_std_logic_vector(0, 0);
 
@@ -33,19 +33,19 @@ begin
 		-- Move pipes once every vertical sync
 		if (rising_edge(I_V_SYNC)) then
 			if (X_POS_A > conv_std_logic_vector(660, 11)) then
-				PIPE_GAP_POSITION_A <= ((conv_std_logic_vector(0, 1) & I_PIPE_GAP_POSITION) + conv_std_logic_vector(164, 10));
+				PIPE_GAP_POSITION_A <= ((I_PIPE_GAP_POSITION & '0') + conv_std_logic_vector(164, 10));
 			elsif (X_POS_B > conv_std_logic_vector(660, 11)) then
-				PIPE_GAP_POSITION_B <= ((conv_std_logic_vector(0, 1) & I_PIPE_GAP_POSITION) + conv_std_logic_vector(164, 10));
+				PIPE_GAP_POSITION_B <= ((I_PIPE_GAP_POSITION & '0') + conv_std_logic_vector(164, 10));
 			end if;
 			X_POS_A := L_X_POS_A - X_VEL;
 			X_POS_B := L_X_POS_B - X_VEL;
 			-- If the pipes overflow, place them back at the start
 			if (X_POS_A <= 0) then
 				X_POS_A := CONV_STD_LOGIC_VECTOR(640, 11);
-				PIPE_GAP_POSITION_A <= ((conv_std_logic_vector(0, 1) & I_PIPE_GAP_POSITION) + conv_std_logic_vector(164, 10));
+				PIPE_GAP_POSITION_A <= ((I_PIPE_GAP_POSITION & '0') + conv_std_logic_vector(164, 10));
 			elsif (X_POS_B <= 0) then
 				X_POS_B := CONV_STD_LOGIC_VECTOR(640, 11);
-				PIPE_GAP_POSITION_B <= ((conv_std_logic_vector(0, 1) & I_PIPE_GAP_POSITION) + conv_std_logic_vector(164, 10));
+				PIPE_GAP_POSITION_B <= ((I_PIPE_GAP_POSITION & '0') + conv_std_logic_vector(164, 10));
 			end if;
 			L_X_POS_A <= X_POS_A;
 			L_X_POS_B <= X_POS_B;
