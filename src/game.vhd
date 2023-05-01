@@ -42,6 +42,8 @@ architecture behavior of game is
     signal L_CLK : std_logic := '1';
     signal L_RGB : std_logic_vector(11 downto 0);
 
+    signal B_COLOUR : std_logic_vector(11 downto 0) := x"2AC";
+
 begin
     square : entity work.square
         port map(
@@ -70,13 +72,13 @@ begin
             O_VAL => LF_PIPE_GAP
         );
 
-    collision : entity.collision
+    collision : entity work.collision
         port map(
             I_CLK => I_CLK,
             I_S_ON => S_ON,
             I_P_ON => P_ON,
             O_COL => C_ON
-        )
+        );
 
         video : entity work.VGA_SYNC
             port map(
@@ -113,7 +115,7 @@ begin
 
     L_RGB <= S_RGB when (S_ON = '1') else
         P_RGB when (P_ON = '1') else
-        x"2AC";
+        B_COLOUR;
 
     O_V_SYNC <= V_V_SYNC;
     O_LED <= M_LEFT or M_RIGHT;
