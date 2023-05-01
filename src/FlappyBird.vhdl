@@ -29,14 +29,17 @@ architecture behavioral of FlappyBird is
     signal M_CURSOR_COL : std_logic_vector(9 downto 0);
 
     signal G_RGB : std_logic_vector(11 downto 0);
+    signal T_RGB : std_logic_vector(11 downto 0);
 
     signal L_CLK : std_logic := '1';
+    signal L_CURSOR_ROW : std_logic_vector(9 downto 0);
+    signal L_CURSOR_COL : std_logic_vector(9 downto 0);
 begin
 
     video : entity work.VGA_SYNC
         port map(
             I_CLK_25Mhz => L_CLK,
-            I_RGB => G_RGB,
+            I_RGB => T_RGB,
 
             O_RED => O_RED,
             O_GREEN => O_GREEN,
@@ -67,6 +70,29 @@ begin
             I_M_LEFT => M_LEFT,
             O_RGB => G_RGB
         );
+
+    titlemenu : entity work.menu
+        port map(
+            I_ON => '1',
+
+            I_V_SYNC => V_V_SYNC,
+            I_PIXEL_ROW => V_PIXEL_ROW,
+            I_PIXEL_COL => V_PIXEL_COL,
+
+            I_M_LEFT => M_LEFT,
+            I_CURSOR_ROW => L_CURSOR_ROW,
+            I_CURSOR_COL => L_CURSOR_COL,
+
+            O_RGB => T_RGB
+        );
+
+    mouse_pos : process (V_V_SYNC)
+    begin
+        if (rising_edge(V_V_SYNC)) then
+            L_CURSOR_ROW <= M_CURSOR_ROW;
+            L_CURSOR_COL <= M_CURSOR_COL;
+        end if;
+    end process;
 
     clk_div : process (I_CLK)
     begin

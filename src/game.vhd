@@ -18,7 +18,6 @@ architecture behavior of game is
     signal S_ON : std_logic;
 
     signal L_RGB : std_logic_vector(11 downto 0);
-
 begin
     square : entity work.square
         port map(
