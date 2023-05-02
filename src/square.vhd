@@ -7,6 +7,7 @@ entity square is
 	port (
 		I_V_SYNC, I_CLICK : in std_logic;
 		I_PIXEL_ROW, I_PIXEL_COL : in std_logic_vector(9 downto 0);
+		O_X_POS, O_Y_POS : out std_logic_vector(9 downto 0);
 		O_RGB : out std_logic_vector(11 downto 0);
 		O_ON : out std_logic
 	);
@@ -45,8 +46,11 @@ begin
 		end if;
 	end process Move_Ball;
 
+	O_X_POS <= L_X_POS;
+	O_Y_POS <= L_Y_POS;
+
 	O_ON <= '1' when (('0' & I_PIXEL_COL >= '0' & L_X_POS) and ('0' & I_PIXEL_COL <= '0' & L_X_POS + SIZE) -- x_pos - size <= pixel_column <= x_pos + size
-		and ('0' & I_PIXEL_ROW >= I_PIXEL_ROW) and ('0' & I_PIXEL_ROW <= L_Y_POS + SIZE)) else -- y_pos - size <= pixel_row <= y_pos + size
+		and ('0' & I_PIXEL_ROW >= L_Y_POS) and ('0' & I_PIXEL_ROW <= L_Y_POS + SIZE)) else -- y_pos - size <= pixel_row <= y_pos + size
 		'0';
 
 	-- Colours for pixel data on video signal
