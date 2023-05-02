@@ -5,26 +5,21 @@ use IEEE.STD_LOGIC_SIGNED.all;
 
 entity collision is
     port (
-        I_VSYNC, I_S_ON, I_P_ON : in std_logic;
+        I_VSYNC : in std_logic;
+        I_S_X_POS, I_S_Y_POS : in std_logic_vector(9 downto 0);
+        I_S_SIZE : in std_logic_vector(9 downto 0);
+        I_P_X_A_POS, I_P_X_B_POS : in std_logic_vector(9 downto 0);
+        I_A_PIPE_GAP_POS, I_B_PIPE_GAP_POS : in std_logic_vector(7 downto 0);
+        I_PIPE_GAP, I_PIPE_WIDTH : in std_logic_vector(9 downto 0);
         O_COL : out std_logic
     );
 end collision;
 
 architecture behaviour of collision is
 
-    signal COL : std_logic;
 begin
     checkCollision : process (I_VSYNC) is
     variable counter : std_logic_vector(4 downto 0);
         begin
-        if ((I_S_ON = '1') and (I_P_ON = '1') and (counter = (conv_std_logic_vector(0, 5)))) then
-            COL <= '1';
-            counter := conv_std_logic_vector(25, 5);
-        elsif (counter > conv_std_logic_vector(0, 5)) then
-            counter := (counter - conv_std_logic_vector(1, 5));
-        else
-            COL <= '0';
-        end if;
     end process;
-    O_COL <= COL;
 end architecture;
