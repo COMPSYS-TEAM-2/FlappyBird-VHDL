@@ -15,7 +15,7 @@ end pipes;
 
 architecture behavior of pipes is
 	constant PIPE_GAP : std_logic_vector(9 downto 0) := conv_std_logic_vector(75, 10); -- Define the size of the gap between the pipes
-	constant PIPE_WIDTH : std_logic_vector(9 downto 0) := conv_std_logic_vector(20, 10);
+	constant PIPE_WIDTH : std_logic_vector(9 downto 0) := conv_std_logic_vector(40, 10);
 	-- constant ACCELLERATION : std_logic_vector(9 downto 0) := conv_std_logic_vector(0, 0);
 
 	signal PIPE_GAP_POSITION_A : std_logic_vector(9 downto 0);
@@ -52,10 +52,10 @@ begin
 		end if;
 	end process Move_pipes;
 
-	O_ON <= '1' when (((('0' & I_PIXEL_COL >= '0' & L_X_POS_A - PIPE_WIDTH) and ('0' & I_PIXEL_COL <= '0' & L_X_POS_A + PIPE_WIDTH))-- L_X_POS_A - PIPE_WIDTH <= I_PIXEL_COL <= L_X_POS_A + PIPE_WIDTH
-		and (('0' & I_PIXEL_ROW <= PIPE_GAP_POSITION_A - PIPE_GAP) or ('0' & I_PIXEL_ROW >= PIPE_GAP_POSITION_A + PIPE_GAP))) -- PIPE_GAP_POSITION_A - PIPE_GAP >= I_PIXEL_ROW >= PIPE_GAP_POSITION_A + PIPE_GAP
-		or ((('0' & I_PIXEL_COL >= '0' & L_X_POS_B - PIPE_WIDTH) and ('0' & I_PIXEL_COL <= '0' & L_X_POS_B + PIPE_WIDTH)) -- L_X_POS_B - PIPE_WIDTH <= I_PIXEL_COL <= L_X_POS_B + PIPE_WIDTH)			
-		and (('0' & I_PIXEL_ROW <= PIPE_GAP_POSITION_B - PIPE_GAP) or ('0' & I_PIXEL_ROW >= PIPE_GAP_POSITION_B + PIPE_GAP)))) else -- PIPE_GAP_POSITION_B - PIPE_GAP >= I_PIXEL_ROW >= PIPE_GAP_POSITION_B + PIPE_GAP 
+	O_ON <= '1' when (((('0' & I_PIXEL_COL >= '0' & L_X_POS_A) and ('0' & I_PIXEL_COL <= '0' & L_X_POS_A + PIPE_WIDTH))-- L_X_POS_A - PIPE_WIDTH <= I_PIXEL_COL <= L_X_POS_A + PIPE_WIDTH
+		and (('0' & I_PIXEL_ROW <= PIPE_GAP_POSITION_A) or ('0' & I_PIXEL_ROW >= PIPE_GAP_POSITION_A + PIPE_GAP))) -- PIPE_GAP_POSITION_A - PIPE_GAP >= I_PIXEL_ROW >= PIPE_GAP_POSITION_A + PIPE_GAP
+		or ((('0' & I_PIXEL_COL >= '0' & L_X_POS_B) and ('0' & I_PIXEL_COL <= '0' & L_X_POS_B + PIPE_WIDTH)) -- L_X_POS_B - PIPE_WIDTH <= I_PIXEL_COL <= L_X_POS_B + PIPE_WIDTH)			
+		and (('0' & I_PIXEL_ROW <= PIPE_GAP_POSITION_B) or ('0' & I_PIXEL_ROW >= PIPE_GAP_POSITION_B + PIPE_GAP)))) else -- PIPE_GAP_POSITION_B - PIPE_GAP >= I_PIXEL_ROW >= PIPE_GAP_POSITION_B + PIPE_GAP 
 		'0';
 
 	O_RGB <= x"5E2";
