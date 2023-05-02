@@ -140,6 +140,6 @@ begin
         B_COLOUR;
 
     O_V_SYNC <= V_V_SYNC;
-    O_LED <= C_ON;
+    -- O_LED <= C_ON;
 
 end architecture;
