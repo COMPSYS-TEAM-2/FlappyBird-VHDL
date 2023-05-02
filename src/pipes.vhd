@@ -8,8 +8,8 @@ entity pipes is
 		I_V_SYNC : in std_logic;
 		I_PIXEL_ROW, I_PIXEL_COL : in std_logic_vector(9 downto 0);
 		I_PIPE_GAP_POSITION : in std_logic_vector(7 downto 0);
-		O_X_A_POS, O_X_B_POS : out std_logic_vector(9 downto 0);
-		O_A_PIPE_GAP_POS, O_B_PIPE_GAP_POS : out std_logic_vector(7 downto 0);
+		O_X_A_POS, O_X_B_POS : out std_logic_vector(10 downto 0);
+		O_A_PIPE_GAP_POS, O_B_PIPE_GAP_POS : out std_logic_vector(9 downto 0);
 		O_PIPE_GAP, O_PIPE_WIDTH : out std_logic_vector(9 downto 0);
 		O_RGB : out std_logic_vector(11 downto 0);
 		O_ON : out std_logic

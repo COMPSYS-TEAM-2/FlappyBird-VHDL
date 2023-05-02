@@ -20,13 +20,14 @@ entity game is
 end game;
 
 architecture behavior of game is
-    signal S_X_POS, S_Y_POS : std_logic_vector(9 downto 0);
+    signal S_X_POS : std_logic_vector(10 downto 0);
+    signal S_Y_POS : std_logic_vector(10 downto 0);
     signal S_SIZE : std_logic_vector(9 downto 0);
     signal S_RGB : std_logic_vector(11 downto 0);
     signal S_ON : std_logic;
 
-    signal P_X_A_POS, P_X_B_POS : std_logic_vector(9 downto 0);
-    signal P_A_PIPE_GAP_POS, P_B_PIPE_GAP_POS : std_logic_vector(7 downto 0);
+    signal P_X_A_POS, P_X_B_POS : std_logic_vector(10 downto 0);
+    signal P_A_PIPE_GAP_POS, P_B_PIPE_GAP_POS : std_logic_vector(9 downto 0);
     signal P_PIPE_GAP, P_PIPE_WIDTH : std_logic_vector(9 downto 0);
     signal P_RGB : std_logic_vector(11 downto 0);
     signal P_ON : std_logic;
