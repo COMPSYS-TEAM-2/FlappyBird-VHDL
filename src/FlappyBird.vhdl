@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-
+use work.Rectangle.all;
 entity FlappyBird is
     port (
         I_CLK : in std_logic;
@@ -32,8 +32,9 @@ architecture behavioral of FlappyBird is
     signal T_RGB : std_logic_vector(11 downto 0);
 
     signal L_CLK : std_logic := '1';
-    signal L_CURSOR_ROW : std_logic_vector(9 downto 0);
-    signal L_CURSOR_COL : std_logic_vector(9 downto 0);
+
+    signal L_CURSOR : T_RECT := CreateRect(0, 0, 0, 0);
+    signal L_PIXEL : T_RECT := CreateRect(0, 0, 0, 0);
 begin
 
     video : entity work.VGA_SYNC
@@ -76,12 +77,10 @@ begin
             I_ON => '1',
 
             I_V_SYNC => V_V_SYNC,
-            I_PIXEL_ROW => V_PIXEL_ROW,
-            I_PIXEL_COL => V_PIXEL_COL,
+            I_PIXEL => L_PIXEL,
 
             I_M_LEFT => M_LEFT,
-            I_CURSOR_ROW => L_CURSOR_ROW,
-            I_CURSOR_COL => L_CURSOR_COL,
+            I_CURSOR => L_CURSOR,
 
             O_RGB => T_RGB
         );
@@ -89,8 +88,8 @@ begin
     mouse_pos : process (V_V_SYNC)
     begin
         if (rising_edge(V_V_SYNC)) then
-            L_CURSOR_ROW <= M_CURSOR_ROW;
-            L_CURSOR_COL <= M_CURSOR_COL;
+            L_CURSOR.X <= '0' & M_CURSOR_COL;
+            L_CURSOR.Y <= M_CURSOR_ROW;
         end if;
     end process;
 
@@ -100,6 +99,9 @@ begin
             L_CLK <= not L_CLK;
         end if;
     end process;
+
+    L_PIXEL.X <= '0' & V_PIXEL_COL;
+    L_PIXEL.Y <= V_PIXEL_ROW;
 
     O_V_SYNC <= V_V_SYNC;
 end architecture;
