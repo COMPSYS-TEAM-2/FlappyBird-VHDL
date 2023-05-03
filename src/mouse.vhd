@@ -8,12 +8,12 @@ use IEEE.STD_LOGIC_UNSIGNED.all;
 
 entity MOUSE is
 	port (
-		I_CLK_25Mhz, I_RST : in std_logic;
-		IO_DATA : inout std_logic;
-		IO_MCLK : inout std_logic;
-		O_LEFT, O_RIGHT : out std_logic;
-		O_CURSOR_ROW : out std_logic_vector(9 downto 0);
-		O_CURSOR_COL : out std_logic_vector(9 downto 0));
+		clock_25Mhz, reset : in std_logic;
+		mouse_data : inout std_logic;
+		mouse_clk : inout std_logic;
+		left_button, right_button : out std_logic;
+		mouse_cursor_row : out std_logic_vector(9 downto 0);
+		mouse_cursor_column : out std_logic_vector(9 downto 0));
 end MOUSE;
 
 architecture behavior of MOUSE is
@@ -42,22 +42,22 @@ architecture behavior of MOUSE is
 	signal filter : std_logic_vector(7 downto 0);
 begin
 
-	O_CURSOR_ROW <= cursor_row;
-	O_CURSOR_COL <= cursor_column;
+	mouse_cursor_row <= cursor_row;
+	mouse_cursor_column <= cursor_column;
 
 	-- tri_state control logic for mouse data and clock lines
-	IO_DATA <= 'Z' when MOUSE_DATA_DIR = '0' else
+	MOUSE_DATA <= 'Z' when MOUSE_DATA_DIR = '0' else
 		MOUSE_DATA_BUF;
-	IO_MCLK <= 'Z' when MOUSE_CLK_DIR = '0' else
+	MOUSE_CLK <= 'Z' when MOUSE_CLK_DIR = '0' else
 		MOUSE_CLK_BUF;
 	-- state machine to send init command and start recv process.
-	process (I_RST, I_CLK_25Mhz)
+	process (reset, clock_25Mhz)
 	begin
-		if I_RST = '1' then
+		if reset = '1' then
 			mouse_state <= INHIBIT_TRANS;
 			inhibit_wait_count <= conv_std_logic_vector(0, 12);
 			SEND_DATA <= '0';
-		elsif I_CLK_25Mhz'EVENT and I_CLK_25Mhz = '1' then
+		elsif clock_25Mhz'EVENT and clock_25Mhz = '1' then
 			case mouse_state is
 					-- Mouse powers up and sends self test codes, AA and 00 out before board is downloaded
 					-- Pull clock line low to inhibit any transmissions from mouse
@@ -131,9 +131,9 @@ begin
 	-- filter for mouse clock
 	process
 	begin
-		wait until I_CLK_25Mhz'event and I_CLK_25Mhz = '1';
+		wait until clock_25Mhz'event and clock_25Mhz = '1';
 		filter(7 downto 1) <= filter(6 downto 0);
-		filter(0) <= IO_MCLK;
+		filter(0) <= MOUSE_CLK;
 		if filter = "11111111" then
 			MOUSE_CLK_FILTER <= '1';
 		elsif filter = "00000000" then
@@ -186,18 +186,18 @@ begin
 		end if;
 	end process SEND_UART;
 
-	RECV_UART : process (I_RST, mouse_clk_filter)
+	RECV_UART : process (reset, mouse_clk_filter)
 	begin
-		if I_RST = '1' then
+		if RESET = '1' then
 			INCNT <= "0000";
 			READ_CHAR <= '0';
 			PACKET_COUNT <= "00";
-			O_LEFT <= '0';
-			O_RIGHT <= '0';
+			LEFT_BUTTON <= '0';
+			RIGHT_BUTTON <= '0';
 			CHARIN <= "00000000";
 		elsif MOUSE_CLK_FILTER'event and MOUSE_CLK_FILTER = '0' then
 			if MOUSE_DATA_DIR = '0' then
-				if IO_DATA = '0' and READ_CHAR = '0' then
+				if MOUSE_DATA = '0' and READ_CHAR = '0' then
 					READ_CHAR <= '1';
 					IREADY_SET <= '0';
 				else
@@ -206,7 +206,7 @@ begin
 						if INCNT < "1001" then
 							INCNT <= INCNT + 1;
 							SHIFTIN(7 downto 0) <= SHIFTIN(8 downto 1);
-							SHIFTIN(8) <= IO_DATA;
+							SHIFTIN(8) <= MOUSE_DATA;
 							IREADY_SET <= '0';
 							-- END OF CHARACTER
 						else
@@ -261,8 +261,8 @@ begin
 									PACKET_CHAR3(7) & PACKET_CHAR3);
 								NEW_cursor_column <= cursor_column + (PACKET_CHAR2(7) &
 									PACKET_CHAR2(7) & PACKET_CHAR2);
-								O_LEFT <= PACKET_CHAR1(0);
-								O_RIGHT <= PACKET_CHAR1(1);
+								LEFT_BUTTON <= PACKET_CHAR1(0);
+								RIGHT_BUTTON <= PACKET_CHAR1(1);
 							end if;
 						end if;
 					end if;
