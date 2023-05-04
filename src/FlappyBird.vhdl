@@ -74,7 +74,8 @@ begin
             I_PIXEL_ROW => V_PIXEL_ROW,
             I_PIXEL_COL => V_PIXEL_COL,
             I_M_LEFT => M_LEFT,
-            O_RGB => G_RGB
+            O_RGB => G_RGB,
+            O_LED => O_LED
         );
 
     titlemenu : entity work.menu
@@ -121,6 +122,6 @@ begin
 
     L_PIXEL.X <= '0' & V_PIXEL_COL;
     L_PIXEL.Y <= V_PIXEL_ROW;
-    O_LED <= T_BUTTON(0);
+
     O_V_SYNC <= V_V_SYNC;
 end architecture;
