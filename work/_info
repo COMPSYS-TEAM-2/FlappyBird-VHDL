@@ -1,0 +1,106 @@
+m255
+K4
+z2
+!s11e vcom 2020.2 2020.04, Apr 19 2020
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/fosu562/OneDrive - The University of Auckland/Documents/VHDLCode/FlappyBird-VHDL
+T_opt
+!s110 1682913146
+VT_XQKT1`FE4M?PbYYXdbG0
+04 9 4 work test_lfsr test 1
+=1-e454e84f70d7-644f377a-181-333c
+o-quiet -auto_acc_if_foreign -work work +acc
+tCvgOpt 0
+n@_opt
+OE;O;2020.2;71
+Elfsr
+Z1 w1682912874
+Z2 DPx4 ieee 11 numeric_std 0 22 aU^R8eGcicLcUFIaBQSL>3
+Z3 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z4 DPx4 ieee 14 std_logic_1164 0 22 cVAk:aDinOX8^VGI1ekP<3
+!i122 0
+R0
+Z5 8C:/Users/fosu562/OneDrive - The University of Auckland/Documents/VHDLCode/FlappyBird-VHDL/src/lfsr.vhd
+Z6 FC:/Users/fosu562/OneDrive - The University of Auckland/Documents/VHDLCode/FlappyBird-VHDL/src/lfsr.vhd
+l0
+L5 1
+VT]jMSSh04`SlXEGTMem<Q3
+!s100 LZckkoRHKaQNZzIKEBJgJ1
+Z7 OE;C;2020.2;71
+32
+Z8 !s110 1682913131
+!i10b 1
+Z9 !s108 1682913130.000000
+Z10 !s90 -reportprogress|300|-work|work|C:/Users/fosu562/OneDrive - The University of Auckland/Documents/VHDLCode/FlappyBird-VHDL/src/lfsr.vhd|
+Z11 !s107 C:/Users/fosu562/OneDrive - The University of Auckland/Documents/VHDLCode/FlappyBird-VHDL/src/lfsr.vhd|
+!i113 0
+Z12 o-work work
+Z13 tExplicit 1 CvgOpt 0
+Artl
+R2
+R3
+R4
+DEx4 work 4 lfsr 0 22 T]jMSSh04`SlXEGTMem<Q3
+!i122 0
+l21
+L12 24
+Vg<^H_J0<Vjd80n^l=7@LP1
+!s100 1<dY6Y`MZI1H7nLF2iUco3
+R7
+32
+R8
+!i10b 1
+R9
+R10
+R11
+!i113 0
+R12
+R13
+Etest_lfsr
+Z14 w1682913003
+R2
+R3
+R4
+!i122 1
+R0
+Z15 8C:/Users/fosu562/OneDrive - The University of Auckland/Documents/VHDLCode/FlappyBird-VHDL/test/testlfsr.vhd
+Z16 FC:/Users/fosu562/OneDrive - The University of Auckland/Documents/VHDLCode/FlappyBird-VHDL/test/testlfsr.vhd
+l0
+L5 1
+Vo>XlBng^::gj@QUghZ2F<0
+!s100 cOlT6BE0d9o6z69>[iM2z1
+R7
+32
+Z17 !s110 1682913137
+!i10b 1
+Z18 !s108 1682913137.000000
+Z19 !s90 -reportprogress|300|-work|work|C:/Users/fosu562/OneDrive - The University of Auckland/Documents/VHDLCode/FlappyBird-VHDL/test/testlfsr.vhd|
+Z20 !s107 C:/Users/fosu562/OneDrive - The University of Auckland/Documents/VHDLCode/FlappyBird-VHDL/test/testlfsr.vhd|
+!i113 0
+R12
+R13
+Atest
+R2
+R3
+R4
+DEx4 work 9 test_lfsr 0 22 o>XlBng^::gj@QUghZ2F<0
+!i122 1
+l19
+L8 18
+Vb1F;b1Q:JWf@l1_bC`Ph=1
+!s100 =Jmoof2V=MmF2dm0B2ba_0
+R7
+32
+R17
+!i10b 1
+R18
+R19
+R20
+!i113 0
+R12
+R13
