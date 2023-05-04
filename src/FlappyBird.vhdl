@@ -14,7 +14,9 @@ entity FlappyBird is
         O_GREEN : out std_logic_vector(3 downto 0);
         O_BLUE : out std_logic_vector(3 downto 0);
         O_H_SYNC : out std_logic;
-        O_V_SYNC : out std_logic
+        O_V_SYNC : out std_logic;
+
+        O_LED : out std_logic
     );
 end entity;
 
@@ -30,17 +32,20 @@ architecture behavioral of FlappyBird is
 
     signal G_RGB : std_logic_vector(11 downto 0);
     signal T_RGB : std_logic_vector(11 downto 0);
+    signal T_BUTTON : std_logic_vector(1 downto 0);
 
     signal L_CLK : std_logic := '1';
-
+    signal L_STATE : std_logic_vector(1 downto 0) := "00";
+    signal L_RGB : std_logic_vector(11 downto 0);
     signal L_CURSOR : T_RECT := CreateRect(0, 0, 0, 0);
     signal L_PIXEL : T_RECT := CreateRect(0, 0, 0, 0);
+
 begin
 
     video : entity work.VGA_SYNC
         port map(
             I_CLK_25Mhz => L_CLK,
-            I_RGB => T_RGB,
+            I_RGB => L_RGB,
 
             O_RED => O_RED,
             O_GREEN => O_GREEN,
@@ -82,7 +87,8 @@ begin
             I_M_LEFT => M_LEFT,
             I_CURSOR => L_CURSOR,
 
-            O_RGB => T_RGB
+            O_RGB => T_RGB,
+            O_BUTTON => T_BUTTON
         );
 
     mouse_pos : process (V_V_SYNC)
@@ -93,6 +99,15 @@ begin
         end if;
     end process;
 
+    state : process (V_V_SYNC)
+    begin
+        if (rising_edge(V_V_SYNC)) then
+            if (L_STATE = "00") then
+                L_STATE <= T_BUTTON;
+            end if;
+        end if;
+    end process;
+
     clk_div : process (I_CLK)
     begin
         if (rising_edge(I_CLK)) then
@@ -100,8 +115,12 @@ begin
         end if;
     end process;
 
+    L_RGB <= T_RGB when L_STATE = "00" else
+        G_RGB when (L_STATE = "01" or L_STATE = "10") else
+        (others => '0');
+
     L_PIXEL.X <= '0' & V_PIXEL_COL;
     L_PIXEL.Y <= V_PIXEL_ROW;
-
+    O_LED <= T_BUTTON(0);
     O_V_SYNC <= V_V_SYNC;
 end architecture;

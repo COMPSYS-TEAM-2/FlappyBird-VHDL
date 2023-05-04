@@ -43,5 +43,5 @@ begin
     O_CLICK <= L_CLICK;
     O_ON <= CheckCollision(RECT, I_PIXEL);
     O_RGB <= COLOUR when L_CLICK = '0' else
-        COLOUR + x"111";
+        (x"AAA");
 end architecture;
