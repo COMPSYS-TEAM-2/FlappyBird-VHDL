@@ -17,7 +17,7 @@ entity pipes is
 end pipes;
 
 architecture behavior of pipes is
-	constant PIPE_GAP : std_logic_vector(9 downto 0) := conv_std_logic_vector(75, 10); -- Define the size of the gap between the pipes
+	constant PIPE_GAP : std_logic_vector(9 downto 0) := conv_std_logic_vector(195, 10); -- Define the size of the gap between the pipes
 	constant PIPE_WIDTH : std_logic_vector(9 downto 0) := conv_std_logic_vector(40, 10);
 	-- constant ACCELLERATION : std_logic_vector(9 downto 0) := conv_std_logic_vector(0, 0);
 

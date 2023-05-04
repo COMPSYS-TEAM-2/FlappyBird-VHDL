@@ -16,10 +16,19 @@ entity collision is
 end collision;
 
 architecture behaviour of collision is
-
+signal L_COL : std_logic := '0';
 begin
     checkCollision : process (I_VSYNC) is
-    variable counter : std_logic_vector(4 downto 0);
         begin
+            -- Check collisions 
+            if ((((I_S_X_POS >= I_P_X_A_POS) and (I_S_X_POS <= I_P_X_A_POS + I_PIPE_WIDTH)) 
+            and ((I_S_Y_POS <= I_A_PIPE_GAP_POS) or (I_S_Y_POS >= I_A_PIPE_GAP_POS + I_PIPE_GAP)))
+            or (((I_S_X_POS >= I_P_X_B_POS) and (I_S_X_POS <= I_P_X_B_POS + I_PIPE_WIDTH))
+            and ((I_S_Y_POS <= I_B_PIPE_GAP_POS) or (I_S_Y_POS >= I_B_PIPE_GAP_POS + I_PIPE_GAP)))) then
+               L_COL <= '1';  
+            else
+                L_COL <= '0';
+            end if;
     end process;
+    O_COL <= L_COL;
 end architecture;
