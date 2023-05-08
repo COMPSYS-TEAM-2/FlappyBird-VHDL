@@ -40,8 +40,8 @@ begin
 			Y_POS := L_Y_POS + Y_VEL;
 			if (Y_POS >= CONV_STD_LOGIC_VECTOR(479, 11) - SIZE) then
 				Y_POS := CONV_STD_LOGIC_VECTOR(479, 11) - SIZE;
-			elsif (Y_POS <= CONV_STD_LOGIC_VECTOR(0, 11) + SIZE) then
-				Y_POS := CONV_STD_LOGIC_VECTOR(0, 11) + SIZE;
+			elsif (Y_POS <= CONV_STD_LOGIC_VECTOR(0, 11)) then
+				Y_POS := CONV_STD_LOGIC_VECTOR(0, 11);
 			end if;
 			L_Y_POS <= Y_POS;
 		end if;
