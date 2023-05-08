@@ -12,8 +12,10 @@ entity pipe is
 		I_V_SYNC : in std_logic;
 		I_PIXEL : in T_RECT;
 		I_PIPE_GAP_POSITION : in std_logic_vector(7 downto 0);
+		I_BIRD : in T_RECT;
 		O_RGB : out std_logic_vector(11 downto 0);
-		O_ON : out std_logic
+		O_ON : out std_logic;
+		O_COLLISION : out std_logic
 	);
 end pipe;
 
@@ -52,5 +54,6 @@ begin
 
 	O_ON <= CheckCollision(I_PIXEL, L_TOP) or CheckCollision(I_PIXEL, L_BOTTOM);
 	O_RGB <= x"5E2";
+	O_COLLISION <= checkCollision(I_BIRD, L_TOP) or checkCollision(I_BIRD, L_BOTTOM);
 
 end behavior;

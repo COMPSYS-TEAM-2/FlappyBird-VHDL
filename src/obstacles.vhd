@@ -9,6 +9,7 @@ entity obstacles is
         I_V_SYNC : in std_logic;
         I_PIXEL : in T_RECT;
         I_RANDOM : in std_logic_vector(7 downto 0);
+        I_BIRD : in T_RECT;
         O_RGB : out std_logic_vector(11 downto 0);
         O_ON : out std_logic;
         O_COLLISION : out std_logic
@@ -18,6 +19,8 @@ end obstacles;
 architecture behavior of obstacles is
     signal A_RGB : std_logic_vector(11 downto 0);
     signal B_RGB : std_logic_vector(11 downto 0);
+    signal A_COLLISION : std_logic;
+    signal B_COLLISION : std_logic;
     signal A_ON : std_logic;
     signal B_ON : std_logic;
 begin
@@ -29,8 +32,10 @@ begin
             I_V_SYNC => I_V_SYNC,
             I_PIXEL => I_PIXEL,
             I_PIPE_GAP_POSITION => I_RANDOM,
+            I_BIRD => I_BIRD,
             O_RGB => A_RGB,
-            O_ON => A_ON
+            O_ON => A_ON,
+            O_COLLISION => A_COLLISION
         );
 
     pipe_b : entity work.pipe
@@ -41,8 +46,10 @@ begin
             I_V_SYNC => I_V_SYNC,
             I_PIXEL => I_PIXEL,
             I_PIPE_GAP_POSITION => I_RANDOM,
+            I_BIRD => I_BIRD,
             O_RGB => B_RGB,
-            O_ON => B_ON
+            O_ON => B_ON,
+            O_COLLISION => B_COLLISION
         );
 
     O_RGB <= A_RGB when A_ON = '1' else
@@ -50,5 +57,5 @@ begin
         x"000";
 
     O_ON <= A_ON or B_ON;
-    O_COLLISION <= '0';
+    O_COLLISION <= B_COLLISION or A_COLLISION;
 end architecture;
