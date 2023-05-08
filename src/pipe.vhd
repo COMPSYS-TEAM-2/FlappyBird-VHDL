@@ -42,7 +42,7 @@ begin
 			end if;
 			X_POS := X_POS - X_VEL;
 			-- If the pipes overflow, place them back at the start
-			if (X_POS <= 0) then
+			if (X_POS <= - CONV_STD_LOGIC_VECTOR(PIPE_WIDTH, 11)) then
 				X_POS := CONV_STD_LOGIC_VECTOR(640, 11);
 			end if;
 		end if;

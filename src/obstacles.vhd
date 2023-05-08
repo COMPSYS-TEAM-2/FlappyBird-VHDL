@@ -35,7 +35,7 @@ begin
 
     pipe_b : entity work.pipe
         generic map(
-            X_START => CONV_STD_LOGIC_VECTOR(1000, 11)
+            X_START => CONV_STD_LOGIC_VECTOR(1020, 11)
         )
         port map(
             I_V_SYNC => I_V_SYNC,
