@@ -35,10 +35,10 @@ begin
 	begin
 		-- Move pipes once every vertical sync
 		if (rising_edge(I_V_SYNC)) then
-			if (X_POS_A > conv_std_logic_vector(660, 11)) then
-				PIPE_GAP_POSITION_A <= ((I_PIPE_GAP_POSITION & '0') + conv_std_logic_vector(164, 10));
-			elsif (X_POS_B > conv_std_logic_vector(660, 11)) then
-				PIPE_GAP_POSITION_B <= ((I_PIPE_GAP_POSITION & '0') + conv_std_logic_vector(164, 10));
+			if (X_POS_A >= conv_std_logic_vector(640, 11)) then
+				PIPE_GAP_POSITION_A <= (I_PIPE_GAP_POSITION) + conv_std_logic_vector(164, 10);
+			elsif (X_POS_B >= conv_std_logic_vector(640, 11)) then
+				PIPE_GAP_POSITION_B <= (I_PIPE_GAP_POSITION) + conv_std_logic_vector(164, 10);
 			end if;
 			X_POS_A := L_X_POS_A - X_VEL;
 			X_POS_B := L_X_POS_B - X_VEL;

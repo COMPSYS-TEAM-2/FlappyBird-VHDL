@@ -21,15 +21,18 @@ architecture rtl of lfsr is
 begin
     Get_value : process (I_CLK)
     begin
-        L_VAL0 <= L_VAL7 xor I_RVAL;
-        L_VAL1 <= L_VAL0;
-        L_VAL2 <= L_VAL1 xor L_VAL7;
-        L_VAL3 <= L_VAL2;
-        L_VAL4 <= L_VAL3 xor L_VAL7;
-        L_VAL5 <= L_VAL4 xor L_VAL7;
-        L_VAL6 <= L_VAL5;
-        L_VAL7 <= L_VAL6;
+        if rising_edge(I_CLK) then
+            L_VAL0 <= L_VAL7 xor I_RVAL;
+            L_VAL1 <= L_VAL0;
+            L_VAL2 <= L_VAL1 xor L_VAL7;
+            L_VAL3 <= L_VAL2;
+            L_VAL4 <= L_VAL3 xor L_VAL7;
+            L_VAL5 <= L_VAL4 xor L_VAL7;
+            L_VAL6 <= L_VAL5;
+            L_VAL7 <= L_VAL6;
+        end if;
     end process Get_value;
+
     O_VAL <= L_VAL0 & L_VAL1 & L_VAL2 & L_VAL3 & L_VAL4 & L_VAL5 & L_VAL6 & L_VAL7;
 
 end architecture;
