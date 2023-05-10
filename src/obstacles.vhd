@@ -25,8 +25,8 @@ architecture behavior of obstacles is
     signal B_COLLISION : std_logic;
     signal A_ON : std_logic;
     signal B_ON : std_logic;
-    signal PIPE_A : std_logic_vector(10 downto 0);
-    signal PIPE_B : std_logic_vector(10 downto 0);
+    signal PIPE_A : T_RECT;
+    signal PIPE_B : T_RECT;
 begin
     pipe_a : entity work.pipe
         generic map(

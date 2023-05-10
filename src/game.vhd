@@ -63,7 +63,7 @@ begin
             O_VAL => LF_RANDOM
         );
 
-    pipe_passed_inst : entity work.pipe_passed
+    pipe_passed_inst : entity work.pipe_passed 
             port map(
                 I_VSYNC => I_V_SYNC,
                 I_S_X_POS => B_BIRD.X,

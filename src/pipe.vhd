@@ -16,10 +16,7 @@ entity pipe is
 		O_RGB : out std_logic_vector(11 downto 0);
 		O_ON : out std_logic;
 		O_COLLISION : out std_logic ;
-		O_PIPE_X : out STD_LOGIC_VECTOR(10 downto 0) ;
-		
-		
-	
+		O_PIPE : out T_RECT;
 	);
 end pipe;
 
@@ -59,7 +56,7 @@ begin
 	O_ON <= CheckCollision(I_PIXEL, L_TOP) or CheckCollision(I_PIXEL, L_BOTTOM);
 	O_RGB <= x"5E2";
 	O_COLLISION <= checkCollision(I_BIRD, L_TOP) or checkCollision(I_BIRD, L_BOTTOM);
-	O_PIPE_X <= L_TOP.X;
+	O_PIPE <= L_TOP;
 	
 
 end behavior;
