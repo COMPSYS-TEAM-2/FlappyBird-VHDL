@@ -25,6 +25,11 @@ architecture behavior of game is
 
     signal L_BACKGROUND_COLOUR : std_logic_vector(11 downto 0) := x"2AC";
 
+    signal PIPE_A : T_RECT;
+    signal PIPE_B : T_RECT;
+
+    signal COLLISION_ON : std_logic;
+
 begin
     bird : entity work.bird
         port map(
@@ -44,7 +49,10 @@ begin
             I_RANDOM => LF_RANDOM,
             O_RGB => P_RGB,
             O_ON => P_ON,
-            O_COLLISION => O_LED
+            O_COLLISION => COLLISION_ON,
+            O_PIPE_A => PIPE_A,
+            O_PIPE_B => PIPE_B 
+        
         );
 
     -- Define the Linear Feeback Shift Register
@@ -55,7 +63,26 @@ begin
             O_VAL => LF_RANDOM
         );
 
-    O_RGB <= B_RGB when (B_ON = '1') else
+    pipe_passed_inst : entity work.pipe_passed
+            port map(
+                I_VSYNC => I_V_SYNC,
+                I_S_X_POS => B_BIRD.X,
+                I_P_X_A_POS => PIPE_A.X,
+                I_P_X_B_POS => PIPE_B.X,
+                I_PIPE_WIDTH => PIPE_A.WIDTH,
+                O_PIPE_PASSED => O_LED
+            );
+
+    score : entity work.score
+        port map (
+            i_pipePassed => O_LED,
+            i_collision => COLLISION_ON,
+            o_screenScore => SCORE_ON
+        );
+    
+
+    O_RGB <= SS_RGB when (SS_ON = '1') else
+        B_RGB when (B_ON = '1') else
         P_RGB when (P_ON = '1') else
         L_BACKGROUND_COLOUR;
 end architecture;
