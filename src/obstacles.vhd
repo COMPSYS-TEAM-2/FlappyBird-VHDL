@@ -12,9 +12,9 @@ entity obstacles is
         I_BIRD : in T_RECT;
         O_RGB : out std_logic_vector(11 downto 0);
         O_ON : out std_logic;
-        O_COLLISION : out std_logic
+        O_COLLISION : out std_logic;
         O_PIPE_A : out T_RECT;
-        O_PIPE_B : out T_RECT;
+        O_PIPE_B : out T_RECT
     );
 end obstacles;
 
@@ -28,7 +28,7 @@ architecture behavior of obstacles is
     signal PIPE_A : T_RECT;
     signal PIPE_B : T_RECT;
 begin
-    pipe_a : entity work.pipe
+    pipe_aye : entity work.pipe
         generic map(
             X_START => CONV_STD_LOGIC_VECTOR(680, 11)
         )
@@ -39,12 +39,12 @@ begin
             I_BIRD => I_BIRD,
             O_RGB => A_RGB,
             O_ON => A_ON,
-            O_COLLISION => A_COLLISION
-            O_PIPE => PIPE_A,
+            O_COLLISION => A_COLLISION,
+            O_PIPE => PIPE_A
 	        
         );
 
-    pipe_b : entity work.pipe
+    pipe_bee : entity work.pipe
         generic map(
             X_START => CONV_STD_LOGIC_VECTOR(1020, 11)
         )
@@ -56,7 +56,7 @@ begin
             O_RGB => B_RGB,
             O_ON => B_ON,
             O_COLLISION => B_COLLISION,
-            O_PIPE => PIPE_B,
+            O_PIPE => PIPE_B
 	        
         );
 

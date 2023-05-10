@@ -10,7 +10,7 @@ entity bird is
 		I_PIXEL : in T_RECT;
 		O_BIRD : out T_RECT;
 		O_RGB : out std_logic_vector(11 downto 0);
-		O_ON : out std_logic;
+		O_ON : out std_logic
 	);
 end bird;
 

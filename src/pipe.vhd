@@ -16,7 +16,7 @@ entity pipe is
 		O_RGB : out std_logic_vector(11 downto 0);
 		O_ON : out std_logic;
 		O_COLLISION : out std_logic ;
-		O_PIPE : out T_RECT;
+		O_PIPE : out T_RECT
 	);
 end pipe;
 

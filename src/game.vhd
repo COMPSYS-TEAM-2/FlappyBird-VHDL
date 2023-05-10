@@ -29,6 +29,7 @@ architecture behavior of game is
     signal PIPE_B : T_RECT;
 
     signal COLLISION_ON : std_logic;
+	 signal SCORE_ON : STD_LOGIC_VECTOR(5 downto 0);
 
 begin
     bird : entity work.bird
@@ -75,14 +76,13 @@ begin
 
     score : entity work.score
         port map (
-            i_pipePassed => O_LED,
+            i_pipePassed => COLLISION_ON,
             i_collision => COLLISION_ON,
             o_screenScore => SCORE_ON
         );
     
 
-    O_RGB <= SS_RGB when (SS_ON = '1') else
-        B_RGB when (B_ON = '1') else
+    O_RGB <= B_RGB when (B_ON = '1') else
         P_RGB when (P_ON = '1') else
         L_BACKGROUND_COLOUR;
 end architecture;
