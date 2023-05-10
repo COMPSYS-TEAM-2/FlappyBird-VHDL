@@ -5,6 +5,7 @@ use work.Rectangle.all;
 
 entity game is
     port (
+        I_CLK : in std_logic;
         I_V_SYNC : in std_logic;
         I_PIXEL : in T_RECT;
         I_M_LEFT : in std_logic;
@@ -21,6 +22,9 @@ architecture behavior of game is
     signal P_RGB : std_logic_vector(11 downto 0);
     signal P_ON : std_logic;
 
+    signal S_RGB : std_logic_vector(11 downto 0);
+    signal S_ON : std_logic;
+
     signal LF_RANDOM : std_logic_vector(7 downto 0);
 
     signal L_BACKGROUND_COLOUR : std_logic_vector(11 downto 0) := x"2AC";
@@ -29,7 +33,7 @@ architecture behavior of game is
     signal PIPE_B : T_RECT;
 
     signal COLLISION_ON : std_logic;
-	 signal SCORE_ON : STD_LOGIC_VECTOR(5 downto 0);
+    signal SCORE_ON : std_logic_vector(5 downto 0);
 
 begin
     bird : entity work.bird
@@ -52,8 +56,8 @@ begin
             O_ON => P_ON,
             O_COLLISION => COLLISION_ON,
             O_PIPE_A => PIPE_A,
-            O_PIPE_B => PIPE_B 
-        
+            O_PIPE_B => PIPE_B
+
         );
 
     -- Define the Linear Feeback Shift Register
@@ -64,25 +68,35 @@ begin
             O_VAL => LF_RANDOM
         );
 
-    pipe_passed_inst : entity work.pipe_passed 
-            port map(
-                I_VSYNC => I_V_SYNC,
-                I_S_X_POS => B_BIRD.X,
-                I_P_X_A_POS => PIPE_A.X,
-                I_P_X_B_POS => PIPE_B.X,
-                I_PIPE_WIDTH => PIPE_A.WIDTH,
-                O_PIPE_PASSED => O_LED
-            );
+    pipe_passed_inst : entity work.pipe_passed
+        port map(
+            I_VSYNC => I_V_SYNC,
+            I_S_X_POS => B_BIRD.X,
+            I_P_X_A_POS => PIPE_A.X,
+            I_P_X_B_POS => PIPE_B.X,
+            I_PIPE_WIDTH => PIPE_A.WIDTH,
+            O_PIPE_PASSED => O_LED
+        );
 
     score : entity work.score
-        port map (
+        port map(
             i_pipePassed => COLLISION_ON,
             i_collision => COLLISION_ON,
             o_screenScore => SCORE_ON
         );
-    
 
-    O_RGB <= B_RGB when (B_ON = '1') else
+    stext : entity work.stext
+        port map(
+            I_CLK => I_CLK,
+            I_PIXEL_ROW => I_PIXEL.Y,
+            I_PIXEL_COL => I_PIXEL.X(9 downto 0),
+            I_SCORE => "000001",
+            O_RGB => S_RGB,
+            O_ON => S_ON
+        );
+
+    O_RGB <= S_RGB when (S_ON = '1') else
+        B_RGB when (B_ON = '1') else
         P_RGB when (P_ON = '1') else
         L_BACKGROUND_COLOUR;
 end architecture;
