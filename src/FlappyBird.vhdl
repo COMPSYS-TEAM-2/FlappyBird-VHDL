@@ -71,8 +71,7 @@ begin
     game : entity work.game
         port map(
             I_V_SYNC => V_V_SYNC,
-            I_PIXEL_ROW => V_PIXEL_ROW,
-            I_PIXEL_COL => V_PIXEL_COL,
+            I_PIXEL => L_PIXEL,
             I_M_LEFT => M_LEFT,
             O_RGB => G_RGB,
             O_LED => O_LED
