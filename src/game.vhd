@@ -25,6 +25,9 @@ architecture behavior of game is
     signal S_RGB : std_logic_vector(11 downto 0);
     signal S_ON : std_logic;
 
+    signal LI_RGB : std_logic_vector(11 downto 0);
+    signal LI_ON : std_logic;
+
     signal LF_RANDOM : std_logic_vector(7 downto 0);
 
     signal L_BACKGROUND_COLOUR : std_logic_vector(11 downto 0) := x"2AC";
@@ -85,10 +88,26 @@ begin
             o_screenScore => SCORE_ON
         );
 
-    stext : entity work.stext
+    score_text : entity work.string
         generic map(
-            X => 10,
-            Y => 10,
+            X_CENTER => 639/2,
+            Y_CENTER => 24,
+            SCALE => 3,
+            NUM_CHARS => 2
+        )
+        port map(
+            I_CLK => I_CLK,
+            I_PIXEL_ROW => I_PIXEL.Y,
+            I_PIXEL_COL => I_PIXEL.X(9 downto 0),
+            I_CHARS => o"60" & o"61",
+            O_RGB => S_RGB,
+            O_ON => S_ON
+        );
+
+    lives : entity work.string
+        generic map(
+            X_CENTER => 52,
+            Y_CENTER => 24,
             SCALE => 3,
             NUM_CHARS => 3
         )
@@ -96,12 +115,13 @@ begin
             I_CLK => I_CLK,
             I_PIXEL_ROW => I_PIXEL.Y,
             I_PIXEL_COL => I_PIXEL.X(9 downto 0),
-            I_CHARS => o"60" & o"61" & o"62",
-            O_RGB => S_RGB,
-            O_ON => S_ON
+            I_CHARS => o"52" & o"52" & o"52",
+            O_RGB => LI_RGB,
+            O_ON => LI_ON
         );
 
     O_RGB <= S_RGB when (S_ON = '1') else
+        LI_RGB when (Li_ON) = '1' else
         B_RGB when (B_ON = '1') else
         P_RGB when (P_ON = '1') else
         L_BACKGROUND_COLOUR;

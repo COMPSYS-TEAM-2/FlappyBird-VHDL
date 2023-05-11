@@ -4,10 +4,10 @@ use IEEE.STD_LOGIC_ARITH.all;
 use IEEE.STD_LOGIC_SIGNED.all;
 use ieee.numeric_std.all;
 
-entity stext is
+entity string is
     generic (
-        X : integer;
-        Y : integer;
+        X_CENTER : integer;
+        Y_CENTER : integer;
         SCALE : integer;
         NUM_CHARS : integer
     );
@@ -18,13 +18,16 @@ entity stext is
         O_RGB : out std_logic_vector(11 downto 0);
         O_ON : out std_logic
     );
-end stext;
+end string;
 
-architecture behavior of stext is
+architecture behavior of string is
 
     --640 x 480
     constant DEFAULT_SIZE : integer := 8;
     constant SCALED_SIZE : integer := DEFAULT_SIZE * (2 ** (SCALE - 1));
+    constant X : integer := X_CENTER - (SCALED_SIZE * NUM_CHARS)/2;
+    constant Y : integer := Y_CENTER - (SCALED_SIZE)/2;
+
     signal font_row : std_logic_vector(2 downto 0); -- row signal 
     signal font_col : std_logic_vector(2 downto 0); -- column signal 
     signal rom_mux_output : std_logic; -- output signal 
