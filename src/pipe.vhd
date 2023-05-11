@@ -4,6 +4,7 @@ use IEEE.STD_LOGIC_ARITH.all;
 use IEEE.STD_LOGIC_SIGNED.all;
 use work.Rectangle.all;
 use work.Constantvalues.all;
+use work.RGBValues.PIPE_RGB;
 
 entity pipe is
 	generic (
@@ -50,7 +51,7 @@ begin
 	end process Move_pipes;
 
 	O_ON <= CheckCollision(I_PIXEL, L_TOP) or CheckCollision(I_PIXEL, L_BOTTOM);
-	O_RGB <= x"5E2";
+	O_RGB <= PIPE_RGB;
 	O_COLLISION <= checkCollision(I_BIRD, L_TOP) or checkCollision(I_BIRD, L_BOTTOM);
 
 end behavior;

@@ -4,6 +4,7 @@ use ieee.STD_LOGIC_ARITH.all;
 use ieee.std_logic_signed.all;
 use work.Rectangle.all;
 use work.constantvalues.all;
+use work.RGBValues.all;
 
 entity menu is
     port (
@@ -35,7 +36,7 @@ begin
     playbutton : entity work.menubutton
         generic map(
             CreateRect(MENU_BUTTON_X, MENU_BUTTON_PLAY_Y, MENU_BUTTON_SIZE_X, MENU_BUTTON_SIZE_Y),
-            x"F00"
+            MENU_PLAY_BUTTON_RGB
         )
         port map(
             I_V_SYNC => I_V_SYNC,
@@ -50,7 +51,7 @@ begin
     trainbutton : entity work.menubutton
         generic map(
             CreateRect(MENU_BUTTON_X, MENU_BUTTON_TRAIN_Y, MENU_BUTTON_SIZE_X, MENU_BUTTON_SIZE_Y),
-            x"0F0"
+            MENU_TRAIN_BUTTON_RGB
         )
         port map(
             I_V_SYNC => I_V_SYNC,
@@ -64,10 +65,10 @@ begin
 
     L_MOUSE_ON <= CheckCollision(I_CURSOR, I_PIXEL);
 
-    O_RGB <= x"000" when L_MOUSE_ON = '1' else
+    O_RGB <= MOUSE_RGB when L_MOUSE_ON = '1' else
         T_RGB when T_ON = '1' else
         P_RGB when P_ON = '1' else
-        x"FFF";
+        MENU_BACKGROUND_RGB;
 
     O_BUTTON <= "01" when P_CLICK = '1' else
         "10" when T_CLICK = '1' else

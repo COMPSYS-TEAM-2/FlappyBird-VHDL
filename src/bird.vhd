@@ -4,6 +4,7 @@ use IEEE.STD_LOGIC_ARITH.all;
 use IEEE.STD_LOGIC_SIGNED.all;
 use work.rectangle.all;
 use work.constantvalues.all;
+use work.RGBValues.BIRD_RGB;
 
 entity bird is
 	port (
@@ -50,6 +51,6 @@ begin
 
 	-- Colours for pixel data on video signal
 	-- Changing the background and ball colour by pushbuttons
-	O_RGB <= x"ED2";
+	O_RGB <= BIRD_RGB;
 
 end behavior;
