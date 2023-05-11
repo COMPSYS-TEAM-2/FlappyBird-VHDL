@@ -3,6 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.STD_LOGIC_ARITH.all;
 use ieee.std_logic_signed.all;
 use work.Rectangle.all;
+use work.RGBValues.MENU_BUTTON_ONCLICK_RGB;
 
 entity menubutton is
     generic (
@@ -43,5 +44,5 @@ begin
     O_CLICK <= L_CLICK;
     O_ON <= CheckCollision(RECT, I_PIXEL);
     O_RGB <= COLOUR when L_CLICK = '0' else
-        (x"AAA");
+        (MENU_BUTTON_ONCLICK_RGB);
 end architecture;

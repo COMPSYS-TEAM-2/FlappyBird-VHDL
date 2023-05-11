@@ -3,6 +3,8 @@ use IEEE.STD_LOGIC_1164.all;
 use IEEE.STD_LOGIC_ARITH.all;
 use IEEE.STD_LOGIC_SIGNED.all;
 use work.Rectangle.all;
+use work.Constantvalues.all;
+use work.RGBValues.PIPE_RGB;
 
 entity pipe is
 	generic (
@@ -21,10 +23,6 @@ entity pipe is
 end pipe;
 
 architecture behavior of pipe is
-	constant PIPE_GAP : std_logic_vector(9 downto 0) := conv_std_logic_vector(195, 10); -- Define the size of the gap between the pipes
-	constant PIPE_WIDTH : integer := 40;
-	-- constant ACCELLERATION : std_logic_vector(9 downto 0) := conv_std_logic_vector(0, 0);
-
 	signal L_TOP : T_RECT := CreateRect(0, 0, PIPE_WIDTH, 0);
 	signal L_BOTTOM : T_RECT := CreateRect(0, 0, PIPE_WIDTH, 0);
 begin
@@ -54,7 +52,8 @@ begin
 	end process Move_pipes;
 
 	O_ON <= CheckCollision(I_PIXEL, L_TOP) or CheckCollision(I_PIXEL, L_BOTTOM);
-	O_RGB <= x"5E2";
-	O_COLLISION <= CheckCollision(I_BIRD, L_TOP) or CheckCollision(I_BIRD, L_BOTTOM);
 	O_PIPE <= L_TOP;
+	O_RGB <= PIPE_RGB;
+	O_COLLISION <= checkCollision(I_BIRD, L_TOP) or checkCollision(I_BIRD, L_BOTTOM);
+
 end behavior;

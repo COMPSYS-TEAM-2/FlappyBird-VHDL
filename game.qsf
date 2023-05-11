@@ -41,7 +41,7 @@ set_global_assignment -name FAMILY "Cyclone V"
 set_global_assignment -name DEVICE 5CEBA4F23C7
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 22.1STD.1
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "11:14:16  APRIL 26, 2023"
-set_global_assignment -name LAST_QUARTUS_VERSION "22.1std.1 Lite Edition"
+set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Standard Edition"
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name BOARD "DE0-CV Development Board"
 set_global_assignment -name EDA_SIMULATION_TOOL "<None>"
@@ -85,6 +85,8 @@ set_global_assignment -name VHDL_FILE src/string.vhd
 set_global_assignment -name VHDL_FILE src/score.vhd
 set_global_assignment -name VHDL_FILE src/pipe_passed.vhd
 set_global_assignment -name VHDL_FILE src/char_rom.vhd
+set_global_assignment -name VHDL_FILE src/RGBValues.vhdl
+set_global_assignment -name VHDL_FILE src/ConstantValues.vhdl
 set_global_assignment -name VHDL_FILE src/bird.vhd
 set_global_assignment -name VHDL_FILE src/pipe.vhd
 set_global_assignment -name VHDL_FILE src/obstacles.vhd

@@ -3,6 +3,9 @@ use ieee.std_logic_1164.all;
 use ieee.STD_LOGIC_ARITH.all;
 use ieee.std_logic_signed.all;
 use work.Rectangle.all;
+use work.constantvalues.all;
+use work.RGBValues.all;
+
 entity menu is
     port (
         I_ON : in std_logic;
@@ -19,12 +22,6 @@ entity menu is
 end menu;
 
 architecture behavior of menu is
-    constant size_x : integer := 160;
-    constant size_y : integer := 80;
-    constant x : integer := (639 - size_x) / 2;
-    constant y_play : integer := (479 / 2) - size_y - 10;
-    constant y_train : integer := (479 / 2) + 10;
-
     signal P_RGB : std_logic_vector(11 downto 0);
     signal P_ON : std_logic;
     signal P_CLICK : std_logic;
@@ -38,8 +35,8 @@ begin
 
     playbutton : entity work.menubutton
         generic map(
-            CreateRect(x, y_play, size_x, size_y),
-            x"F00"
+            CreateRect(MENU_BUTTON_X, MENU_BUTTON_PLAY_Y, MENU_BUTTON_SIZE_X, MENU_BUTTON_SIZE_Y),
+            MENU_PLAY_BUTTON_RGB
         )
         port map(
             I_V_SYNC => I_V_SYNC,
@@ -53,8 +50,8 @@ begin
 
     trainbutton : entity work.menubutton
         generic map(
-            CreateRect(x, y_train, size_x, size_y),
-            x"0F0"
+            CreateRect(MENU_BUTTON_X, MENU_BUTTON_TRAIN_Y, MENU_BUTTON_SIZE_X, MENU_BUTTON_SIZE_Y),
+            MENU_TRAIN_BUTTON_RGB
         )
         port map(
             I_V_SYNC => I_V_SYNC,
@@ -68,10 +65,10 @@ begin
 
     L_MOUSE_ON <= CheckCollision(I_CURSOR, I_PIXEL);
 
-    O_RGB <= x"000" when L_MOUSE_ON = '1' else
+    O_RGB <= MOUSE_RGB when L_MOUSE_ON = '1' else
         T_RGB when T_ON = '1' else
         P_RGB when P_ON = '1' else
-        x"FFF";
+        MENU_BACKGROUND_RGB;
 
     O_BUTTON <= "01" when P_CLICK = '1' else
         "10" when T_CLICK = '1' else

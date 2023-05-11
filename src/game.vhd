@@ -2,6 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.Rectangle.all;
+use work.RGBValues.BACKGROUND_RGB;
 
 entity game is
     port (
@@ -30,7 +31,7 @@ architecture behavior of game is
 
     signal LF_RANDOM : std_logic_vector(7 downto 0);
 
-    signal L_BACKGROUND_COLOUR : std_logic_vector(11 downto 0) := x"2AC";
+    signal L_BACKGROUND_COLOUR : std_logic_vector(11 downto 0) := BACKGROUND_RGB;
 
     signal PIPE_A : T_RECT;
     signal PIPE_B : T_RECT;
