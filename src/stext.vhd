@@ -29,7 +29,7 @@ architecture behavior of stext is
     signal font_col : std_logic_vector(2 downto 0); -- column signal 
     signal rom_mux_output : std_logic; -- output signal 
     signal L_CHAR : std_logic_vector(5 downto 0);
-
+    signal L_ON : std_logic;
 begin
 
     char_rom : entity work.char_rom
@@ -44,9 +44,10 @@ begin
     get_int_score : process (I_CLK)
         variable temp_col : std_logic_vector(10 downto 0);
         variable temp_row : std_logic_vector(9 downto 0);
+        variable T_ON : std_logic;
     begin
         if rising_edge(I_CLK) then
-
+            T_ON := '0';
             for i in 0 to NUM_CHARS - 1 loop
                 if ((I_PIXEL_COL >= conv_std_logic_vector(X + (SCALED_SIZE * i), 11)) and
                     (I_PIXEL_COL < conv_std_logic_vector(X + (SCALED_SIZE * (i + 1)), 11))) and
@@ -59,12 +60,14 @@ begin
                     font_row <= temp_row((SCALE + 1) downto (SCALE - 1));
 
                     L_CHAR <= I_CHARS((6 * (NUM_CHARS - i) - 1) downto (6 * (NUM_CHARS - i - 1)));
+                    T_ON := '1';
                 end if;
             end loop;
         end if;
+        L_ON <= T_ON;
     end process;
 
     O_RGB <= x"fff";
-    O_ON <= rom_mux_output;
+    O_ON <= rom_mux_output and L_ON;
 
 end architecture;
