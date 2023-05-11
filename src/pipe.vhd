@@ -3,6 +3,7 @@ use IEEE.STD_LOGIC_1164.all;
 use IEEE.STD_LOGIC_ARITH.all;
 use IEEE.STD_LOGIC_SIGNED.all;
 use work.Rectangle.all;
+use work.Constantvalues.all;
 
 entity pipe is
 	generic (
@@ -20,10 +21,6 @@ entity pipe is
 end pipe;
 
 architecture behavior of pipe is
-	constant PIPE_GAP : std_logic_vector(9 downto 0) := conv_std_logic_vector(195, 10); -- Define the size of the gap between the pipes
-	constant PIPE_WIDTH : integer := 40;
-	-- constant ACCELLERATION : std_logic_vector(9 downto 0) := conv_std_logic_vector(0, 0);
-
 	signal L_TOP : T_RECT := CreateRect(0, 0, PIPE_WIDTH, 0);
 	signal L_BOTTOM : T_RECT := CreateRect(0, 0, PIPE_WIDTH, 0);
 begin

@@ -3,6 +3,7 @@ use IEEE.STD_LOGIC_1164.all;
 use IEEE.STD_LOGIC_ARITH.all;
 use IEEE.STD_LOGIC_SIGNED.all;
 use work.rectangle.all;
+use work.constantvalues.all;
 
 entity bird is
 	port (
@@ -15,9 +16,7 @@ entity bird is
 end bird;
 
 architecture behavior of bird is
-	constant GRAVITY : std_logic_vector(9 downto 0) := CONV_STD_LOGIC_VECTOR(1, 10);
-	constant SIZE : integer := 16;
-	signal L_BIRD : T_RECT := CreateRect(200, 150, Size, Size);
+	signal L_BIRD : T_RECT := CreateRect(200, 150, PLAYER_SIZE, PLAYER_SIZE);
 
 begin
 	move_bird : process (I_V_SYNC)
@@ -29,9 +28,9 @@ begin
 			if (I_CLICK = '1' and Y_VEL >= CONV_STD_LOGIC_VECTOR(2, 10)) then
 				Y_VEL := - CONV_STD_LOGIC_VECTOR(12, 10);
 			else
-				Y_VEL := Y_VEL + gravity;
-				if (Y_VEL > gravity(5 downto 0) & "0000") then
-					Y_VEL := gravity(5 downto 0) & "0000";
+				Y_VEL := Y_VEL + GRAVITY;
+				if (Y_VEL > GRAVITY(5 downto 0) & "0000") then
+					Y_VEL := GRAVITY(5 downto 0) & "0000";
 				end if;
 			end if;
 

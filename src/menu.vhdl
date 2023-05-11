@@ -3,6 +3,8 @@ use ieee.std_logic_1164.all;
 use ieee.STD_LOGIC_ARITH.all;
 use ieee.std_logic_signed.all;
 use work.Rectangle.all;
+use work.constantvalues.all;
+
 entity menu is
     port (
         I_ON : in std_logic;
@@ -19,12 +21,6 @@ entity menu is
 end menu;
 
 architecture behavior of menu is
-    constant size_x : integer := 160;
-    constant size_y : integer := 80;
-    constant x : integer := (639 - size_x) / 2;
-    constant y_play : integer := (479 / 2) - size_y - 10;
-    constant y_train : integer := (479 / 2) + 10;
-
     signal P_RGB : std_logic_vector(11 downto 0);
     signal P_ON : std_logic;
     signal P_CLICK : std_logic;
@@ -38,7 +34,7 @@ begin
 
     playbutton : entity work.menubutton
         generic map(
-            CreateRect(x, y_play, size_x, size_y),
+            CreateRect(MENU_BUTTON_X, MENU_BUTTON_PLAY_Y, MENU_BUTTON_SIZE_X, MENU_BUTTON_SIZE_Y),
             x"F00"
         )
         port map(
@@ -53,7 +49,7 @@ begin
 
     trainbutton : entity work.menubutton
         generic map(
-            CreateRect(x, y_train, size_x, size_y),
+            CreateRect(MENU_BUTTON_X, MENU_BUTTON_TRAIN_Y, MENU_BUTTON_SIZE_X, MENU_BUTTON_SIZE_Y),
             x"0F0"
         )
         port map(
