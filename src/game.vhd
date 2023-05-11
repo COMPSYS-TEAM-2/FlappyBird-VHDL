@@ -86,11 +86,16 @@ begin
         );
 
     stext : entity work.stext
+        generic map(
+            X => 10,
+            Y => 10,
+            SCALE => 3
+        )
         port map(
             I_CLK => I_CLK,
             I_PIXEL_ROW => I_PIXEL.Y,
             I_PIXEL_COL => I_PIXEL.X(9 downto 0),
-            I_SCORE => "000001",
+            I_CHAR => o"60",
             O_RGB => S_RGB,
             O_ON => S_ON
         );

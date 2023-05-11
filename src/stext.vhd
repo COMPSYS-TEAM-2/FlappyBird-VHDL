@@ -5,17 +5,22 @@ use IEEE.STD_LOGIC_SIGNED.all;
 use ieee.numeric_std.all;
 
 entity stext is
+    generic (
+        X : integer;
+        Y : integer;
+        SCALE : integer
+    );
     port (
         I_CLK : in std_logic;
         I_PIXEL_ROW, I_PIXEL_COL : in std_logic_vector(9 downto 0);
-        I_SCORE : in std_logic_vector(5 downto 0);
+        I_CHAR : in std_logic_vector(5 downto 0);
         O_RGB : out std_logic_vector(11 downto 0);
         O_ON : out std_logic
     );
 end stext;
 architecture behavior of stext is
     --640 x 480
-
+    constant size : integer := 8;
     signal font_row : std_logic_vector(2 downto 0); -- row signal 
     signal font_col : std_logic_vector(2 downto 0); -- column signal 
     signal character_address : std_logic_vector(5 downto 0); -- address from MIF 
@@ -35,7 +40,7 @@ begin
 
     char_rom : entity work.char_rom
         port map(
-            character_address => character_address,
+            character_address => I_CHAR,
             font_row => font_row,
             font_col => font_col,
             clock => I_CLK,
@@ -43,6 +48,8 @@ begin
         );
 
     get_int_score : process (I_CLK)
+        variable temp_col : std_logic_vector(10 downto 0);
+        variable temp_row : std_logic_vector(9 downto 0);
     begin
 
         --L_digit_one <= (L_SCORE_INT /100);
@@ -62,27 +69,17 @@ begin
             --L_digit_three_address <= L_digit_three_address + L_digit_three;
 
             -- If the pixel cols and rows are within the region we want them displaying in.
-            if (((I_PIXEL_ROW >= conv_std_logic_vector(100, 10)) and (I_PIXEL_ROW < conv_std_logic_vector(300, 10))) and
-                ((I_PIXEL_COL >= conv_std_logic_vector(48, 10)) and (I_PIXEL_COL < conv_std_logic_vector(300, 10)))) then
-                font_col <= I_PIXEL_COL(3 downto 1);
-                font_row <= I_PIXEL_ROW(3 downto 1);
-
-                if (((I_PIXEL_ROW >= conv_std_logic_vector(112, 10)) and (I_PIXEL_ROW < conv_std_logic_vector(124, 10))) and
-                    ((I_PIXEL_COL >= conv_std_logic_vector(52, 10)) and (I_PIXEL_COL < conv_std_logic_vector(64, 10)))) then
-
-                    character_address <= conv_std_logic_vector(48, 6); -- First digit (hundreds digit)
-
-                    CHAR_ON <= '1';
-                else
-                    CHAR_ON <= '0';
-                end if;
-            else
-                CHAR_ON <= '0';
+            if (((I_PIXEL_ROW >= conv_std_logic_vector(X, 11)) and (I_PIXEL_ROW < conv_std_logic_vector(X + SIZE * 2 ** (SCALE - 1), 11))) and
+                ((I_PIXEL_COL >= conv_std_logic_vector(Y, 10)) and (I_PIXEL_COL < conv_std_logic_vector(Y + SIZE * 2 ** (SCALE - 1), 10)))) then
+                temp_col := (I_PIXEL_COL - conv_std_logic_vector(X, 11));
+                font_col <= temp_col((SCALE + 1) downto (SCALE - 1));
+                temp_row := (I_PIXEL_ROW - conv_std_logic_vector(Y, 10));
+                font_row <= temp_row((SCALE + 1) downto (SCALE - 1));
             end if;
         end if;
     end process;
 
     O_RGB <= x"fff";
-    O_ON <= rom_mux_output and CHAR_ON;
+    O_ON <= rom_mux_output;
 
 end architecture;
