@@ -22,6 +22,8 @@ architecture behavior of game is
 
     signal P_RGB : std_logic_vector(11 downto 0);
     signal P_ON : std_logic;
+    signal P_COLLISION_ON : std_logic;
+    signal P_PIPE_PASSED : std_logic;
 
     signal S_RGB : std_logic_vector(11 downto 0);
     signal S_ON : std_logic;
@@ -33,10 +35,6 @@ architecture behavior of game is
 
     signal L_BACKGROUND_COLOUR : std_logic_vector(11 downto 0) := BACKGROUND_RGB;
 
-    signal PIPE_A : T_RECT;
-    signal PIPE_B : T_RECT;
-
-    signal COLLISION_ON : std_logic;
     signal SCORE_ON : std_logic_vector(5 downto 0);
 
 begin
@@ -58,10 +56,8 @@ begin
             I_RANDOM => LF_RANDOM,
             O_RGB => P_RGB,
             O_ON => P_ON,
-            O_COLLISION => COLLISION_ON,
-            O_PIPE_A => PIPE_A,
-            O_PIPE_B => PIPE_B
-
+            O_COLLISION => P_COLLISION_ON,
+            O_PIPE_PASSED => P_PIPE_PASSED
         );
 
     -- Define the Linear Feeback Shift Register
@@ -72,20 +68,10 @@ begin
             O_VAL => LF_RANDOM
         );
 
-    pipe_passed_inst : entity work.pipe_passed
-        port map(
-            I_VSYNC => I_V_SYNC,
-            I_S_X_POS => B_BIRD.X,
-            I_P_X_A_POS => PIPE_A.X,
-            I_P_X_B_POS => PIPE_B.X,
-            I_PIPE_WIDTH => PIPE_A.WIDTH,
-            O_PIPE_PASSED => O_LED
-        );
-
     score : entity work.score
         port map(
-            i_pipePassed => COLLISION_ON,
-            i_collision => COLLISION_ON,
+            i_pipePassed => P_PIPE_PASSED,
+            i_collision => P_COLLISION_ON,
             o_screenScore => SCORE_ON
         );
 
@@ -129,4 +115,6 @@ begin
         B_RGB when (B_ON = '1') else
         P_RGB when (P_ON = '1') else
         L_BACKGROUND_COLOUR;
+
+    O_LED <= P_PIPE_PASSED;
 end architecture;
