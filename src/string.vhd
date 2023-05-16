@@ -9,7 +9,9 @@ entity string is
         X_CENTER : integer;
         Y_CENTER : integer;
         SCALE : integer;
-        NUM_CHARS : integer
+        NUM_CHARS : integer;
+        COLOR : std_logic_vector(11 downto 0);
+        GAP : integer range 0 to 1 := 0
     );
     port (
         I_CLK : in std_logic;
@@ -24,8 +26,10 @@ architecture behavior of string is
 
     --640 x 480
     constant DEFAULT_SIZE : integer := 8;
-    constant SCALED_SIZE : integer := DEFAULT_SIZE * (2 ** (SCALE - 1));
-    constant X : integer := X_CENTER - (SCALED_SIZE * NUM_CHARS)/2;
+    constant C_SCALE : integer := (2 ** (SCALE - 1));
+    constant SCALED_SIZE : integer := DEFAULT_SIZE * C_SCALE;
+    constant GAP_SIZE : integer := 1 * C_SCALE * GAP;
+    constant X : integer := X_CENTER - ((SCALED_SIZE + GAP_SIZE) * NUM_CHARS - GAP_SIZE)/2;
     constant Y : integer := Y_CENTER - (SCALED_SIZE)/2;
 
     signal font_row : std_logic_vector(2 downto 0); -- row signal 
@@ -52,12 +56,12 @@ begin
         if rising_edge(I_CLK) then
             T_ON := '0';
             for i in 0 to NUM_CHARS - 1 loop
-                if ((I_PIXEL_COL >= conv_std_logic_vector(X + (SCALED_SIZE * i), 11)) and
-                    (I_PIXEL_COL < conv_std_logic_vector(X + (SCALED_SIZE * (i + 1)), 11))) and
+                if ((I_PIXEL_COL >= conv_std_logic_vector(X + (i * GAP_SIZE) + (SCALED_SIZE * i), 11)) and
+                    (I_PIXEL_COL < conv_std_logic_vector(X + (i * GAP_SIZE) + (SCALED_SIZE * (i + 1)), 11))) and
                     ((I_PIXEL_ROW >= conv_std_logic_vector(Y, 10)) and
                     (I_PIXEL_ROW < conv_std_logic_vector(Y + SCALED_SIZE, 10))) then
 
-                    temp_col := (I_PIXEL_COL - conv_std_logic_vector(X, 11));
+                    temp_col := (I_PIXEL_COL - conv_std_logic_vector(X + (i * GAP_SIZE) + (SCALED_SIZE * i), 11));
                     font_col <= temp_col((SCALE + 1) downto (SCALE - 1));
                     temp_row := (I_PIXEL_ROW - conv_std_logic_vector(Y, 10));
                     font_row <= temp_row((SCALE + 1) downto (SCALE - 1));
@@ -70,7 +74,7 @@ begin
         L_ON <= T_ON;
     end process;
 
-    O_RGB <= x"fff";
+    O_RGB <= COLOR;
     O_ON <= rom_mux_output and L_ON;
 
 end architecture;

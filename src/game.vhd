@@ -94,7 +94,8 @@ begin
             X_CENTER => 639/2,
             Y_CENTER => 24,
             SCALE => 3,
-            NUM_CHARS => 2
+            NUM_CHARS => 2,
+            COLOR => x"FFF"
         )
         port map(
             I_CLK => I_CLK,
@@ -110,13 +111,15 @@ begin
             X_CENTER => 52,
             Y_CENTER => 24,
             SCALE => 3,
-            NUM_CHARS => 3
+            NUM_CHARS => 3,
+            COLOR => x"F00",
+            GAP => 1
         )
         port map(
             I_CLK => I_CLK,
             I_PIXEL_ROW => I_PIXEL.Y,
             I_PIXEL_COL => I_PIXEL.X(9 downto 0),
-            I_CHARS => o"52" & o"52" & o"52",
+            I_CHARS => o"33" & o"33" & o"33",
             O_RGB => LI_RGB,
             O_ON => LI_ON
         );
