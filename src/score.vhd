@@ -20,18 +20,33 @@ architecture behavioral of score is
 begin
     -- PROCESS TO UPDATE THE SCORE
     process (I_CLK)
-        variable L_COLLIDED : std_logic := '0';
-        variable L_INCREMENTED : std_logic := '0';
+        variable COLLIDED : std_logic := '0';
+        variable INCREMENTED : std_logic := '0';
+        variable V_ONES : std_logic_vector(3 downto 0) := conv_std_logic_vector(0, 4);
+        variable V_TENS : std_logic_vector(3 downto 0) := conv_std_logic_vector(0, 4);
     begin
         if (rising_edge(I_CLK)) then
-            if (I_PipePassed = '1') then
-                if (L_INCREMENTED = '0') then
-                    L_ONES <= L_ONES + 1;
+            if (I_COLLISION = '1') then
+                COLLIDED := '1';
+            elsif (I_PipePassed = '1') then
+                if (INCREMENTED = '0' and COLLIDED = '0') then
+                    V_ONES := V_ONES + 1;
+                    if (V_ONES = conv_std_logic_vector(10, 4)) then
+                        V_ONES := conv_std_logic_vector(0, 4);
+                        V_TENS := V_TENS + 1;
+                    end if;
+                    if (V_TENS = conv_std_logic_vector(10, 4)) then
+                        V_TENS := conv_std_logic_vector(9, 4);
+                        V_ONES := conv_std_logic_vector(9, 4);
+                    end if;
                 end if;
-                L_INCREMENTED := '1';
+                INCREMENTED := '1';
+                COLLIDED := '0';
             else
-                L_INCREMENTED := '0';
+                INCREMENTED := '0';
             end if;
+            L_ONES <= V_ONES;
+            L_TENS <= V_TENS;
         end if;
     end process;
 
