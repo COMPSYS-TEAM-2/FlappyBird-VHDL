@@ -38,15 +38,14 @@ architecture behavior of game is
     signal LF_RANDOM : std_logic_vector(7 downto 0);
 
     signal L_BACKGROUND_COLOUR : std_logic_vector(11 downto 0) := BACKGROUND_RGB;
-
-    signal SCORE_ON : std_logic_vector(5 downto 0);
-
+    signal L_PLAYING : std_logic;
+    signal L_ENABLE : std_logic;
 begin
     bird : entity work.bird
         port map(
             I_V_SYNC => I_V_SYNC,
             I_RST => I_RST,
-            I_ENABLE => I_ENABLE,
+            I_ENABLE => L_ENABLE,
             I_PIXEL => I_PIXEL,
             I_CLICK => I_M_LEFT,
             O_BIRD => B_BIRD,
@@ -58,7 +57,7 @@ begin
         port map(
             I_V_SYNC => I_V_SYNC,
             I_RST => I_RST,
-            I_ENABLE => I_ENABLE,
+            I_ENABLE => L_ENABLE,
             I_PIXEL => I_PIXEL,
             I_BIRD => B_BIRD,
             I_RANDOM => LF_RANDOM,
@@ -121,11 +120,22 @@ begin
             O_ON => LI_ON
         );
 
+    playing : process (I_V_SYNC)
+    begin
+        if (rising_edge(I_V_SYNC)) then
+            if (I_RST = '1') then
+                L_PLAYING <= '0';
+            elsif (I_M_LEFT = '1' and I_ENABLE = '1') then
+                L_PLAYING <= '1';
+            end if;
+        end if;
+    end process;
+
     O_RGB <= S_RGB when (S_ON = '1') else
         LI_RGB when (Li_ON) = '1' else
         B_RGB when (B_ON = '1') else
         P_RGB when (P_ON = '1') else
         L_BACKGROUND_COLOUR;
-
+    L_ENABLE <= I_ENABLE and L_PLAYING;
     O_LED <= P_PIPE_PASSED;
 end architecture;

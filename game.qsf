@@ -80,6 +80,8 @@ set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name TOP_LEVEL_ENTITY FlappyBird
+set_location_assignment PIN_P22 -to I_RST_N
+set_location_assignment PIN_U13 -to I_ENABLE
 set_global_assignment -name VHDL_FILE src/string.vhd
 set_global_assignment -name VHDL_FILE src/score.vhd
 set_global_assignment -name VHDL_FILE src/char_rom.vhd
@@ -91,13 +93,10 @@ set_global_assignment -name VHDL_FILE src/obstacles.vhd
 set_global_assignment -name VHDL_FILE src/Rectangle.vhdl
 set_global_assignment -name VHDL_FILE src/menubutton.vhdl
 set_global_assignment -name VHDL_FILE src/lfsr.vhd
-set_global_assignment -name VHDL_FILE src/pipes.vhd
 set_global_assignment -name VHDL_FILE src/menu.vhdl
 set_global_assignment -name VHDL_FILE src/FlappyBird.vhdl
 set_global_assignment -name VHDL_FILE src/vga_sync.vhd
 set_global_assignment -name VHDL_FILE src/mouse.vhd
 set_global_assignment -name VHDL_FILE src/game.vhd
 set_global_assignment -name SOURCE_FILE db/game.cmp.rdb
-set_location_assignment PIN_P22 -to I_RST_N
-set_location_assignment PIN_U13 -to I_ENABLE
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
