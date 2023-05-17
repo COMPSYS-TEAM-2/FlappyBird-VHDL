@@ -12,6 +12,8 @@ entity pipe is
 	);
 	port (
 		I_V_SYNC : in std_logic;
+		I_RST : in std_logic;
+		I_ENABLE : in std_logic;
 		I_PIXEL : in T_RECT;
 		I_PIPE_GAP_POSITION : in std_logic_vector(7 downto 0);
 		I_BIRD : in T_RECT;
@@ -23,28 +25,34 @@ entity pipe is
 end pipe;
 
 architecture behavior of pipe is
+	constant INITIAL_SPEED : std_logic_vector(9 downto 0) := CONV_STD_LOGIC_VECTOR(2, 10);
 	signal L_TOP : T_RECT := CreateRect(0, 0, PIPE_WIDTH, 0);
 	signal L_BOTTOM : T_RECT := CreateRect(0, 0, PIPE_WIDTH, 0);
 begin
 	Move_Pipes : process (I_V_SYNC)
 		variable X_POS : std_logic_vector(10 downto 0) := X_START;
-		variable X_VEL : std_logic_vector(9 downto 0) := CONV_STD_LOGIC_VECTOR(2, 10);
+		variable X_VEL : std_logic_vector(9 downto 0) := INITIAL_SPEED;
 		variable PIPE_GAP_POSITION : std_logic_vector(9 downto 0);
 		variable Y_POS : std_logic_vector(9 downto 0);
 	begin
 		-- Move pipes once every vertical sync
 		if (rising_edge(I_V_SYNC)) then
-			if (X_POS >= conv_std_logic_vector(640, 11)) then
-				PIPE_GAP_POSITION := ("00" & I_PIPE_GAP_POSITION) + CONV_STD_LOGIC_VECTOR((480 - 256)/2, 10);
-				L_TOP.HEIGHT <= PIPE_GAP_POSITION - ('0' & PIPE_GAP(9 downto 1));
-				Y_POS := PIPE_GAP_POSITION + ('0' & PIPE_GAP(9 downto 1));
-				L_BOTTOM.Y <= Y_POS;
-				L_BOTTOM.HEIGHT <= conv_std_logic_vector(480, 10) - (Y_POS);
-			end if;
-			X_POS := X_POS - X_VEL;
-			-- If the pipes overflow, place them back at the start
-			if (X_POS <= - CONV_STD_LOGIC_VECTOR(PIPE_WIDTH, 11)) then
-				X_POS := CONV_STD_LOGIC_VECTOR(640, 11);
+			if (I_RST = '1') then
+				X_POS := X_START;
+				X_VEL := INITIAL_SPEED;
+			elsif (I_ENABLE = '1') then
+				if (X_POS >= conv_std_logic_vector(640, 11)) then
+					PIPE_GAP_POSITION := ("00" & I_PIPE_GAP_POSITION) + CONV_STD_LOGIC_VECTOR((480 - 256)/2, 10);
+					L_TOP.HEIGHT <= PIPE_GAP_POSITION - ('0' & PIPE_GAP(9 downto 1));
+					Y_POS := PIPE_GAP_POSITION + ('0' & PIPE_GAP(9 downto 1));
+					L_BOTTOM.Y <= Y_POS;
+					L_BOTTOM.HEIGHT <= conv_std_logic_vector(480, 10) - (Y_POS);
+				end if;
+				X_POS := X_POS - X_VEL;
+				-- If the pipes overflow, place them back at the start
+				if (X_POS <= - CONV_STD_LOGIC_VECTOR(PIPE_WIDTH, 11)) then
+					X_POS := CONV_STD_LOGIC_VECTOR(640, 11);
+				end if;
 			end if;
 		end if;
 		L_TOP.X <= X_POS;

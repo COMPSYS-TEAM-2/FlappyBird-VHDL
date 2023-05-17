@@ -57,6 +57,8 @@ begin
     obstacles : entity work.obstacles
         port map(
             I_V_SYNC => I_V_SYNC,
+            I_RST => I_RST,
+            I_ENABLE => I_ENABLE,
             I_PIXEL => I_PIXEL,
             I_BIRD => B_BIRD,
             I_RANDOM => LF_RANDOM,
