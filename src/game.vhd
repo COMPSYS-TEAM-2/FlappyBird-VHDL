@@ -43,6 +43,7 @@ architecture behavior of game is
 begin
     bird : entity work.bird
         port map(
+            I_CLK => I_CLK,
             I_V_SYNC => I_V_SYNC,
             I_PIXEL => I_PIXEL,
             I_CLICK => I_M_LEFT,

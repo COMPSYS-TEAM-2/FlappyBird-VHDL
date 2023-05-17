@@ -41,7 +41,7 @@ set_global_assignment -name FAMILY "Cyclone V"
 set_global_assignment -name DEVICE 5CEBA4F23C7
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 22.1STD.1
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "11:14:16  APRIL 26, 2023"
-set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Standard Edition"
+set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name BOARD "DE0-CV Development Board"
 set_global_assignment -name EDA_SIMULATION_TOOL "<None>"
@@ -81,6 +81,7 @@ set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name TOP_LEVEL_ENTITY FlappyBird
 set_location_assignment PIN_P22 -to I_RST
+set_global_assignment -name VHDL_FILE src/sprite.vhd
 set_global_assignment -name VHDL_FILE src/string.vhd
 set_global_assignment -name VHDL_FILE src/score.vhd
 set_global_assignment -name VHDL_FILE src/char_rom.vhd
