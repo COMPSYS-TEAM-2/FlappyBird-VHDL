@@ -8,6 +8,7 @@ entity game is
     port (
         I_CLK : in std_logic;
         I_V_SYNC : in std_logic;
+        I_RST, I_ENABLE : in std_logic;
         I_PIXEL : in T_RECT;
         I_M_LEFT : in std_logic;
         O_RGB : out std_logic_vector(11 downto 0);

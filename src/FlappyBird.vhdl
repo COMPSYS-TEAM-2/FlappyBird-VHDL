@@ -5,7 +5,8 @@ use work.Rectangle.all;
 entity FlappyBird is
     port (
         I_CLK : in std_logic;
-        I_RST : in std_logic;
+        I_RST_N : in std_logic;
+        I_ENABLE : in std_logic;
 
         IO_DATA : inout std_logic;
         IO_MCLK : inout std_logic;
@@ -39,6 +40,7 @@ architecture behavioral of FlappyBird is
     signal L_RGB : std_logic_vector(11 downto 0);
     signal L_CURSOR : T_RECT := CreateRect(0, 0, 0, 0);
     signal L_PIXEL : T_RECT := CreateRect(0, 0, 0, 0);
+    signal L_GAME_RST : std_logic := '0';
 
 begin
 
@@ -71,6 +73,8 @@ begin
     game : entity work.game
         port map(
             I_CLK => L_CLK,
+            I_RST => L_GAME_RST,
+            I_ENABLE => I_ENABLE,
             I_V_SYNC => V_V_SYNC,
             I_PIXEL => L_PIXEL,
             I_M_LEFT => M_LEFT,
@@ -103,7 +107,9 @@ begin
     state : process (V_V_SYNC)
     begin
         if (rising_edge(V_V_SYNC)) then
-            if (L_STATE = "00") then
+            if (I_RST_N = '0') then
+                L_STATE <= "00";
+            elsif (L_STATE = "00") then
                 L_STATE <= T_BUTTON;
             end if;
         end if;
