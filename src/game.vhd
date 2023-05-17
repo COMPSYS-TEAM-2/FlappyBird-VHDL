@@ -79,6 +79,7 @@ begin
     score : entity work.score
         port map(
             I_CLK => I_V_SYNC,
+            I_RST => I_RST,
             i_pipePassed => P_PIPE_PASSED,
             i_collision => P_COLLISION_ON,
             O_ONES => S_ONES,
@@ -102,7 +103,7 @@ begin
             O_ON => S_ON
         );
 
-    lives : entity work.string
+    lives_text : entity work.string
         generic map(
             X_CENTER => 52,
             Y_CENTER => 24,
