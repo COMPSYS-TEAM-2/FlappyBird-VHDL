@@ -12,19 +12,23 @@ entity obstacles is
         I_BIRD : in T_RECT;
         O_RGB : out std_logic_vector(11 downto 0);
         O_ON : out std_logic;
-        O_COLLISION : out std_logic
+        O_COLLISION : out std_logic;
+        O_PIPE_PASSED : out std_logic
     );
 end obstacles;
 
 architecture behavior of obstacles is
     signal A_RGB : std_logic_vector(11 downto 0);
-    signal B_RGB : std_logic_vector(11 downto 0);
     signal A_COLLISION : std_logic;
-    signal B_COLLISION : std_logic;
     signal A_ON : std_logic;
+    signal A_PIPE_PASSED : std_logic;
+
+    signal B_RGB : std_logic_vector(11 downto 0);
+    signal B_COLLISION : std_logic;
     signal B_ON : std_logic;
+    signal B_PIPE_PASSED : std_logic;
 begin
-    pipe_a : entity work.pipe
+    pipe_aye : entity work.pipe
         generic map(
             X_START => CONV_STD_LOGIC_VECTOR(680, 11)
         )
@@ -35,10 +39,12 @@ begin
             I_BIRD => I_BIRD,
             O_RGB => A_RGB,
             O_ON => A_ON,
-            O_COLLISION => A_COLLISION
+            O_COLLISION => A_COLLISION,
+            O_PIPE_PASSED => A_PIPE_PASSED
+
         );
 
-    pipe_b : entity work.pipe
+    pipe_bee : entity work.pipe
         generic map(
             X_START => CONV_STD_LOGIC_VECTOR(1020, 11)
         )
@@ -49,7 +55,8 @@ begin
             I_BIRD => I_BIRD,
             O_RGB => B_RGB,
             O_ON => B_ON,
-            O_COLLISION => B_COLLISION
+            O_COLLISION => B_COLLISION,
+            O_PIPE_PASSED => B_PIPE_PASSED
         );
 
     O_RGB <= A_RGB when A_ON = '1' else
@@ -58,4 +65,5 @@ begin
 
     O_ON <= A_ON or B_ON;
     O_COLLISION <= B_COLLISION or A_COLLISION;
+    O_PIPE_PASSED <= A_PIPE_PASSED or B_PIPE_PASSED;
 end architecture;

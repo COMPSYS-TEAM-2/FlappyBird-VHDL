@@ -17,7 +17,8 @@ entity pipe is
 		I_BIRD : in T_RECT;
 		O_RGB : out std_logic_vector(11 downto 0);
 		O_ON : out std_logic;
-		O_COLLISION : out std_logic
+		O_COLLISION : out std_logic;
+		O_PIPE_PASSED : out std_logic
 	);
 end pipe;
 
@@ -25,7 +26,7 @@ architecture behavior of pipe is
 	signal L_TOP : T_RECT := CreateRect(0, 0, PIPE_WIDTH, 0);
 	signal L_BOTTOM : T_RECT := CreateRect(0, 0, PIPE_WIDTH, 0);
 begin
-	Move_pipes : process (I_V_SYNC)
+	Move_Pipes : process (I_V_SYNC)
 		variable X_POS : std_logic_vector(10 downto 0) := X_START;
 		variable X_VEL : std_logic_vector(9 downto 0) := CONV_STD_LOGIC_VECTOR(2, 10);
 		variable PIPE_GAP_POSITION : std_logic_vector(9 downto 0);
@@ -48,8 +49,10 @@ begin
 		end if;
 		L_TOP.X <= X_POS;
 		L_BOTTOM.X <= X_POS;
-	end process Move_pipes;
+	end process;
 
+	O_PIPE_PASSED <= '1' when ((I_BIRD.X >= L_TOP.X + L_TOP.WIDTH) and (I_BIRD.X <= L_TOP.X + L_TOP.WIDTH + L_TOP.WIDTH)) else
+		'0';
 	O_ON <= CheckCollision(I_PIXEL, L_TOP) or CheckCollision(I_PIXEL, L_BOTTOM);
 	O_RGB <= PIPE_RGB;
 	O_COLLISION <= checkCollision(I_BIRD, L_TOP) or checkCollision(I_BIRD, L_BOTTOM);

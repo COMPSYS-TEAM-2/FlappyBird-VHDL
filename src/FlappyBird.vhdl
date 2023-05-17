@@ -70,6 +70,7 @@ begin
 
     game : entity work.game
         port map(
+            I_CLK => L_CLK,
             I_V_SYNC => V_V_SYNC,
             I_PIXEL => L_PIXEL,
             I_M_LEFT => M_LEFT,
