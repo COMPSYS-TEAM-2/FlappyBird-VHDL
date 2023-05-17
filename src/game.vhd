@@ -25,6 +25,9 @@ architecture behavior of game is
     signal P_COLLISION_ON : std_logic;
     signal P_PIPE_PASSED : std_logic;
 
+    signal S_ONES : std_logic_vector(5 downto 0);
+    signal S_TENS : std_logic_vector(5 downto 0);
+
     signal S_RGB : std_logic_vector(11 downto 0);
     signal S_ON : std_logic;
 
@@ -70,9 +73,11 @@ begin
 
     score : entity work.score
         port map(
+            I_CLK => I_V_SYNC,
             i_pipePassed => P_PIPE_PASSED,
             i_collision => P_COLLISION_ON,
-            o_screenScore => SCORE_ON
+            O_ONES => S_ONES,
+            O_TENS => S_TENS
         );
 
     score_text : entity work.string
@@ -87,7 +92,7 @@ begin
             I_CLK => I_CLK,
             I_PIXEL_ROW => I_PIXEL.Y,
             I_PIXEL_COL => I_PIXEL.X(9 downto 0),
-            I_CHARS => o"60" & o"61",
+            I_CHARS => S_TENS & S_ONES,
             O_RGB => S_RGB,
             O_ON => S_ON
         );

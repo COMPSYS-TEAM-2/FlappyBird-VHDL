@@ -51,15 +51,8 @@ begin
 		L_BOTTOM.X <= X_POS;
 	end process;
 
-	Pipe_Passed : process (I_V_SYNC) is
-	begin
-		if ((I_BIRD.X >= L_TOP.X + L_TOP.WIDTH) and (I_BIRD.X <= L_TOP.X + L_TOP.WIDTH + L_TOP.WIDTH)) then
-			O_PIPE_PASSED <= '1';
-		else
-			O_PIPE_PASSED <= '0';
-		end if;
-	end process;
-
+	O_PIPE_PASSED <= '1' when ((I_BIRD.X >= L_TOP.X + L_TOP.WIDTH) and (I_BIRD.X <= L_TOP.X + L_TOP.WIDTH + L_TOP.WIDTH)) else
+		'0';
 	O_ON <= CheckCollision(I_PIXEL, L_TOP) or CheckCollision(I_PIXEL, L_BOTTOM);
 	O_RGB <= PIPE_RGB;
 	O_COLLISION <= checkCollision(I_BIRD, L_TOP) or checkCollision(I_BIRD, L_BOTTOM);
