@@ -45,6 +45,8 @@ begin
     bird : entity work.bird
         port map(
             I_V_SYNC => I_V_SYNC,
+            I_RST => I_RST,
+            I_ENABLE => I_ENABLE,
             I_PIXEL => I_PIXEL,
             I_CLICK => I_M_LEFT,
             O_BIRD => B_BIRD,

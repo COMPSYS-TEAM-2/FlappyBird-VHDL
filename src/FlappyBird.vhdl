@@ -74,7 +74,7 @@ begin
         port map(
             I_CLK => L_CLK,
             I_RST => L_GAME_RST,
-            I_ENABLE => I_ENABLE,
+            I_ENABLE => not I_ENABLE,
             I_V_SYNC => V_V_SYNC,
             I_PIXEL => L_PIXEL,
             I_M_LEFT => M_LEFT,
@@ -128,6 +128,7 @@ begin
 
     L_PIXEL.X <= '0' & V_PIXEL_COL;
     L_PIXEL.Y <= V_PIXEL_ROW;
+    L_GAME_RST <= (not I_RST_N);
 
     O_V_SYNC <= V_V_SYNC;
 end architecture;
