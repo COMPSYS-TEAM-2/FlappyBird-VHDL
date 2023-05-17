@@ -17,6 +17,7 @@ entity sprite is
 end sprite;
 
 architecture behavior of sprite is
+    -- Default size of the sprite
     constant spriteSize : integer := 32;
     --640 x 480
     signal font_row : std_logic_vector(2 downto 0); -- row signal 

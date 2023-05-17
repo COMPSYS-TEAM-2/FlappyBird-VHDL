@@ -81,6 +81,7 @@ set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name TOP_LEVEL_ENTITY FlappyBird
 set_location_assignment PIN_P22 -to I_RST
+set_global_assignment -name MIF_FILE src/TCGROM.MIF
 set_global_assignment -name VHDL_FILE src/sprite.vhd
 set_global_assignment -name VHDL_FILE src/string.vhd
 set_global_assignment -name VHDL_FILE src/score.vhd
