@@ -7,6 +7,7 @@ use ieee.STD_LOGIC_unsigned.all;
 entity score is
     port (
         I_CLK : in std_logic;
+        I_RST : in std_logic;
         I_PipePassed : in std_logic; -- INPUT FROM PIPE BEING PASSED
         I_Collision : in std_logic;
         O_ONES : out std_logic_vector(5 downto 0); -- OUTPUT FOR DISPLAYSCORE.VHD
@@ -26,7 +27,12 @@ begin
         variable V_TENS : std_logic_vector(3 downto 0) := conv_std_logic_vector(0, 4);
     begin
         if (rising_edge(I_CLK)) then
-            if (I_COLLISION = '1') then
+            if (I_RST = '1') then
+                COLLIDED := '0';
+                INCREMENTED := '0';
+                V_ONES := conv_std_logic_vector(0, 4);
+                V_TENS := conv_std_logic_vector(0, 4);
+            elsif (I_COLLISION = '1') then
                 COLLIDED := '1';
             elsif (I_PipePassed = '1') then
                 if (INCREMENTED = '0' and COLLIDED = '0') then

@@ -5,7 +5,8 @@ use work.Rectangle.all;
 entity FlappyBird is
     port (
         I_CLK : in std_logic;
-        I_RST : in std_logic;
+        I_RST_N : in std_logic;
+        I_ENABLE_N : in std_logic;
 
         IO_DATA : inout std_logic;
         IO_MCLK : inout std_logic;
@@ -39,6 +40,10 @@ architecture behavioral of FlappyBird is
     signal L_RGB : std_logic_vector(11 downto 0);
     signal L_CURSOR : T_RECT := CreateRect(0, 0, 0, 0);
     signal L_PIXEL : T_RECT := CreateRect(0, 0, 0, 0);
+    signal L_GAME_RST : std_logic := '0';
+    signal L_GAME_RST_STATE : std_logic := '0';
+    signal L_GAME_ENABLED : std_logic := '0';
+    signal L_GAME_ENABLE : std_logic := '0';
 
 begin
 
@@ -71,6 +76,8 @@ begin
     game : entity work.game
         port map(
             I_CLK => L_CLK,
+            I_RST => L_GAME_RST,
+            I_ENABLE => L_GAME_ENABLE,
             I_V_SYNC => V_V_SYNC,
             I_PIXEL => L_PIXEL,
             I_M_LEFT => M_LEFT,
@@ -103,8 +110,25 @@ begin
     state : process (V_V_SYNC)
     begin
         if (rising_edge(V_V_SYNC)) then
-            if (L_STATE = "00") then
-                L_STATE <= T_BUTTON;
+            if (I_RST_N = '0') then
+                L_STATE <= "00";
+            else
+                case L_STATE is
+                    when "00" =>
+                        L_STATE <= T_BUTTON;
+                        L_GAME_ENABLED <= '0';
+                        L_GAME_RST_STATE <= '1';
+                    when "01" =>
+                        L_GAME_ENABLED <= '1';
+                        L_GAME_RST_STATE <= '0';
+                    when "10" =>
+                        L_GAME_ENABLED <= '1';
+                        L_GAME_RST_STATE <= '0';
+                    when others =>
+                        L_STATE <= "00";
+                        L_GAME_ENABLED <= '0';
+                        L_GAME_RST_STATE <= '0';
+                end case;
             end if;
         end if;
     end process;
@@ -122,6 +146,7 @@ begin
 
     L_PIXEL.X <= '0' & V_PIXEL_COL;
     L_PIXEL.Y <= V_PIXEL_ROW;
-
+    L_GAME_RST <= (not I_RST_N) or L_GAME_RST_STATE;
+    L_GAME_ENABLE <= (not I_ENABLE_N) and L_GAME_ENABLED;
     O_V_SYNC <= V_V_SYNC;
 end architecture;
