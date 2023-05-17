@@ -4,10 +4,11 @@ use IEEE.STD_LOGIC_ARITH.all;
 use IEEE.STD_LOGIC_SIGNED.all;
 use work.rectangle.all;
 use work.constantvalues.all;
-use work.RGBValues.BIRD_RGB;
+use work.RGBValues.all;
 
 entity bird is
 	port (
+		I_CLK : in std_logic;
 		I_V_SYNC, I_CLICK : in std_logic;
 		I_RST, I_ENABLE : in std_logic;
 		I_PIXEL : in T_RECT;
@@ -19,8 +20,43 @@ end bird;
 
 architecture behavior of bird is
 	signal L_BIRD : T_RECT := CreateRect(200, 150, PLAYER_SIZE, PLAYER_SIZE);
+	signal L_BIRD_ON : std_logic;
+	signal L_BIRD_EYE_ON : std_logic;
+	signal L_BIRD_BEAK_ON : std_logic;
 
 begin
+	spriteBird : entity work.sprite
+		port map(
+			I_CLK => I_CLK,
+			I_X => L_BIRD.X,
+			I_Y => L_BIRD.Y,
+			I_PIXEL_ROW => I_PIXEL.Y,
+			I_PIXEL_COL => I_PIXEL.X,
+			I_INDEX => o"36",
+			O_ON => L_BIRD_ON
+		);
+
+	spriteEye : entity work.sprite
+		port map(
+			I_CLK => I_CLK,
+			I_X => L_BIRD.X,
+			I_Y => L_BIRD.Y,
+			I_PIXEL_ROW => I_PIXEL.Y,
+			I_PIXEL_COL => I_PIXEL.X,
+			I_INDEX => o"37",
+			O_ON => L_BIRD_EYE_ON
+		);
+
+	spriteBeak : entity work.sprite
+		port map(
+			I_CLK => I_CLK,
+			I_X => L_BIRD.X,
+			I_Y => L_BIRD.Y,
+			I_PIXEL_ROW => I_PIXEL.Y,
+			I_PIXEL_COL => I_PIXEL.X,
+			I_INDEX => o"40",
+			O_ON => L_BIRD_BEAK_ON
+		);
 	move_bird : process (I_V_SYNC)
 		variable Y_POS : std_logic_vector(9 downto 0) := L_BIRD.Y;
 		variable Y_VEL : std_logic_vector(9 downto 0) := CONV_STD_LOGIC_VECTOR(0, 10);
@@ -49,13 +85,14 @@ begin
 			L_BIRD.Y <= Y_POS;
 		end if;
 	end process move_bird;
-
 	O_BIRD <= L_BIRD;
 
-	O_ON <= CheckCollision(I_PIXEL, L_BIRD);
+	O_ON <= L_BIRD_ON or L_BIRD_EYE_ON or L_BIRD_BEAK_ON;
 
 	-- Colours for pixel data on video signal
 	-- Changing the background and ball colour by pushbuttons
-	O_RGB <= BIRD_RGB;
+	O_RGB <= BIRD_RGB when (L_BIRD_ON = '1') else
+		BIRD_EYE_RGB when (L_BIRD_EYE_ON = '1') else
+		BIRD_BEAK_RGB when (L_BIRD_BEAK_ON = '1');
 
 end behavior;

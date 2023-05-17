@@ -6,7 +6,7 @@ entity FlappyBird is
     port (
         I_CLK : in std_logic;
         I_RST_N : in std_logic;
-        I_ENABLE : in std_logic;
+        I_ENABLE_N : in std_logic;
 
         IO_DATA : inout std_logic;
         IO_MCLK : inout std_logic;
@@ -43,6 +43,7 @@ architecture behavioral of FlappyBird is
     signal L_GAME_RST : std_logic := '0';
     signal L_GAME_RST_STATE : std_logic := '0';
     signal L_GAME_ENABLED : std_logic := '0';
+    signal L_GAME_ENABLE : std_logic := '0';
 
 begin
 
@@ -76,7 +77,7 @@ begin
         port map(
             I_CLK => L_CLK,
             I_RST => L_GAME_RST,
-            I_ENABLE => not I_ENABLE,
+            I_ENABLE => L_GAME_ENABLE,
             I_V_SYNC => V_V_SYNC,
             I_PIXEL => L_PIXEL,
             I_M_LEFT => M_LEFT,
@@ -146,6 +147,6 @@ begin
     L_PIXEL.X <= '0' & V_PIXEL_COL;
     L_PIXEL.Y <= V_PIXEL_ROW;
     L_GAME_RST <= (not I_RST_N) or L_GAME_RST_STATE;
-
+    L_GAME_ENABLE <= (not I_ENABLE_N) and L_GAME_ENABLED;
     O_V_SYNC <= V_V_SYNC;
 end architecture;
