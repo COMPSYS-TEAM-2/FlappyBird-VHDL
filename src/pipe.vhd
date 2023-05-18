@@ -4,13 +4,14 @@ use IEEE.STD_LOGIC_ARITH.all;
 use IEEE.STD_LOGIC_SIGNED.all;
 use work.Rectangle.all;
 use work.Constantvalues.all;
-use work.RGBValues.PIPE_RGB;
+use work.RGBValues.all;
 
 entity pipe is
 	generic (
 		X_START : std_logic_vector(10 downto 0)
 	);
 	port (
+		I_CLK : in std_logic;
 		I_V_SYNC : in std_logic;
 		I_PIXEL : in T_RECT;
 		I_PIPE_GAP_POSITION : in std_logic_vector(7 downto 0);
@@ -25,7 +26,20 @@ end pipe;
 architecture behavior of pipe is
 	signal L_TOP : T_RECT := CreateRect(0, 0, PIPE_WIDTH, 0);
 	signal L_BOTTOM : T_RECT := CreateRect(0, 0, PIPE_WIDTH, 0);
+	signal L_POWERUP : T_RECT := CreateRect(0, 0, PLAYER_SIZE, PLAYER_SIZE);
+	signal L_POWERUP_ON : std_logic;
 begin
+	spritePowerup : entity work.sprite
+		port map(
+			I_CLK => I_CLK,
+			I_X => L_POWERUP.X,
+			I_Y => L_POWERUP.Y,
+			I_PIXEL_ROW => I_PIXEL.Y,
+			I_PIXEL_COL => I_PIXEL.X,
+			I_INDEX => o"33",
+			O_ON => L_POWERUP_ON
+		);
+
 	Move_Pipes : process (I_V_SYNC)
 		variable X_POS : std_logic_vector(10 downto 0) := X_START;
 		variable X_VEL : std_logic_vector(9 downto 0) := CONV_STD_LOGIC_VECTOR(2, 10);
@@ -40,6 +54,12 @@ begin
 				Y_POS := PIPE_GAP_POSITION + ('0' & PIPE_GAP(9 downto 1));
 				L_BOTTOM.Y <= Y_POS;
 				L_BOTTOM.HEIGHT <= conv_std_logic_vector(480, 10) - (Y_POS);
+				-- Powerup should only appear is the random value is within a range
+				if (PIPE_GAP_POSITION(3 downto 0) > 4) then
+					L_POWERUP.Y <= Y_POS - ('0' & PIPE_GAP(9 downto 1));
+				else
+					L_POWERUP.Y <= conv_std_logic_vector(500, 10);
+				end if;
 			end if;
 			X_POS := X_POS - X_VEL;
 			-- If the pipes overflow, place them back at the start
@@ -49,12 +69,14 @@ begin
 		end if;
 		L_TOP.X <= X_POS;
 		L_BOTTOM.X <= X_POS;
+		L_POWERUP.X <= X_POS + conv_std_logic_vector(2, 11);
 	end process;
 
 	O_PIPE_PASSED <= '1' when ((I_BIRD.X >= L_TOP.X + L_TOP.WIDTH) and (I_BIRD.X <= L_TOP.X + L_TOP.WIDTH + L_TOP.WIDTH)) else
 		'0';
-	O_ON <= CheckCollision(I_PIXEL, L_TOP) or CheckCollision(I_PIXEL, L_BOTTOM);
-	O_RGB <= PIPE_RGB;
+	O_ON <= CheckCollision(I_PIXEL, L_TOP) or CheckCollision(I_PIXEL, L_BOTTOM) or CheckCollision(I_PIXEL, L_POWERUP);
+	O_RGB <= PIPE_RGB when ((CheckCollision(I_PIXEL, L_TOP) or CheckCollision(I_PIXEL, L_BOTTOM)) = '1') else
+		HEART_SPRITE_RGB when (L_POWERUP_ON = '1');
 	O_COLLISION <= checkCollision(I_BIRD, L_TOP) or checkCollision(I_BIRD, L_BOTTOM);
 
 end behavior;

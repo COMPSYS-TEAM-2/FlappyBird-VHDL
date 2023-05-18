@@ -6,6 +6,7 @@ use work.Rectangle.all;
 
 entity obstacles is
     port (
+        I_CLK : in std_logic;
         I_V_SYNC : in std_logic;
         I_PIXEL : in T_RECT;
         I_RANDOM : in std_logic_vector(7 downto 0);
@@ -33,6 +34,7 @@ begin
             X_START => CONV_STD_LOGIC_VECTOR(680, 11)
         )
         port map(
+            I_CLK => I_CLK,
             I_V_SYNC => I_V_SYNC,
             I_PIXEL => I_PIXEL,
             I_PIPE_GAP_POSITION => I_RANDOM,
@@ -49,6 +51,7 @@ begin
             X_START => CONV_STD_LOGIC_VECTOR(1020, 11)
         )
         port map(
+            I_CLK => I_CLK,
             I_V_SYNC => I_V_SYNC,
             I_PIXEL => I_PIXEL,
             I_PIPE_GAP_POSITION => I_RANDOM,
