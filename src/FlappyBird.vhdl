@@ -44,7 +44,7 @@ architecture behavioral of FlappyBird is
     signal L_GAME_RST_STATE : std_logic := '0';
     signal L_GAME_ENABLED : std_logic := '0';
     signal L_GAME_ENABLE : std_logic := '0';
-
+    signal L_MENU_ENABLED : std_logic := '0';
 begin
 
     video : entity work.VGA_SYNC
@@ -64,7 +64,7 @@ begin
     mouse : entity work.mouse
         port map(
             I_CLK_25Mhz => L_CLK,
-            I_RST => '0',
+            I_RST => not I_RST_N,
             IO_DATA => IO_DATA,
             IO_MCLK => IO_MCLK,
             O_LEFT => M_LEFT,
@@ -87,8 +87,8 @@ begin
 
     titlemenu : entity work.menu
         port map(
-            I_ON => '1',
-
+            I_ON => L_MENU_ENABLED,
+            I_CLK => L_CLK,
             I_V_SYNC => V_V_SYNC,
             I_PIXEL => L_PIXEL,
 
@@ -113,21 +113,20 @@ begin
             if (I_RST_N = '0') then
                 L_STATE <= "00";
             else
+                L_MENU_ENABLED <= '0';
+                L_GAME_ENABLED <= '0';
+                L_GAME_RST_STATE <= '0';
                 case L_STATE is
                     when "00" =>
                         L_STATE <= T_BUTTON;
-                        L_GAME_ENABLED <= '0';
+                        L_MENU_ENABLED <= '1';
                         L_GAME_RST_STATE <= '1';
                     when "01" =>
                         L_GAME_ENABLED <= '1';
-                        L_GAME_RST_STATE <= '0';
                     when "10" =>
                         L_GAME_ENABLED <= '1';
-                        L_GAME_RST_STATE <= '0';
                     when others =>
                         L_STATE <= "00";
-                        L_GAME_ENABLED <= '0';
-                        L_GAME_RST_STATE <= '0';
                 end case;
             end if;
         end if;

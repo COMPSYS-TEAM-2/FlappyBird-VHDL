@@ -9,7 +9,7 @@ use work.RGBValues.all;
 entity menu is
     port (
         I_ON : in std_logic;
-
+        I_CLK : in std_logic;
         I_V_SYNC : in std_logic;
         I_PIXEL : in T_RECT;
 
@@ -32,6 +32,16 @@ architecture behavior of menu is
 
     signal L_MOUSE_ON : std_logic;
 begin
+    spriteMouse : entity work.sprite
+        port map(
+            I_CLK => I_CLK,
+            I_X => I_CURSOR.X,
+            I_Y => I_CURSOR.Y,
+            I_PIXEL_ROW => I_PIXEL.Y,
+            I_PIXEL_COL => I_PIXEL.X,
+            I_INDEX => o"41",
+            O_ON => L_MOUSE_ON
+        );
 
     playbutton : entity work.menubutton
         generic map(
@@ -63,14 +73,13 @@ begin
             O_CLICK => T_CLICK
         );
 
-    L_MOUSE_ON <= CheckCollision(I_CURSOR, I_PIXEL);
-
     O_RGB <= MOUSE_RGB when L_MOUSE_ON = '1' else
         T_RGB when T_ON = '1' else
         P_RGB when P_ON = '1' else
         MENU_BACKGROUND_RGB;
 
-    O_BUTTON <= "01" when P_CLICK = '1' else
+    O_BUTTON <= "00" when I_ON = '0' else
+        "01" when P_CLICK = '1' else
         "10" when T_CLICK = '1' else
         "00";
 end architecture;
