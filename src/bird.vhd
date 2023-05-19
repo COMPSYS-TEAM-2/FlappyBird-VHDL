@@ -32,7 +32,7 @@ begin
 			I_Y => L_BIRD.Y,
 			I_PIXEL_ROW => I_PIXEL.Y,
 			I_PIXEL_COL => I_PIXEL.X,
-			I_INDEX => o"36",
+			I_INDEX => o"47",
 			O_ON => L_BIRD_ON
 		);
 
@@ -43,7 +43,7 @@ begin
 			I_Y => L_BIRD.Y,
 			I_PIXEL_ROW => I_PIXEL.Y,
 			I_PIXEL_COL => I_PIXEL.X,
-			I_INDEX => o"37",
+			I_INDEX => o"50",
 			O_ON => L_BIRD_EYE_ON
 		);
 
@@ -54,7 +54,7 @@ begin
 			I_Y => L_BIRD.Y,
 			I_PIXEL_ROW => I_PIXEL.Y,
 			I_PIXEL_COL => I_PIXEL.X,
-			I_INDEX => o"40",
+			I_INDEX => o"51",
 			O_ON => L_BIRD_BEAK_ON
 		);
 	move_bird : process (I_V_SYNC)

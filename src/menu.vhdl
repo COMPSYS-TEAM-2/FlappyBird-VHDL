@@ -39,7 +39,7 @@ begin
             I_Y => I_CURSOR.Y,
             I_PIXEL_ROW => I_PIXEL.Y,
             I_PIXEL_COL => I_PIXEL.X,
-            I_INDEX => o"41",
+            I_INDEX => o"52",
             O_ON => L_MOUSE_ON
         );
 
