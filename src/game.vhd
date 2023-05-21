@@ -32,8 +32,10 @@ architecture behavior of game is
     signal S_RGB : std_logic_vector(11 downto 0);
     signal S_ON : std_logic;
 
+    signal LI_LIVES : std_logic_vector(17 downto 0);
     signal LI_RGB : std_logic_vector(11 downto 0);
     signal LI_ON : std_logic;
+    signal LI_GAME_OVER : std_logic;
 
     signal LF_RANDOM : std_logic_vector(7 downto 0);
 
@@ -103,6 +105,17 @@ begin
             O_ON => S_ON
         );
 
+    lives : entity work.lives
+        port map(
+            I_CLK => I_V_SYNC,
+            I_RST => I_RST,
+            I_ADD_LIFE => '0',
+            I_pipePassed => P_PIPE_PASSED,
+            I_collision => P_COLLISION_ON,
+            O_LIVES => LI_LIVES,
+            O_GAME_OVER => LI_GAME_OVER
+        );
+
     lives_text : entity work.string
         generic map(
             X_CENTER => 52,
@@ -116,7 +129,7 @@ begin
             I_CLK => I_CLK,
             I_PIXEL_ROW => I_PIXEL.Y,
             I_PIXEL_COL => I_PIXEL.X(9 downto 0),
-            I_CHARS => o"33" & o"33" & o"33",
+            I_CHARS => LI_LIVES,
             O_RGB => LI_RGB,
             O_ON => LI_ON
         );
