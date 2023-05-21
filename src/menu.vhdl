@@ -36,6 +36,13 @@ architecture behavior of menu is
 
     signal TI_RGB : std_logic_vector(11 downto 0);
     signal TI_ON : std_logic;
+
+    signal T_RGB : std_logic_vector(11 downto 0);
+    signal T_ON : std_logic;
+
+    signal N_RGB : std_logic_vector(11 downto 0);
+    signal N_ON : std_logic;
+
     signal PT_RGB : std_logic_vector(11 downto 0);
     signal PT_ON : std_logic;
 
@@ -45,7 +52,7 @@ architecture behavior of menu is
 begin
     title : entity work.string
         generic map(
-            X_CENTER => 639/2,
+            X_CENTER => SCREEN_WIDTH/2,
             Y_CENTER => 50,
             SCALE => 3,
             NUM_CHARS => 11,
@@ -75,7 +82,7 @@ begin
 
     leftbutton : entity work.menubutton
         generic map(
-            CreateRect(SCREEN_WIDTH/2 - 120 - 32, 239, 32, 32),
+            CreateRect(SCREEN_WIDTH/2 - 140 - 32, 239, 32, 32),
             x"333"
         )
         port map(
@@ -89,7 +96,7 @@ begin
         );
     rightbutton : entity work.menubutton
         generic map(
-            CreateRect(SCREEN_WIDTH/2 + 120, 239, 32, 32),
+            CreateRect(SCREEN_WIDTH/2 + 140, 239, 32, 32),
             x"333"
         )
         port map(
@@ -100,6 +107,44 @@ begin
             O_RGB => RB_RGB,
             O_ON => RB_ON,
             O_CLICK => RB_CLICK
+        );
+
+    training_text : entity work.string
+        generic map(
+            X_CENTER => SCREEN_WIDTH/2,
+            Y_CENTER => SCREEN_HEIGHT/2 + 16,
+            SCALE => 3,
+            NUM_CHARS => 8,
+            COLOR => x"000",
+            GAP => 1
+        )
+        port map(
+            I_CLK => I_CLK,
+            I_PIXEL_ROW => I_PIXEL.Y,
+            I_PIXEL_COL => I_PIXEL.X(9 downto 0),
+            --           T R A I N I N G
+            I_CHARS => o"3533122227222720",
+            O_RGB => T_RGB,
+            O_ON => T_ON
+        );
+
+    normal_text : entity work.string
+        generic map(
+            X_CENTER => SCREEN_WIDTH/2,
+            Y_CENTER => SCREEN_HEIGHT/2 + 16,
+            SCALE => 3,
+            NUM_CHARS => 6,
+            COLOR => x"000",
+            GAP => 1
+        )
+        port map(
+            I_CLK => I_CLK,
+            I_PIXEL_ROW => I_PIXEL.Y,
+            I_PIXEL_COL => I_PIXEL.X(9 downto 0),
+            --           N O R M A L
+            I_CHARS => o"273033261225",
+            O_RGB => N_RGB,
+            O_ON => N_ON
         );
 
     playbutton : entity work.menubutton
@@ -145,6 +190,8 @@ begin
         P_RGB when P_ON = '1' else
         LB_RGB when LB_ON = '1' else
         RB_RGB when RB_ON = '1' else
+        T_RGB when T_ON = '1' and L_MODE = '1' else
+        N_RGB when N_ON = '1' and L_MODE = '0' else
         MENU_BACKGROUND_RGB;
 
     O_BUTTON <= "00" when I_ON = '0' else
