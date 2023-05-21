@@ -74,7 +74,7 @@ begin
 
 	O_PIPE_PASSED <= '1' when ((I_BIRD.X >= L_TOP.X + L_TOP.WIDTH) and (I_BIRD.X <= L_TOP.X + L_TOP.WIDTH + L_TOP.WIDTH)) else
 		'0';
-	O_ON <= CheckCollision(I_PIXEL, L_TOP) or CheckCollision(I_PIXEL, L_BOTTOM) or CheckCollision(I_PIXEL, L_POWERUP);
+	O_ON <= CheckCollision(I_PIXEL, L_TOP) or CheckCollision(I_PIXEL, L_BOTTOM) or (L_POWERUP_ON = '1');
 	O_RGB <= PIPE_RGB when ((CheckCollision(I_PIXEL, L_TOP) or CheckCollision(I_PIXEL, L_BOTTOM)) = '1') else
 		HEART_SPRITE_RGB when (L_POWERUP_ON = '1');
 	O_COLLISION <= checkCollision(I_BIRD, L_TOP) or checkCollision(I_BIRD, L_BOTTOM);
