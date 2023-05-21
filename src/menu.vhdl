@@ -28,10 +28,31 @@ architecture behavior of menu is
 
     signal T_RGB : std_logic_vector(11 downto 0);
     signal T_ON : std_logic;
+    signal TI_RGB : std_logic_vector(11 downto 0);
+    signal TI_ON : std_logic;
     signal T_CLICK : std_logic;
 
     signal L_MOUSE_ON : std_logic;
 begin
+    title : entity work.string
+        generic map(
+            X_CENTER => 639/2,
+            Y_CENTER => 50,
+            SCALE => 3,
+            NUM_CHARS => 11,
+            COLOR => x"000",
+            GAP => 1
+        )
+        port map(
+            I_CLK => I_CLK,
+            I_PIXEL_ROW => I_PIXEL.Y,
+            I_PIXEL_COL => I_PIXEL.X(9 downto 0),
+            --          F       L       A       P       P       Y       " "     B       I       R       D
+            I_CHARS => o"17" & o"25" & o"12" & o"31" & o"31" & o"42" & o"44" & o"13" & o"22" & o"33" & o"15",
+            O_RGB => TI_RGB,
+            O_ON => TI_ON
+        );
+
     spriteMouse : entity work.sprite
         port map(
             I_CLK => I_CLK,
@@ -39,7 +60,7 @@ begin
             I_Y => I_CURSOR.Y,
             I_PIXEL_ROW => I_PIXEL.Y,
             I_PIXEL_COL => I_PIXEL.X,
-            I_INDEX => o"52",
+            I_INDEX => o"53",
             O_ON => L_MOUSE_ON
         );
 
@@ -74,6 +95,7 @@ begin
         );
 
     O_RGB <= MOUSE_RGB when L_MOUSE_ON = '1' else
+        TI_RGB when TI_ON = '1' else
         T_RGB when T_ON = '1' else
         P_RGB when P_ON = '1' else
         MENU_BACKGROUND_RGB;
