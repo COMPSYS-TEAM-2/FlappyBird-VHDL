@@ -26,13 +26,14 @@ architecture behavior of menu is
     signal P_ON : std_logic;
     signal P_CLICK : std_logic;
 
-    signal T_RGB : std_logic_vector(11 downto 0);
-    signal T_ON : std_logic;
     signal TI_RGB : std_logic_vector(11 downto 0);
     signal TI_ON : std_logic;
-    signal T_CLICK : std_logic;
+    signal PT_RGB : std_logic_vector(11 downto 0);
+    signal PT_ON : std_logic;
 
-    signal L_MOUSE_ON : std_logic;
+    signal S_MOUSE_ON : std_logic;
+
+    signal L_MODE : std_logic := '0';
 begin
     title : entity work.string
         generic map(
@@ -47,8 +48,8 @@ begin
             I_CLK => I_CLK,
             I_PIXEL_ROW => I_PIXEL.Y,
             I_PIXEL_COL => I_PIXEL.X(9 downto 0),
-            --          F       L       A       P       P       Y       " "     B       I       R       D
-            I_CHARS => o"17" & o"25" & o"12" & o"31" & o"31" & o"42" & o"44" & o"13" & o"22" & o"33" & o"15",
+            --           F L A P P Y   B I R D
+            I_CHARS => o"1725123131424413223315",
             O_RGB => TI_RGB,
             O_ON => TI_ON
         );
@@ -61,13 +62,13 @@ begin
             I_PIXEL_ROW => I_PIXEL.Y,
             I_PIXEL_COL => I_PIXEL.X,
             I_INDEX => o"53",
-            O_ON => L_MOUSE_ON
+            O_ON => S_MOUSE_ON
         );
 
     playbutton : entity work.menubutton
         generic map(
-            CreateRect(MENU_BUTTON_X, MENU_BUTTON_PLAY_Y, MENU_BUTTON_SIZE_X, MENU_BUTTON_SIZE_Y),
-            MENU_PLAY_BUTTON_RGB
+            CreateRect(MENU_BUTTON_X, MENU_BUTTON_Y, MENU_BUTTON_SIZE_X, MENU_BUTTON_SIZE_Y),
+            MENU_BUTTON_RGB
         )
         port map(
             I_V_SYNC => I_V_SYNC,
@@ -78,30 +79,33 @@ begin
             O_ON => P_ON,
             O_CLICK => P_CLICK
         );
-
-    trainbutton : entity work.menubutton
+    play_button_text : entity work.string
         generic map(
-            CreateRect(MENU_BUTTON_X, MENU_BUTTON_TRAIN_Y, MENU_BUTTON_SIZE_X, MENU_BUTTON_SIZE_Y),
-            MENU_TRAIN_BUTTON_RGB
+            X_CENTER => (SCREEN_WIDTH/2),
+            Y_CENTER => (MENU_BUTTON_Y + MENU_BUTTON_SIZE_Y/2),
+            SCALE => 3,
+            NUM_CHARS => 4,
+            COLOR => x"FFF",
+            GAP => 1
         )
         port map(
-            I_V_SYNC => I_V_SYNC,
-            I_PIXEL => I_PIXEL,
-            I_M_LEFT => I_M_LEFT,
-            I_CURSOR => I_CURSOR,
-            O_RGB => T_RGB,
-            O_ON => T_ON,
-            O_CLICK => T_CLICK
+            I_CLK => I_CLK,
+            I_PIXEL_ROW => I_PIXEL.Y,
+            I_PIXEL_COL => I_PIXEL.X(9 downto 0),
+            --           P L A Y 
+            I_CHARS => o"31251242",
+            O_RGB => PT_RGB,
+            O_ON => PT_ON
         );
 
-    O_RGB <= MOUSE_RGB when L_MOUSE_ON = '1' else
+    O_RGB <= MOUSE_RGB when S_MOUSE_ON = '1' else
         TI_RGB when TI_ON = '1' else
-        T_RGB when T_ON = '1' else
+        PT_RGB when PT_ON = '1' else
         P_RGB when P_ON = '1' else
         MENU_BACKGROUND_RGB;
 
     O_BUTTON <= "00" when I_ON = '0' else
-        "01" when P_CLICK = '1' else
-        "10" when T_CLICK = '1' else
+        "01" when P_CLICK = '1' and L_MODE = '0' else
+        "10" when P_CLICK = '1' and L_MODE = '1' else
         "00";
 end architecture;
