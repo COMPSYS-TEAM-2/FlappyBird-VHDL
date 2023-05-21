@@ -26,6 +26,14 @@ architecture behavior of menu is
     signal P_ON : std_logic;
     signal P_CLICK : std_logic;
 
+    signal LB_RGB : std_logic_vector(11 downto 0);
+    signal LB_ON : std_logic;
+    signal LB_CLICK : std_logic;
+
+    signal RB_RGB : std_logic_vector(11 downto 0);
+    signal RB_ON : std_logic;
+    signal RB_CLICK : std_logic;
+
     signal TI_RGB : std_logic_vector(11 downto 0);
     signal TI_ON : std_logic;
     signal PT_RGB : std_logic_vector(11 downto 0);
@@ -65,6 +73,35 @@ begin
             O_ON => S_MOUSE_ON
         );
 
+    leftbutton : entity work.menubutton
+        generic map(
+            CreateRect(SCREEN_WIDTH/2 - 120 - 32, 239, 32, 32),
+            x"333"
+        )
+        port map(
+            I_V_SYNC => I_V_SYNC,
+            I_PIXEL => I_PIXEL,
+            I_M_LEFT => I_M_LEFT,
+            I_CURSOR => I_CURSOR,
+            O_RGB => LB_RGB,
+            O_ON => LB_ON,
+            O_CLICK => LB_CLICK
+        );
+    rightbutton : entity work.menubutton
+        generic map(
+            CreateRect(SCREEN_WIDTH/2 + 120, 239, 32, 32),
+            x"333"
+        )
+        port map(
+            I_V_SYNC => I_V_SYNC,
+            I_PIXEL => I_PIXEL,
+            I_M_LEFT => I_M_LEFT,
+            I_CURSOR => I_CURSOR,
+            O_RGB => RB_RGB,
+            O_ON => RB_ON,
+            O_CLICK => RB_CLICK
+        );
+
     playbutton : entity work.menubutton
         generic map(
             CreateRect(MENU_BUTTON_X, MENU_BUTTON_Y, MENU_BUTTON_SIZE_X, MENU_BUTTON_SIZE_Y),
@@ -79,7 +116,7 @@ begin
             O_ON => P_ON,
             O_CLICK => P_CLICK
         );
-    play_button_text : entity work.string
+    playbutton_text : entity work.string
         generic map(
             X_CENTER => (SCREEN_WIDTH/2),
             Y_CENTER => (MENU_BUTTON_Y + MENU_BUTTON_SIZE_Y/2),
@@ -98,10 +135,16 @@ begin
             O_ON => PT_ON
         );
 
+    L_MODE <= '1' when LB_CLICK = '1' else
+        '0' when RB_CLICK = '1' else
+        L_MODE;
+
     O_RGB <= MOUSE_RGB when S_MOUSE_ON = '1' else
         TI_RGB when TI_ON = '1' else
         PT_RGB when PT_ON = '1' else
         P_RGB when P_ON = '1' else
+        LB_RGB when LB_ON = '1' else
+        RB_RGB when RB_ON = '1' else
         MENU_BACKGROUND_RGB;
 
     O_BUTTON <= "00" when I_ON = '0' else
