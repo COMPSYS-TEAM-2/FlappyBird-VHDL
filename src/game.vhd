@@ -9,6 +9,7 @@ entity game is
         I_CLK : in std_logic;
         I_V_SYNC : in std_logic;
         I_RST, I_ENABLE : in std_logic;
+        I_TRAINING : in std_logic;
         I_PIXEL : in T_RECT;
         I_M_LEFT : in std_logic;
         O_RGB : out std_logic_vector(11 downto 0);
@@ -146,7 +147,7 @@ begin
     end process;
 
     O_RGB <= S_RGB when (S_ON = '1') else
-        LI_RGB when (Li_ON) = '1' else
+        LI_RGB when (LI_ON = '1' and I_TRAINING /= '1') else
         B_RGB when (B_ON = '1') else
         P_RGB when (P_ON = '1') else
         L_BACKGROUND_COLOUR;
