@@ -16,8 +16,8 @@ entity lives is
 end entity lives;
 
 architecture behavior of lives is
-    constant LIVE_INDEX : std_logic_vector(5 downto 0) := o"33";
-    constant EMPTY_INDEX : std_logic_vector(5 downto 0) := o"37";
+    constant LIVE_INDEX : std_logic_vector(5 downto 0) := o"47";
+    constant EMPTY_INDEX : std_logic_vector(5 downto 0) := o"44";
 
     signal L_LIVES : std_logic_vector(1 downto 0) := "11";
 begin
