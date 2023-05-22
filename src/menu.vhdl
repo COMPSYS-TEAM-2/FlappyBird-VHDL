@@ -29,10 +29,12 @@ architecture behavior of menu is
     signal LB_RGB : std_logic_vector(11 downto 0);
     signal LB_ON : std_logic;
     signal LB_CLICK : std_logic;
+    signal LBS_ON : std_logic;
 
     signal RB_RGB : std_logic_vector(11 downto 0);
     signal RB_ON : std_logic;
     signal RB_CLICK : std_logic;
+    signal RBS_ON : std_logic;
 
     signal TI_RGB : std_logic_vector(11 downto 0);
     signal TI_ON : std_logic;
@@ -80,6 +82,17 @@ begin
             O_ON => S_MOUSE_ON
         );
 
+    leftbuttonSprite : entity work.sprite
+        port map(
+            I_CLK => I_CLK,
+            I_X => conv_std_logic_vector(SCREEN_WIDTH/2 - 160 - 16, 11),
+            I_Y => conv_std_logic_vector(SCREEN_HEIGHT/2, 10),
+            I_PIXEL_ROW => I_PIXEL.Y,
+            I_PIXEL_COL => I_PIXEL.X,
+            I_INDEX => o"55",
+            O_ON => LBS_ON
+        );
+
     leftbutton : entity work.menubutton
         generic map(
             CreateRect(SCREEN_WIDTH/2 - 160 - 16, 239, 16, 32),
@@ -94,9 +107,21 @@ begin
             O_ON => LB_ON,
             O_CLICK => LB_CLICK
         );
+
+    rightbuttonSprite : entity work.sprite
+        port map(
+            I_CLK => I_CLK,
+            I_X => conv_std_logic_vector(SCREEN_WIDTH/2 + 160, 11),
+            I_Y => conv_std_logic_vector(SCREEN_HEIGHT/2, 10),
+            I_PIXEL_ROW => I_PIXEL.Y,
+            I_PIXEL_COL => I_PIXEL.X,
+            I_INDEX => o"54",
+            O_ON => RBS_ON
+        );
+
     rightbutton : entity work.menubutton
         generic map(
-            CreateRect(SCREEN_WIDTH/2 + 160, 239, 16, 32),
+            CreateRect(SCREEN_WIDTH/2 + 160, SCREEN_HEIGHT/2, 16, 32),
             x"333"
         )
         port map(
@@ -193,8 +218,8 @@ begin
         TI_RGB when TI_ON = '1' else
         PT_RGB when PT_ON = '1' else
         P_RGB when P_ON = '1' else
-        LB_RGB when LB_ON = '1' else
-        RB_RGB when RB_ON = '1' else
+        LB_RGB when LBS_ON = '1' else
+        RB_RGB when RBS_ON = '1' else
         T_RGB when T_ON = '1' and L_MODE = '1' else
         N_RGB when N_ON = '1' and L_MODE = '0' else
         MENU_BACKGROUND_RGB;
