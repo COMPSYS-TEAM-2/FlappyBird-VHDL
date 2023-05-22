@@ -72,7 +72,9 @@ begin
                     font_row <= temp_row((SCALE + 1) downto (SCALE - 1));
 
                     L_CHAR <= I_CHARS((6 * (NUM_CHARS - i) - 1) downto (6 * (NUM_CHARS - i - 1)));
-                    T_ON := '1';
+                    if (I_PIXEL_COL /= conv_std_logic_vector(X + (i * GAP_SIZE) + (SCALED_SIZE * i), 11)) then
+                        T_ON := '1';
+                    end if;
                 end if;
             end loop;
         end if;

@@ -56,7 +56,7 @@ begin
             Y_CENTER => 50,
             SCALE => 3,
             NUM_CHARS => 11,
-            COLOR => x"000",
+            COLOR => x"FFF",
             GAP => 1
         )
         port map(
@@ -82,7 +82,7 @@ begin
 
     leftbutton : entity work.menubutton
         generic map(
-            CreateRect(SCREEN_WIDTH/2 - 140 - 32, 239, 32, 32),
+            CreateRect(SCREEN_WIDTH/2 - 160 - 16, 239, 16, 32),
             x"333"
         )
         port map(
@@ -96,7 +96,7 @@ begin
         );
     rightbutton : entity work.menubutton
         generic map(
-            CreateRect(SCREEN_WIDTH/2 + 140, 239, 32, 32),
+            CreateRect(SCREEN_WIDTH/2 + 160, 239, 16, 32),
             x"333"
         )
         port map(
@@ -115,7 +115,7 @@ begin
             Y_CENTER => SCREEN_HEIGHT/2 + 16,
             SCALE => 3,
             NUM_CHARS => 8,
-            COLOR => x"000",
+            COLOR => x"FFF",
             GAP => 1
         )
         port map(
@@ -134,7 +134,7 @@ begin
             Y_CENTER => SCREEN_HEIGHT/2 + 16,
             SCALE => 3,
             NUM_CHARS => 6,
-            COLOR => x"000",
+            COLOR => x"FFF",
             GAP => 1
         )
         port map(
@@ -180,9 +180,14 @@ begin
             O_ON => PT_ON
         );
 
-    L_MODE <= '1' when LB_CLICK = '1' else
-        '0' when RB_CLICK = '1' else
-        L_MODE;
+    process (I_V_SYNC)
+    begin
+        if rising_edge(I_V_SYNC) then
+            if (LB_CLICK = '1' or RB_CLICK = '1') then
+                L_MODE <= not L_MODE;
+            end if;
+        end if;
+    end process;
 
     O_RGB <= MOUSE_RGB when S_MOUSE_ON = '1' else
         TI_RGB when TI_ON = '1' else
