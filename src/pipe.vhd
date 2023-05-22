@@ -63,9 +63,9 @@ begin
 					L_BOTTOM.Y <= Y_POS;
 					L_BOTTOM.HEIGHT <= conv_std_logic_vector(480, 10) - (Y_POS);
 					case (PIPE_GAP_POSITION(1 downto 0)) is
-						when "00" => POWERUP_TYPE <= o"34"; -- Clock 
-						when "01" => POWERUP_TYPE <= o"35"; -- Sheild
-						when others => POWERUP_TYPE <= o"33"; -- Heart 
+						when "01" => POWERUP_TYPE <= CLOCK_POWERUP; -- Clock 
+						when "10" => POWERUP_TYPE <= SHEILD_POWERUP;-- Sheild
+						when others => POWERUP_TYPE <= HEART_POWERUP; -- Heart 
 					end case;
 					-- Powerup should only appear is the random value is within a range
 					if (PIPE_GAP_POSITION(3 downto 0) > 4) then
@@ -91,9 +91,9 @@ begin
 	O_ON <= '1' when ((CheckCollision(I_PIXEL, L_TOP) = '1') or (CheckCollision(I_PIXEL, L_BOTTOM) = '1') or (L_POWERUP_ON = '1')) else
 		'0';
 	O_RGB <= PIPE_RGB when ((CheckCollision(I_PIXEL, L_TOP) or CheckCollision(I_PIXEL, L_BOTTOM)) = '1') else
-		HEART_SPRITE_RGB when (L_POWERUP_ON = '1' and POWERUP_TYPE = o"33") else
-		CLOCK_SPRITE_RGB when (L_POWERUP_ON = '1' and POWERUP_TYPE = o"34") else
-		SHEILD_SPRITE_RGB when (L_POWERUP_ON = '1' and POWERUP_TYPE = o"35");
+		HEART_SPRITE_RGB when (L_POWERUP_ON = '1' and POWERUP_TYPE = HEART_POWERUP) else
+		CLOCK_SPRITE_RGB when (L_POWERUP_ON = '1' and POWERUP_TYPE = CLOCK_POWERUP) else
+		SHEILD_SPRITE_RGB when (L_POWERUP_ON = '1' and POWERUP_TYPE = SHEILD_POWERUP);
 	O_COLLISION <= checkCollision(I_BIRD, L_TOP) or checkCollision(I_BIRD, L_BOTTOM);
 
 end behavior;
