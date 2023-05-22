@@ -56,6 +56,7 @@ begin
 
     obstacles : entity work.obstacles
         port map(
+            I_CLK => I_CLK,
             I_V_SYNC => I_V_SYNC,
             I_RST => I_RST,
             I_ENABLE => L_ENABLE,

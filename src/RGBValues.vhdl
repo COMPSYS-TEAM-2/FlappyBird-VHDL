@@ -11,6 +11,8 @@ package RGBValues is
     constant MENU_BUTTON_RGB : std_logic_vector(11 downto 0) := x"C82";
     constant MENU_BUTTON_ONCLICK_RGB : std_logic_vector(11 downto 0) := x"A71";
     constant HEART_SPRITE_RGB : std_logic_vector(11 downto 0) := x"F00";
+    constant CLOCK_SPRITE_RGB : std_logic_vector(11 downto 0) := x"000";
+    constant SHEILD_SPRITE_RGB : std_logic_vector(11 downto 0) := x"00F";
     constant BIRD_RGB : std_logic_vector(11 downto 0) := x"93A";
     constant BIRD_EYE_RGB : std_logic_vector(11 downto 0) := x"000";
     constant BIRD_BEAK_RGB : std_logic_vector(11 downto 0) := x"FF0";
