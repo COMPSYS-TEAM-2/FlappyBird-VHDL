@@ -26,6 +26,7 @@ end pipe;
 architecture behavior of pipe is
 	signal L_TOP : T_RECT := CreateRect(0, 0, PIPE_WIDTH, 0);
 	signal L_BOTTOM : T_RECT := CreateRect(0, 0, PIPE_WIDTH, 0);
+	signal POWERUP_TYPE : std_logic_vector(5 downto 0);
 	signal L_POWERUP : T_RECT := CreateRect(0, 0, PLAYER_SIZE, PLAYER_SIZE);
 	signal L_POWERUP_ON : std_logic;
 begin
@@ -36,7 +37,7 @@ begin
 			I_Y => L_POWERUP.Y,
 			I_PIXEL_ROW => I_PIXEL.Y,
 			I_PIXEL_COL => I_PIXEL.X,
-			I_INDEX => o"33",
+			I_INDEX => POWERUP_TYPE,
 			O_ON => L_POWERUP_ON
 		);
 
@@ -54,6 +55,11 @@ begin
 				Y_POS := PIPE_GAP_POSITION + ('0' & PIPE_GAP(9 downto 1));
 				L_BOTTOM.Y <= Y_POS;
 				L_BOTTOM.HEIGHT <= conv_std_logic_vector(480, 10) - (Y_POS);
+				case (PIPE_GAP_POSITION(1 downto 0)) is
+					when "00" => POWERUP_TYPE <= o"34"; -- Clock 
+					when "01" => POWERUP_TYPE <= o"35"; -- Sheild
+					when others => POWERUP_TYPE <= o"33"; -- Heart 
+				end case;
 				-- Powerup should only appear is the random value is within a range
 				if (PIPE_GAP_POSITION(3 downto 0) > 4) then
 					L_POWERUP.Y <= Y_POS - ('0' & PIPE_GAP(9 downto 1));
@@ -74,9 +80,12 @@ begin
 
 	O_PIPE_PASSED <= '1' when ((I_BIRD.X >= L_TOP.X + L_TOP.WIDTH) and (I_BIRD.X <= L_TOP.X + L_TOP.WIDTH + L_TOP.WIDTH)) else
 		'0';
-	O_ON <= CheckCollision(I_PIXEL, L_TOP) or CheckCollision(I_PIXEL, L_BOTTOM) or (L_POWERUP_ON = '1');
+	O_ON <= '1' when ((CheckCollision(I_PIXEL, L_TOP) = '1') or (CheckCollision(I_PIXEL, L_BOTTOM) = '1') or (L_POWERUP_ON = '1')) else
+		'0';
 	O_RGB <= PIPE_RGB when ((CheckCollision(I_PIXEL, L_TOP) or CheckCollision(I_PIXEL, L_BOTTOM)) = '1') else
-		HEART_SPRITE_RGB when (L_POWERUP_ON = '1');
+		HEART_SPRITE_RGB when (L_POWERUP_ON = '1' and POWERUP_TYPE = o"33") else
+		CLOCK_SPRITE_RGB when (L_POWERUP_ON = '1' and POWERUP_TYPE = o"34") else
+		SHEILD_SPRITE_RGB when (L_POWERUP_ON = '1' and POWERUP_TYPE = o"35");
 	O_COLLISION <= checkCollision(I_BIRD, L_TOP) or checkCollision(I_BIRD, L_BOTTOM);
 
 end behavior;
