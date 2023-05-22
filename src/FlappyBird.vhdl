@@ -45,6 +45,7 @@ architecture behavioral of FlappyBird is
     signal L_GAME_ENABLED : std_logic := '0';
     signal L_GAME_ENABLE : std_logic := '0';
     signal L_MENU_ENABLED : std_logic := '0';
+    signal L_TRAINING : std_logic := '0';
 begin
 
     video : entity work.VGA_SYNC
@@ -78,6 +79,7 @@ begin
             I_CLK => L_CLK,
             I_RST => L_GAME_RST,
             I_ENABLE => L_GAME_ENABLE,
+            I_TRAINING => L_TRAINING,
             I_V_SYNC => V_V_SYNC,
             I_PIXEL => L_PIXEL,
             I_M_LEFT => M_LEFT,
@@ -115,6 +117,7 @@ begin
             else
                 L_MENU_ENABLED <= '0';
                 L_GAME_ENABLED <= '0';
+                L_TRAINING <= '0';
                 L_GAME_RST_STATE <= '0';
                 case L_STATE is
                     when "00" =>
@@ -125,6 +128,7 @@ begin
                         L_GAME_ENABLED <= '1';
                     when "10" =>
                         L_GAME_ENABLED <= '1';
+                        L_TRAINING <= '1';
                     when others =>
                         L_STATE <= "00";
                 end case;
