@@ -19,7 +19,7 @@ entity bird is
 end bird;
 
 architecture behavior of bird is
-	signal L_BIRD : T_RECT := CreateRect(200, 150, PLAYER_SIZE, PLAYER_SIZE);
+	signal L_BIRD : T_RECT := CreateRect(200, 150, PLAYER_SIZE, PLAYER_SIZE - 4);
 	signal L_BIRD_ON : std_logic;
 	signal L_BIRD_EYE_ON : std_logic;
 	signal L_BIRD_BEAK_ON : std_logic;
@@ -32,7 +32,7 @@ begin
 			I_Y => L_BIRD.Y,
 			I_PIXEL_ROW => I_PIXEL.Y,
 			I_PIXEL_COL => I_PIXEL.X,
-			I_INDEX => o"36",
+			I_INDEX => o"50",
 			O_ON => L_BIRD_ON
 		);
 
@@ -43,7 +43,7 @@ begin
 			I_Y => L_BIRD.Y,
 			I_PIXEL_ROW => I_PIXEL.Y,
 			I_PIXEL_COL => I_PIXEL.X,
-			I_INDEX => o"37",
+			I_INDEX => o"51",
 			O_ON => L_BIRD_EYE_ON
 		);
 
@@ -54,7 +54,7 @@ begin
 			I_Y => L_BIRD.Y,
 			I_PIXEL_ROW => I_PIXEL.Y,
 			I_PIXEL_COL => I_PIXEL.X,
-			I_INDEX => o"40",
+			I_INDEX => o"52",
 			O_ON => L_BIRD_BEAK_ON
 		);
 	move_bird : process (I_V_SYNC)
@@ -93,6 +93,7 @@ begin
 	-- Changing the background and ball colour by pushbuttons
 	O_RGB <= BIRD_RGB when (L_BIRD_ON = '1') else
 		BIRD_EYE_RGB when (L_BIRD_EYE_ON = '1') else
-		BIRD_BEAK_RGB when (L_BIRD_BEAK_ON = '1');
+		BIRD_BEAK_RGB when (L_BIRD_BEAK_ON = '1') else
+		(others => '0');
 
 end behavior;

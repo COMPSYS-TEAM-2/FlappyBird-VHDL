@@ -116,7 +116,7 @@ begin
             I_CLK => I_CLK,
             I_PIXEL_ROW => I_PIXEL.Y,
             I_PIXEL_COL => I_PIXEL.X(9 downto 0),
-            I_CHARS => o"33" & o"33" & o"33",
+            I_CHARS => o"47" & o"47" & o"47",
             O_RGB => LI_RGB,
             O_ON => LI_ON
         );

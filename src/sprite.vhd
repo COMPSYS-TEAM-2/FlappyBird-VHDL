@@ -38,24 +38,27 @@ begin
     get_int_score : process (I_CLK)
         variable temp_col : std_logic_vector(10 downto 0);
         variable temp_row : std_logic_vector(9 downto 0);
-        variable T_ON : std_logic;
     begin
+        temp_col := (others => '0');
+        temp_row := (others => '0');
+
         if rising_edge(I_CLK) then
-            T_ON := '0';
             if ((I_PIXEL_COL >= I_X) and
-                (I_PIXEL_COL < I_X + conv_std_logic_vector(spriteSize, 11))) and
+                (I_PIXEL_COL <= I_X + conv_std_logic_vector(spriteSize, 11))) and
                 ((I_PIXEL_ROW >= I_Y) and
                 (I_PIXEL_ROW < I_Y + conv_std_logic_vector(spriteSize, 10))) then
 
-                temp_col := (I_PIXEL_COL - I_X);
+                temp_col := (I_PIXEL_COL - I_X - '1');
                 font_col <= temp_col(4 downto 2);
                 temp_row := (I_PIXEL_ROW - I_Y);
                 font_row <= temp_row(4 downto 2);
-
-                T_ON := '1';
+                L_ON <= '1';
+            else
+                font_col <= (others => '0');
+                font_row <= (others => '0');
+                L_ON <= '0';
             end if;
         end if;
-        L_ON <= T_ON;
     end process;
 
     O_ON <= rom_mux_output and L_ON;
