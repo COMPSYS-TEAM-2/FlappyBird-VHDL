@@ -49,10 +49,10 @@ begin
         end if;
     end process;
 
-    O_LIVES(17 downto 12) <= LIVE_INDEX when (L_LIVES >= 3) else
+    O_LIVES(17 downto 12) <= LIVE_INDEX when (L_LIVES >= 1) else
     EMPTY_INDEX;
     O_LIVES(11 downto 6) <= LIVE_INDEX when (L_LIVES >= 2) else
     EMPTY_INDEX;
-    O_LIVES(5 downto 0) <= LIVE_INDEX when (L_LIVES >= 1) else
+    O_LIVES(5 downto 0) <= LIVE_INDEX when (L_LIVES >= 3) else
     EMPTY_INDEX;
 end architecture;
