@@ -71,7 +71,7 @@ begin
 					L_TOP.HEIGHT <= PIPE_GAP_POSITION - ('0' & PIPE_GAP(9 downto 1));
 					Y_POS := PIPE_GAP_POSITION + ('0' & PIPE_GAP(9 downto 1));
 					L_BOTTOM.Y <= Y_POS;
-					L_BOTTOM.HEIGHT <= conv_std_logic_vector(480, 10) - (Y_POS) - conv_std_logic_vector(PLAYER_SIZE/2, 10);
+					L_BOTTOM.HEIGHT <= conv_std_logic_vector(480, 10) - (Y_POS);
 					case (PIPE_GAP_POSITION(1 downto 0)) is
 						when "01" => L_POWERUP_TYPE <= CLOCK_POWERUP; -- Clock 
 						when "10" => L_POWERUP_TYPE <= SHEILD_POWERUP;-- Sheild
@@ -79,7 +79,7 @@ begin
 					end case;
 					-- Powerup should only appear is the random value is within a range
 					if (PIPE_GAP_POSITION(3 downto 0) > 4) then
-						L_POWERUP.Y <= Y_POS - ('0' & PIPE_GAP(9 downto 1));
+						L_POWERUP.Y <= Y_POS - ('0' & PIPE_GAP(9 downto 1) - conv_std_logic_vector(PLAYER_SIZE/2, 10));
 					else
 						L_POWERUP.Y <= conv_std_logic_vector(500, 10);
 					end if;
