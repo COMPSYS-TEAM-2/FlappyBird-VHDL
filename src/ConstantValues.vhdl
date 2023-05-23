@@ -16,7 +16,9 @@ package Constantvalues is
     constant MENU_BUTTON_X : integer := (SCREEN_WIDTH - MENU_BUTTON_SIZE_X) / 2;
     constant MENU_BUTTON_Y : integer := 360;
     constant CLOCK_POWERUP : std_logic_vector(5 downto 0) := o"45";
-    constant SHEILD_POWERUP : std_logic_vector(5 downto 0) := o"46";
-    constant HEART_POWERUP : std_logic_vector(5 downto 0) := o"47";
+    constant HEART_POWERUP : std_logic_vector(5 downto 0) := o"46";
+    constant SHEILD_POWERUP : std_logic_vector(5 downto 0) := o"47";
+    constant GROUND_HEIGHT : integer := 10;
+    constant GRASS_HEIGHT : integer := 6;
 
 end package Constantvalues;

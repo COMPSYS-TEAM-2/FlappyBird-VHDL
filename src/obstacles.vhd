@@ -31,6 +31,10 @@ architecture behavior of obstacles is
     signal B_COLLISION : std_logic;
     signal B_ON : std_logic;
     signal B_PIPE_PASSED : std_logic;
+    signal G_RGB : std_logic_vector(11 downto 0);
+    signal G_COLLISION : std_logic;
+    signal G_ON : std_logic;
+
     signal L_ADD_LIFE_A : std_logic;
     signal L_ADD_LIFE_B : std_logic;
 begin
@@ -72,11 +76,23 @@ begin
             O_ADD_LIFE => L_ADD_LIFE_B
         );
 
-    O_RGB <= A_RGB when A_ON = '1' else
+    ground : entity work.ground
+        port map(
+            I_V_SYNC => I_V_SYNC,
+            I_ENABLE => I_ENABLE,
+            I_PIXEL => I_PIXEL,
+            I_BIRD => I_BIRD,
+            O_RGB => G_RGB,
+            O_ON => G_ON,
+            O_COLLISION => G_COLLISION
+        );
+
+    O_RGB <= G_RGB when G_ON = '1' else
+        A_RGB when A_ON = '1' else
         B_RGB when B_ON = '1' else
         x"000";
 
-    O_ON <= A_ON or B_ON;
+    O_ON <= (A_ON or B_ON or G_ON);
     O_COLLISION <= B_COLLISION or A_COLLISION;
     O_PIPE_PASSED <= A_PIPE_PASSED or B_PIPE_PASSED;
     O_ADD_LIFE <= L_ADD_LIFE_A or L_ADD_LIFE_B;

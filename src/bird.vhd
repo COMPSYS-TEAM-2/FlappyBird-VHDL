@@ -76,8 +76,8 @@ begin
 				end if;
 
 				Y_POS := L_BIRD.Y + Y_VEL;
-				if (Y_POS >= CONV_STD_LOGIC_VECTOR(479, 10) - L_BIRD.Height) then
-					Y_POS := CONV_STD_LOGIC_VECTOR(479, 10) - L_BIRD.Height;
+				if (Y_POS >= CONV_STD_LOGIC_VECTOR(479 - GROUND_HEIGHT, 10) - L_BIRD.Height) then
+					Y_POS := CONV_STD_LOGIC_VECTOR(479 - GROUND_HEIGHT, 10) - L_BIRD.Height;
 				elsif (Y_POS <= CONV_STD_LOGIC_VECTOR(0, 10)) then
 					Y_POS := CONV_STD_LOGIC_VECTOR(0, 10);
 				end if;
