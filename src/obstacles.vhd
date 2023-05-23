@@ -3,6 +3,7 @@ use IEEE.STD_LOGIC_1164.all;
 use IEEE.STD_LOGIC_ARITH.all;
 use IEEE.STD_LOGIC_SIGNED.all;
 use work.Rectangle.all;
+use work.Constantvalues.all;
 
 entity obstacles is
     port (
@@ -33,6 +34,10 @@ architecture behavior of obstacles is
     signal B_PIPE_PASSED : std_logic;
     signal L_ADD_LIFE_A : std_logic;
     signal L_ADD_LIFE_B : std_logic;
+    signal L_SLOW_TIME_A : std_logic;
+    signal L_SLOW_TIME_B : std_logic;
+
+    signal L_X_VEL : std_logic_vector(9 downto 0) := INITIAL_SPEED;
 begin
     pipe_aye : entity work.pipe
         generic map(
@@ -46,11 +51,13 @@ begin
             I_PIXEL => I_PIXEL,
             I_PIPE_GAP_POSITION => I_RANDOM,
             I_BIRD => I_BIRD,
+            I_X_VEL => L_X_VEL,
             O_RGB => A_RGB,
             O_ON => A_ON,
             O_COLLISION => A_COLLISION,
             O_PIPE_PASSED => A_PIPE_PASSED,
-            O_ADD_LIFE => L_ADD_LIFE_A
+            O_ADD_LIFE => L_ADD_LIFE_A,
+            O_SLOW_TIME => L_SLOW_TIME_A
         );
 
     pipe_bee : entity work.pipe
@@ -65,13 +72,36 @@ begin
             I_PIXEL => I_PIXEL,
             I_PIPE_GAP_POSITION => I_RANDOM,
             I_BIRD => I_BIRD,
+            I_X_VEL => L_X_VEL,
             O_RGB => B_RGB,
             O_ON => B_ON,
             O_COLLISION => B_COLLISION,
             O_PIPE_PASSED => B_PIPE_PASSED,
-            O_ADD_LIFE => L_ADD_LIFE_B
+            O_ADD_LIFE => L_ADD_LIFE_B,
+            O_SLOW_TIME => L_SLOW_TIME_B
         );
 
+    process (I_V_SYNC)
+        variable PP_COUNTER : std_logic_vector(3 downto 0);
+    begin
+        if (rising_edge(I_V_SYNC)) then
+            if (I_RST = '1') then
+                L_X_VEL <= INITIAL_SPEED;
+            elsif (I_ENABLE = '1') then
+                if (L_SLOW_TIME_A = '1' or L_SLOW_TIME_B = '1') then
+                    L_X_VEL <= '0' & L_X_VEL(9 downto 1);
+                end if;
+                if (B_PIPE_PASSED = '1') then
+                    if (PP_COUNTER = conv_std_logic_vector(10, 4)) then
+                        L_X_VEL <= L_X_VEL + PIPE_ACCELERATION;
+                        PP_COUNTER := conv_std_logic_vector(0, 4);
+                    else
+                        PP_COUNTER := PP_COUNTER + conv_std_logic_vector(1, 4);
+                    end if;
+                end if;
+            end if;
+        end if;
+    end process;
     O_RGB <= A_RGB when A_ON = '1' else
         B_RGB when B_ON = '1' else
         x"000";

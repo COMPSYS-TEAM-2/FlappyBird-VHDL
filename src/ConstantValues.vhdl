@@ -10,6 +10,7 @@ package Constantvalues is
     constant PLAYER_SIZE : integer := 32;
     constant PIPE_GAP : std_logic_vector(9 downto 0) := conv_std_logic_vector(195, 10);
     constant PIPE_WIDTH : integer := 40;
+    constant INITIAL_SPEED : std_logic_vector(9 downto 0) := CONV_STD_LOGIC_VECTOR(2, 10);
     constant PIPE_ACCELERATION : std_logic_vector(9 downto 0) := conv_std_logic_vector(1, 10);
     constant MENU_BUTTON_SIZE_X : integer := 160;
     constant MENU_BUTTON_SIZE_Y : integer := 80;
