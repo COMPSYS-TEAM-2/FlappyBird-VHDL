@@ -17,7 +17,8 @@ entity obstacles is
         O_ON : out std_logic;
         O_COLLISION : out std_logic;
         O_PIPE_PASSED : out std_logic;
-        O_ADD_LIFE : out std_logic
+        O_ADD_LIFE : out std_logic;
+        O_GAME_OVER : out std_logic
     );
 end obstacles;
 
@@ -32,7 +33,6 @@ architecture behavior of obstacles is
     signal B_ON : std_logic;
     signal B_PIPE_PASSED : std_logic;
     signal G_RGB : std_logic_vector(11 downto 0);
-    signal G_COLLISION : std_logic;
     signal G_ON : std_logic;
 
     signal L_ADD_LIFE_A : std_logic;
@@ -84,7 +84,7 @@ begin
             I_BIRD => I_BIRD,
             O_RGB => G_RGB,
             O_ON => G_ON,
-            O_COLLISION => G_COLLISION
+            O_COLLISION => O_GAME_OVER
         );
 
     O_RGB <= G_RGB when G_ON = '1' else

@@ -22,7 +22,7 @@ architecture behavior of ground is
 begin
     O_ON <= '1' when (I_PIXEL.Y >= conv_std_logic_vector(SCREEN_HEIGHT - GROUND_HEIGHT - GRASS_HEIGHT, 10)) else
         '0';
-    O_COLLISION <= '1' when (I_BIRD.Y >= conv_std_logic_vector(SCREEN_HEIGHT - GROUND_HEIGHT - GRASS_HEIGHT, 10)) else
+    O_COLLISION <= '1' when (I_BIRD.Y + I_BIRD.HEIGHT >= conv_std_logic_vector(SCREEN_HEIGHT - GROUND_HEIGHT - GRASS_HEIGHT, 10)) else
         '0';
 
     O_RGB <= GROUND_RGB when I_PIXEL.Y >= conv_std_logic_vector(SCREEN_HEIGHT - GROUND_HEIGHT, 10) else

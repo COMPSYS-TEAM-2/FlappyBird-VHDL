@@ -27,7 +27,6 @@ begin
         if (rising_edge(I_CLK)) then
             if (I_RST = '1') then
                 L_LIVES <= "11";
-                O_GAME_OVER <= '0';
                 COLLIDED := '0';
             elsif (I_ADD_LIFE = '1') then
                 if (L_LIVES /= "11") then
@@ -36,9 +35,7 @@ begin
 
             else
                 if (I_Collision = '1' and COLLIDED = '0') then
-                    if (L_LIVES = "00") then
-                        O_GAME_OVER <= '1';
-                    else
+                    if (L_LIVES /= "00") then
                         L_LIVES <= L_LIVES - 1;
                     end if;
                     COLLIDED := '1';
@@ -55,4 +52,7 @@ begin
     EMPTY_INDEX;
     O_LIVES(5 downto 0) <= LIVE_INDEX when (L_LIVES >= 3) else
     EMPTY_INDEX;
+
+    O_GAME_OVER <= '1' when L_LIVES = "00" else
+        '0';
 end architecture;
