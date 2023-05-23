@@ -57,6 +57,7 @@ begin
             I_ENABLE => L_ENABLE,
             I_PIXEL => I_PIXEL,
             I_CLICK => L_M_LEFT,
+            I_DEAD => L_DEAD,
             O_BIRD => B_BIRD,
             O_RGB => B_RGB,
             O_ON => B_ON

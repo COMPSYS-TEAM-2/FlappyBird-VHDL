@@ -10,7 +10,7 @@ entity bird is
 	port (
 		I_CLK : in std_logic;
 		I_V_SYNC, I_CLICK : in std_logic;
-		I_RST, I_ENABLE : in std_logic;
+		I_RST, I_ENABLE, I_DEAD : in std_logic;
 		I_PIXEL : in T_RECT;
 		O_BIRD : out T_RECT;
 		O_RGB : out std_logic_vector(11 downto 0);
@@ -23,6 +23,9 @@ architecture behavior of bird is
 	signal L_BIRD_ON : std_logic;
 	signal L_BIRD_EYE_ON : std_logic;
 	signal L_BIRD_BEAK_ON : std_logic;
+	signal L_BIRD_SPRITE : std_logic_vector(5 downto 0);
+	signal L_EYE_SPRITE : std_logic_vector(5 downto 0);
+	signal L_BEAK_SPRITE : std_logic_vector(5 downto 0);
 
 begin
 	spriteBird : entity work.sprite
@@ -32,7 +35,7 @@ begin
 			I_Y => L_BIRD.Y,
 			I_PIXEL_ROW => I_PIXEL.Y,
 			I_PIXEL_COL => I_PIXEL.X,
-			I_INDEX => o"50",
+			I_INDEX => L_BIRD_SPRITE,
 			O_ON => L_BIRD_ON
 		);
 
@@ -43,7 +46,7 @@ begin
 			I_Y => L_BIRD.Y,
 			I_PIXEL_ROW => I_PIXEL.Y,
 			I_PIXEL_COL => I_PIXEL.X,
-			I_INDEX => o"51",
+			I_INDEX => L_EYE_SPRITE,
 			O_ON => L_BIRD_EYE_ON
 		);
 
@@ -54,7 +57,7 @@ begin
 			I_Y => L_BIRD.Y,
 			I_PIXEL_ROW => I_PIXEL.Y,
 			I_PIXEL_COL => I_PIXEL.X,
-			I_INDEX => o"52",
+			I_INDEX => L_BEAK_SPRITE,
 			O_ON => L_BIRD_BEAK_ON
 		);
 	move_bird : process (I_V_SYNC)
@@ -85,6 +88,14 @@ begin
 			L_BIRD.Y <= Y_POS;
 		end if;
 	end process move_bird;
+
+	L_BIRD_SPRITE <= o"50" when I_DEAD /= '1' else
+		o"53";
+	L_EYE_SPRITE <= o"51" when I_DEAD /= '1' else
+		o"54";
+	L_BEAK_SPRITE <= o"52" when I_DEAD /= '1' else
+		o"55";
+
 	O_BIRD <= L_BIRD;
 
 	O_ON <= L_BIRD_ON or L_BIRD_EYE_ON or L_BIRD_BEAK_ON;
