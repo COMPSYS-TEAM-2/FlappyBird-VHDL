@@ -24,7 +24,8 @@ entity pipe is
 		O_COLLISION : out std_logic;
 		O_PIPE_PASSED : out std_logic;
 		O_ADD_LIFE : out std_logic;
-		O_SLOW_TIME : out std_logic
+		O_SLOW_TIME : out std_logic;
+		O_SHEILD : out std_logic
 	);
 end entity pipe;
 
@@ -37,7 +38,8 @@ architecture behavior of pipe is
 	signal L_POWERUP_ON : std_logic;
 	signal L_ADD_LIFE : std_logic;
 	signal L_SLOW_TIME : std_logic;
-	signal L_COLLISION : std_logic;
+	signal L_SHEILD : std_logic;
+	signal PU_COLLISION : std_logic;
 begin
 	spritePowerup : entity work.sprite
 		port map(
@@ -57,7 +59,8 @@ begin
 			I_POWERUP_TYPE => L_POWERUP_TYPE,
 			O_ADD_LIFE => L_ADD_LIFE,
 			O_SLOW_TIME => L_SLOW_TIME,
-			O_COLLISION => L_COLLISION
+			O_SHEILD => L_SHEILD,
+			O_COLLISION => PU_COLLISION
 		);
 
 	Move_Pipes : process (I_V_SYNC)
@@ -98,7 +101,7 @@ begin
 		L_TOP.X <= X_POS;
 		L_BOTTOM.X <= X_POS;
 		L_POWERUP.X <= X_POS + conv_std_logic_vector(2, 11);
-		if (L_COLLISION = '1') then
+		if (PU_COLLISION = '1') then
 			L_POWERUP.Y <= conv_std_logic_vector(500, 10);
 		end if;
 	end process;
@@ -114,5 +117,6 @@ begin
 	O_COLLISION <= checkCollision(I_BIRD, L_TOP) or checkCollision(I_BIRD, L_BOTTOM);
 	O_ADD_LIFE <= L_ADD_LIFE;
 	O_SLOW_TIME <= L_SLOW_TIME;
+	O_SHEILD <= L_SHEILD;
 
 end behavior;

@@ -12,6 +12,7 @@ entity bird is
 		I_V_SYNC, I_CLICK : in std_logic;
 		I_RST, I_ENABLE : in std_logic;
 		I_PIXEL : in T_RECT;
+		I_SHEILD : in std_logic;
 		O_BIRD : out T_RECT;
 		O_RGB : out std_logic_vector(11 downto 0);
 		O_ON : out std_logic
@@ -91,7 +92,8 @@ begin
 
 	-- Colours for pixel data on video signal
 	-- Changing the background and ball colour by pushbuttons
-	O_RGB <= BIRD_RGB when (L_BIRD_ON = '1') else
+	O_RGB <= SHEILD_SPRITE_RGB when (L_BIRD_ON = '1' and I_SHEILD = '1') else
+		BIRD_RGB when (L_BIRD_ON = '1') else
 		BIRD_EYE_RGB when (L_BIRD_EYE_ON = '1') else
 		BIRD_BEAK_RGB when (L_BIRD_BEAK_ON = '1') else
 		(others => '0');

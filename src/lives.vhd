@@ -10,6 +10,7 @@ entity lives is
         I_PipePassed : in std_logic;
         I_Collision : in std_logic;
         I_ADD_LIFE : in std_logic;
+        I_SHEILD : in std_logic;
         O_LIVES : out std_logic_vector(17 downto 0);
         O_GAME_OVER : out std_logic
     );
@@ -35,7 +36,7 @@ begin
                 end if;
 
             else
-                if (I_Collision = '1' and COLLIDED = '0') then
+                if (I_Collision = '1' and COLLIDED = '0' and I_SHEILD = '0') then
                     if (L_LIVES = "00") then
                         O_GAME_OVER <= '1';
                     else

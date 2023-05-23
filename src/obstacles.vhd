@@ -18,7 +18,8 @@ entity obstacles is
         O_ON : out std_logic;
         O_COLLISION : out std_logic;
         O_PIPE_PASSED : out std_logic;
-        O_ADD_LIFE : out std_logic
+        O_ADD_LIFE : out std_logic;
+        O_SHEILD : out std_logic
     );
 end obstacles;
 
@@ -36,6 +37,9 @@ architecture behavior of obstacles is
     signal L_ADD_LIFE_B : std_logic;
     signal L_SLOW_TIME_A : std_logic;
     signal L_SLOW_TIME_B : std_logic;
+    signal L_SHEILD_A : std_logic;
+    signal L_SHEILD_B : std_logic;
+    signal L_SHEILD_O : std_logic;
 
     signal L_X_VEL : std_logic_vector(9 downto 0) := INITIAL_SPEED;
 begin
@@ -57,7 +61,8 @@ begin
             O_COLLISION => A_COLLISION,
             O_PIPE_PASSED => A_PIPE_PASSED,
             O_ADD_LIFE => L_ADD_LIFE_A,
-            O_SLOW_TIME => L_SLOW_TIME_A
+            O_SLOW_TIME => L_SLOW_TIME_A,
+            O_SHEILD => L_SHEILD_A
         );
 
     pipe_bee : entity work.pipe
@@ -78,11 +83,13 @@ begin
             O_COLLISION => B_COLLISION,
             O_PIPE_PASSED => B_PIPE_PASSED,
             O_ADD_LIFE => L_ADD_LIFE_B,
-            O_SLOW_TIME => L_SLOW_TIME_B
+            O_SLOW_TIME => L_SLOW_TIME_B,
+            O_SHEILD => L_SHEILD_B
         );
 
     process (I_V_SYNC)
         variable PP_COUNTER : std_logic_vector(3 downto 0);
+        variable S_COUNTER : std_logic_vector(3 downto 0);
     begin
         if (rising_edge(I_V_SYNC)) then
             if (I_RST = '1') then
@@ -90,6 +97,14 @@ begin
             elsif (I_ENABLE = '1') then
                 if (L_SLOW_TIME_A = '1' or L_SLOW_TIME_B = '1') then
                     L_X_VEL <= '0' & L_X_VEL(9 downto 1);
+                end if;
+                if (L_SHEILD_A = '1' or L_SHEILD_B = '1') then
+                    L_SHEILD_O <= '1';
+                    S_COUNTER := S_COUNTER + conv_std_logic_vector(1, 4);
+                    if (S_COUNTER = conv_std_logic_vector(5, 4)) then
+                        S_COUNTER := conv_std_logic_vector(0, 4);
+                        L_SHEILD_O <= '0';
+                    end if;
                 end if;
                 if (B_PIPE_PASSED = '1') then
                     if (PP_COUNTER = conv_std_logic_vector(10, 4)) then
@@ -110,4 +125,5 @@ begin
     O_COLLISION <= B_COLLISION or A_COLLISION;
     O_PIPE_PASSED <= A_PIPE_PASSED or B_PIPE_PASSED;
     O_ADD_LIFE <= L_ADD_LIFE_A or L_ADD_LIFE_B;
+    O_SHEILD <= L_SHEILD_O;
 end architecture;
