@@ -81,6 +81,7 @@ set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name TOP_LEVEL_ENTITY FlappyBird
 set_location_assignment PIN_P22 -to I_RST_N
 set_location_assignment PIN_U13 -to I_ENABLE_N
+set_global_assignment -name VHDL_FILE src/levelOut.vhdl
 set_global_assignment -name VHDL_FILE src/vga_sync.vhd
 set_global_assignment -name VHDL_FILE src/string.vhd
 set_global_assignment -name VHDL_FILE src/sprite.vhd

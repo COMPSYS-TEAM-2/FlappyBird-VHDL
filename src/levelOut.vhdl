@@ -19,6 +19,7 @@ begin
         case I_LEVEL is
 
             when "00" => -- score 1-10
+					G_TRIG := '0';
 
             when "01" => -- score 10-20
                 G_TRIG := '1';
