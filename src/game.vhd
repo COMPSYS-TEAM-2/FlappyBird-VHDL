@@ -13,6 +13,7 @@ entity game is
         I_PIXEL : in T_RECT;
         I_M_LEFT : in std_logic;
         O_RGB : out std_logic_vector(11 downto 0);
+        O_TO_MENU : out std_logic;
         O_LED : out std_logic
     );
 end game;
@@ -158,11 +159,11 @@ begin
     game_over : process (I_V_SYNC)
     begin
         if (rising_edge(I_V_SYNC)) then
-            O_LED <= '0';
+            O_TO_MENU <= '0';
             if (I_RST = '1') then
                 L_DEAD <= '0';
             elsif (I_M_LEFT = '1' and L_DEAD = '1' and OB_GAME_OVER = '1') then
-                O_LED <= '1';
+                O_TO_MENU <= '1';
             elsif (OB_GAME_OVER = '1' or LI_GAME_OVER = '1') then
                 L_DEAD <= '1';
             end if;

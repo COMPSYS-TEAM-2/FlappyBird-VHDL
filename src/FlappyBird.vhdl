@@ -32,6 +32,7 @@ architecture behavioral of FlappyBird is
     signal M_CURSOR_COL : std_logic_vector(9 downto 0);
 
     signal G_RGB : std_logic_vector(11 downto 0);
+    signal G_TO_MENU : std_logic;
     signal T_RGB : std_logic_vector(11 downto 0);
     signal T_BUTTON : std_logic_vector(1 downto 0);
 
@@ -84,6 +85,7 @@ begin
             I_PIXEL => L_PIXEL,
             I_M_LEFT => M_LEFT,
             O_RGB => G_RGB,
+            O_TO_MENU => G_TO_MENU,
             O_LED => O_LED
         );
 
@@ -112,13 +114,16 @@ begin
     state : process (V_V_SYNC)
     begin
         if (rising_edge(V_V_SYNC)) then
+            L_MENU_ENABLED <= '0';
+            L_GAME_ENABLED <= '0';
+            L_TRAINING <= '0';
+            L_GAME_RST_STATE <= '0';
             if (I_RST_N = '0') then
                 L_STATE <= "00";
+            elsif (G_TO_MENU = '1') then
+                L_STATE <= "00";
             else
-                L_MENU_ENABLED <= '0';
-                L_GAME_ENABLED <= '0';
-                L_TRAINING <= '0';
-                L_GAME_RST_STATE <= '0';
+
                 case L_STATE is
                     when "00" =>
                         L_STATE <= T_BUTTON;
