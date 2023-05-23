@@ -44,7 +44,7 @@ architecture behavior of game is
     signal L_PLAYING : STD_LOGIC;
     signal L_ENABLE : STD_LOGIC;
 
-    signal L_LEVEL : STD_LOGIC;
+    signal L_LEVEL : std_logic_vector(1 downto 0);
 begin
     bird : entity work.bird
         port map(
@@ -162,5 +162,5 @@ begin
         P_RGB when (P_ON = '1') else
         L_BACKGROUND_COLOUR;
     L_ENABLE <= I_ENABLE and L_PLAYING;
-    O_LED <= P_PIPE_PASSED;
+	 
 end architecture;

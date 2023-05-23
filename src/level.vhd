@@ -7,7 +7,7 @@ entity level is
     port (
         I_CLK : in STD_LOGIC;
         I_SCORE : in STD_LOGIC_VECTOR(5 downto 0);
-        O_LEVEL : out STD_LOGIC
+        O_LEVEL : out std_logic_vector(1 downto 0)
     );
 end level;
 architecture a of level is
@@ -17,12 +17,23 @@ begin
         variable V_LEVEL : STD_LOGIC := '0';
     begin
         case I_SCORE is
+		  
+				when "000000" =>
+                V_LEVEL := '00';
+		  
             when "000001" =>
-                V_LEVEL := '1';
+                V_LEVEL := '01';
+					 
+				when "000010" =>
+                V_LEVEL := '10';
+					 
+				when "000011" =>
+                V_LEVEL := '11';
 
             when others =>
-                V_LEVEL := '0';
+                V_LEVEL := '11';
         end case;
-        O_LEVEL <= V_LEVEL;
+       	 O_LEVEL <= V_LEVEL;
+
     end process;
 end architecture;
