@@ -94,6 +94,9 @@ begin
 		L_TOP.X <= X_POS;
 		L_BOTTOM.X <= X_POS;
 		L_POWERUP.X <= X_POS + conv_std_logic_vector(2, 11);
+		if (L_ADD_LIFE = '1') then
+			L_POWERUP.Y <= conv_std_logic_vector(500, 10);
+		end if;
 	end process;
 
 	O_PIPE_PASSED <= '1' when ((I_BIRD.X >= L_TOP.X + L_TOP.WIDTH) and (I_BIRD.X <= L_TOP.X + L_TOP.WIDTH + L_TOP.WIDTH)) else

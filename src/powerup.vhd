@@ -12,14 +12,12 @@ entity powerup is
         I_BIRD : in T_RECT;
         I_POWERUP : in T_RECT;
         I_POWERUP_TYPE : in std_logic_vector(5 downto 0);
-        O_POWERUP : out T_RECT;
         O_ADD_LIFE : out std_logic
     );
 end entity powerup;
 
 architecture behaviour of powerup is
     signal L_ADD_LIFE : std_logic := '0';
-    signal L_POWERUP : T_RECT := I_POWERUP;
 begin
     process (I_V_SYNC)
     begin
@@ -27,7 +25,6 @@ begin
             if (checkCollision(I_BIRD, I_POWERUP) = '1') then
                 if (I_POWERUP_TYPE = HEART_POWERUP) then
                     L_ADD_LIFE <= '1';
-                    L_POWERUP.Y <= conv_std_logic_vector(500, 10);
                 end if;
             else
                 L_ADD_LIFE <= '0';
@@ -35,5 +32,4 @@ begin
         end if;
     end process;
     O_ADD_LIFE <= L_ADD_LIFE;
-    O_POWERUP <= L_POWERUP;
 end architecture;
