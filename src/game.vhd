@@ -6,43 +6,45 @@ use work.RGBValues.BACKGROUND_RGB;
 
 entity game is
     port (
-        I_CLK : in std_logic;
-        I_V_SYNC : in std_logic;
-        I_RST, I_ENABLE : in std_logic;
-        I_TRAINING : in std_logic;
+        I_CLK : in STD_LOGIC;
+        I_V_SYNC : in STD_LOGIC;
+        I_RST, I_ENABLE : in STD_LOGIC;
+        I_TRAINING : in STD_LOGIC;
         I_PIXEL : in T_RECT;
-        I_M_LEFT : in std_logic;
-        O_RGB : out std_logic_vector(11 downto 0);
-        O_LED : out std_logic
+        I_M_LEFT : in STD_LOGIC;
+        O_RGB : out STD_LOGIC_VECTOR(11 downto 0);
+        O_LED : out STD_LOGIC
     );
 end game;
 
 architecture behavior of game is
-    signal B_RGB : std_logic_vector(11 downto 0);
-    signal B_ON : std_logic;
+    signal B_RGB : STD_LOGIC_VECTOR(11 downto 0);
+    signal B_ON : STD_LOGIC;
     signal B_BIRD : T_RECT;
 
-    signal P_RGB : std_logic_vector(11 downto 0);
-    signal P_ON : std_logic;
-    signal P_COLLISION_ON : std_logic;
-    signal P_PIPE_PASSED : std_logic;
+    signal P_RGB : STD_LOGIC_VECTOR(11 downto 0);
+    signal P_ON : STD_LOGIC;
+    signal P_COLLISION_ON : STD_LOGIC;
+    signal P_PIPE_PASSED : STD_LOGIC;
 
-    signal S_ONES : std_logic_vector(5 downto 0);
-    signal S_TENS : std_logic_vector(5 downto 0);
+    signal S_ONES : STD_LOGIC_VECTOR(5 downto 0);
+    signal S_TENS : STD_LOGIC_VECTOR(5 downto 0);
 
-    signal S_RGB : std_logic_vector(11 downto 0);
-    signal S_ON : std_logic;
+    signal S_RGB : STD_LOGIC_VECTOR(11 downto 0);
+    signal S_ON : STD_LOGIC;
 
-    signal LI_LIVES : std_logic_vector(17 downto 0);
-    signal LI_RGB : std_logic_vector(11 downto 0);
-    signal LI_ON : std_logic;
-    signal LI_GAME_OVER : std_logic;
+    signal LI_LIVES : STD_LOGIC_VECTOR(17 downto 0);
+    signal LI_RGB : STD_LOGIC_VECTOR(11 downto 0);
+    signal LI_ON : STD_LOGIC;
+    signal LI_GAME_OVER : STD_LOGIC;
 
-    signal LF_RANDOM : std_logic_vector(7 downto 0);
+    signal LF_RANDOM : STD_LOGIC_VECTOR(7 downto 0);
 
-    signal L_BACKGROUND_COLOUR : std_logic_vector(11 downto 0) := BACKGROUND_RGB;
-    signal L_PLAYING : std_logic;
-    signal L_ENABLE : std_logic;
+    signal L_BACKGROUND_COLOUR : STD_LOGIC_VECTOR(11 downto 0) := BACKGROUND_RGB;
+    signal L_PLAYING : STD_LOGIC;
+    signal L_ENABLE : STD_LOGIC;
+
+    signal L_LEVEL : STD_LOGIC;
 begin
     bird : entity work.bird
         port map(
@@ -80,6 +82,13 @@ begin
             O_VAL => LF_RANDOM
         );
 
+    getLevel : entity work.level
+        port map(
+            I_CLK => I_V_SYNC,
+            I_SCORE => S_TENS,
+            O_LEVEL => L_LEVEL
+        );
+
     score : entity work.score
         port map(
             I_CLK => I_V_SYNC,
@@ -90,7 +99,7 @@ begin
             O_TENS => S_TENS
         );
 
-    score_text : entity work.string
+    score_text : entity work.STRING
         generic map(
             X_CENTER => 639/2,
             Y_CENTER => 24,
@@ -118,7 +127,7 @@ begin
             O_GAME_OVER => LI_GAME_OVER
         );
 
-    lives_text : entity work.string
+    lives_text : entity work.STRING
         generic map(
             X_CENTER => 52,
             Y_CENTER => 24,
