@@ -21,17 +21,19 @@ entity pipe is
 		O_RGB : out std_logic_vector(11 downto 0);
 		O_ON : out std_logic;
 		O_COLLISION : out std_logic;
-		O_PIPE_PASSED : out std_logic
+		O_PIPE_PASSED : out std_logic;
+		O_ADD_LIFE : out std_logic
 	);
-end pipe;
+end entity pipe;
 
 architecture behavior of pipe is
 	constant INITIAL_SPEED : std_logic_vector(9 downto 0) := CONV_STD_LOGIC_VECTOR(2, 10);
 	signal L_TOP : T_RECT := CreateRect(0, 0, PIPE_WIDTH, 0);
 	signal L_BOTTOM : T_RECT := CreateRect(0, 0, PIPE_WIDTH, 0);
-	signal POWERUP_TYPE : std_logic_vector(5 downto 0);
+	signal L_POWERUP_TYPE : std_logic_vector(5 downto 0);
 	signal L_POWERUP : T_RECT := CreateRect(0, 0, PLAYER_SIZE, PLAYER_SIZE);
 	signal L_POWERUP_ON : std_logic;
+	signal L_ADD_LIFE : std_logic;
 begin
 	spritePowerup : entity work.sprite
 		port map(
@@ -40,8 +42,16 @@ begin
 			I_Y => L_POWERUP.Y,
 			I_PIXEL_ROW => I_PIXEL.Y,
 			I_PIXEL_COL => I_PIXEL.X,
-			I_INDEX => POWERUP_TYPE,
+			I_INDEX => L_POWERUP_TYPE,
 			O_ON => L_POWERUP_ON
+		);
+	powerup : entity work.powerup
+		port map(
+			I_V_SYNC => I_V_SYNC,
+			I_BIRD => I_BIRD,
+			I_POWERUP => L_POWERUP,
+			I_POWERUP_TYPE => L_POWERUP_TYPE,
+			O_ADD_LIFE => L_ADD_LIFE
 		);
 
 	Move_Pipes : process (I_V_SYNC)
@@ -63,13 +73,13 @@ begin
 					L_BOTTOM.Y <= Y_POS;
 					L_BOTTOM.HEIGHT <= conv_std_logic_vector(480, 10) - (Y_POS);
 					case (PIPE_GAP_POSITION(1 downto 0)) is
-						when "01" => POWERUP_TYPE <= CLOCK_POWERUP; -- Clock 
-						when "10" => POWERUP_TYPE <= SHEILD_POWERUP;-- Sheild
-						when others => POWERUP_TYPE <= HEART_POWERUP; -- Heart 
+						when "01" => L_POWERUP_TYPE <= CLOCK_POWERUP; -- Clock 
+						when "10" => L_POWERUP_TYPE <= SHEILD_POWERUP;-- Sheild
+						when others => L_POWERUP_TYPE <= HEART_POWERUP; -- Heart 
 					end case;
 					-- Powerup should only appear is the random value is within a range
 					if (PIPE_GAP_POSITION(3 downto 0) > 4) then
-						L_POWERUP.Y <= Y_POS - ('0' & PIPE_GAP(9 downto 1));
+						L_POWERUP.Y <= Y_POS - ('0' & PIPE_GAP(9 downto 1) - conv_std_logic_vector(PLAYER_SIZE/2, 10));
 					else
 						L_POWERUP.Y <= conv_std_logic_vector(500, 10);
 					end if;
@@ -84,6 +94,9 @@ begin
 		L_TOP.X <= X_POS;
 		L_BOTTOM.X <= X_POS;
 		L_POWERUP.X <= X_POS + conv_std_logic_vector(2, 11);
+		if (L_ADD_LIFE = '1') then
+			L_POWERUP.Y <= conv_std_logic_vector(500, 10);
+		end if;
 	end process;
 
 	O_PIPE_PASSED <= '1' when ((I_BIRD.X >= L_TOP.X + L_TOP.WIDTH) and (I_BIRD.X <= L_TOP.X + L_TOP.WIDTH + L_TOP.WIDTH)) else
@@ -91,9 +104,10 @@ begin
 	O_ON <= '1' when ((CheckCollision(I_PIXEL, L_TOP) = '1') or (CheckCollision(I_PIXEL, L_BOTTOM) = '1') or (L_POWERUP_ON = '1')) else
 		'0';
 	O_RGB <= PIPE_RGB when ((CheckCollision(I_PIXEL, L_TOP) or CheckCollision(I_PIXEL, L_BOTTOM)) = '1') else
-		HEART_SPRITE_RGB when (L_POWERUP_ON = '1' and POWERUP_TYPE = HEART_POWERUP) else
-		CLOCK_SPRITE_RGB when (L_POWERUP_ON = '1' and POWERUP_TYPE = CLOCK_POWERUP) else
-		SHEILD_SPRITE_RGB when (L_POWERUP_ON = '1' and POWERUP_TYPE = SHEILD_POWERUP);
+		HEART_SPRITE_RGB when (L_POWERUP_ON = '1' and L_POWERUP_TYPE = HEART_POWERUP) else
+		CLOCK_SPRITE_RGB when (L_POWERUP_ON = '1' and L_POWERUP_TYPE = CLOCK_POWERUP) else
+		SHEILD_SPRITE_RGB when (L_POWERUP_ON = '1' and L_POWERUP_TYPE = SHEILD_POWERUP);
 	O_COLLISION <= checkCollision(I_BIRD, L_TOP) or checkCollision(I_BIRD, L_BOTTOM);
+	O_ADD_LIFE <= L_ADD_LIFE;
 
 end behavior;
