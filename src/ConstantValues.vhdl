@@ -18,5 +18,7 @@ package Constantvalues is
     constant CLOCK_POWERUP : std_logic_vector(5 downto 0) := o"45";
     constant HEART_POWERUP : std_logic_vector(5 downto 0) := o"46";
     constant SHEILD_POWERUP : std_logic_vector(5 downto 0) := o"47";
+    constant GROUND_HEIGHT : integer := 10;
+    constant GRASS_HEIGHT : integer := 6;
 
 end package Constantvalues;
