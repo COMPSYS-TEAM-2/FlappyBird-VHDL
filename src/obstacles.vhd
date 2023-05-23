@@ -6,30 +6,30 @@ use work.Rectangle.all;
 
 entity obstacles is
     port (
-        I_CLK : in std_logic;
-        I_V_SYNC : in std_logic;
-        I_RST : in std_logic;
-        I_ENABLE : in std_logic;
+        I_CLK : in STD_LOGIC;
+        I_V_SYNC : in STD_LOGIC;
+        I_RST : in STD_LOGIC;
+        I_ENABLE : in STD_LOGIC;
         I_PIXEL : in T_RECT;
-        I_RANDOM : in std_logic_vector(7 downto 0);
+        I_RANDOM : in STD_LOGIC_VECTOR(7 downto 0);
         I_BIRD : in T_RECT;
-        O_RGB : out std_logic_vector(11 downto 0);
-        O_ON : out std_logic;
-        O_COLLISION : out std_logic;
-        O_PIPE_PASSED : out std_logic
+        O_RGB : out STD_LOGIC_VECTOR(11 downto 0);
+        O_ON : out STD_LOGIC;
+        O_COLLISION : out STD_LOGIC;
+        O_PIPE_PASSED : out STD_LOGIC
     );
 end obstacles;
 
 architecture behavior of obstacles is
-    signal A_RGB : std_logic_vector(11 downto 0);
-    signal A_COLLISION : std_logic;
-    signal A_ON : std_logic;
-    signal A_PIPE_PASSED : std_logic;
+    signal A_RGB : STD_LOGIC_VECTOR(11 downto 0);
+    signal A_COLLISION : STD_LOGIC;
+    signal A_ON : STD_LOGIC;
+    signal A_PIPE_PASSED : STD_LOGIC;
 
-    signal B_RGB : std_logic_vector(11 downto 0);
-    signal B_COLLISION : std_logic;
-    signal B_ON : std_logic;
-    signal B_PIPE_PASSED : std_logic;
+    signal B_RGB : STD_LOGIC_VECTOR(11 downto 0);
+    signal B_COLLISION : STD_LOGIC;
+    signal B_ON : STD_LOGIC;
+    signal B_PIPE_PASSED : STD_LOGIC;
 begin
     pipe_aye : entity work.pipe
         generic map(

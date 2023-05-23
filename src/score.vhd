@@ -6,25 +6,25 @@ use ieee.STD_LOGIC_unsigned.all;
 
 entity score is
     port (
-        I_CLK : in std_logic;
-        I_RST : in std_logic;
-        I_PipePassed : in std_logic; -- INPUT FROM PIPE BEING PASSED
-        I_Collision : in std_logic;
-        O_ONES : out std_logic_vector(5 downto 0); -- OUTPUT FOR DISPLAYSCORE.VHD
-        O_TENS : out std_logic_vector(5 downto 0) -- OUTPUT FOR DISPLAYSCORE.VHD
+        I_CLK : in STD_LOGIC;
+        I_RST : in STD_LOGIC;
+        I_PipePassed : in STD_LOGIC; -- INPUT FROM PIPE BEING PASSED
+        I_Collision : in STD_LOGIC;
+        O_ONES : out STD_LOGIC_VECTOR(5 downto 0); -- OUTPUT FOR DISPLAYSCORE.VHD
+        O_TENS : out STD_LOGIC_VECTOR(5 downto 0) -- OUTPUT FOR DISPLAYSCORE.VHD
     );
 end entity score;
 architecture behavioral of score is
-    signal L_ONES : std_logic_vector(5 downto 0) := conv_std_logic_vector(0, 6);
-    signal L_TENS : std_logic_vector(5 downto 0) := conv_std_logic_vector(0, 6);
+    signal L_ONES : STD_LOGIC_VECTOR(5 downto 0) := conv_std_logic_vector(0, 6);
+    signal L_TENS : STD_LOGIC_VECTOR(5 downto 0) := conv_std_logic_vector(0, 6);
 
 begin
     -- PROCESS TO UPDATE THE SCORE
     process (I_CLK)
-        variable COLLIDED : std_logic := '0';
-        variable INCREMENTED : std_logic := '0';
-        variable V_ONES : std_logic_vector(5 downto 0) := conv_std_logic_vector(0, 6);
-        variable V_TENS : std_logic_vector(5 downto 0) := conv_std_logic_vector(0, 6);
+        variable COLLIDED : STD_LOGIC := '0';
+        variable INCREMENTED : STD_LOGIC := '0';
+        variable V_ONES : STD_LOGIC_VECTOR(5 downto 0) := conv_std_logic_vector(0, 6);
+        variable V_TENS : STD_LOGIC_VECTOR(5 downto 0) := conv_std_logic_vector(0, 6);
     begin
         if (rising_edge(I_CLK)) then
             if (I_RST = '1') then

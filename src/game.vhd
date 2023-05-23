@@ -44,7 +44,8 @@ architecture behavior of game is
     signal L_PLAYING : STD_LOGIC;
     signal L_ENABLE : STD_LOGIC;
 
-    signal L_LEVEL : std_logic_vector(1 downto 0);
+    signal L_LEVEL : STD_LOGIC_VECTOR(1 downto 0);
+    signal L_GRAVITY_TRIGGER : STD_LOGIC;
 begin
     bird : entity work.bird
         port map(
@@ -88,7 +89,12 @@ begin
             I_SCORE => S_TENS,
             O_LEVEL => L_LEVEL
         );
-
+    leveltrig_inst : entity work.levelTrig
+        port map(
+            I_CLK => I_CLK,
+            I_LEVEL => L_LEVEL,
+            O_REV_GRAVITY => L_GRAVITY_TRIGGER
+        );
     score : entity work.score
         port map(
             I_CLK => I_V_SYNC,
@@ -162,5 +168,6 @@ begin
         P_RGB when (P_ON = '1') else
         L_BACKGROUND_COLOUR;
     L_ENABLE <= I_ENABLE and L_PLAYING;
-	 
+
+    O_LED <= L_GRAVITY_TRIGGER;
 end architecture;
