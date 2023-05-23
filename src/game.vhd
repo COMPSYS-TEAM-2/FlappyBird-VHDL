@@ -43,6 +43,9 @@ architecture behavior of game is
     signal L_BACKGROUND_COLOUR : std_logic_vector(11 downto 0) := BACKGROUND_RGB;
     signal L_PLAYING : std_logic;
     signal L_ENABLE : std_logic;
+
+    signal LI_ADD_LIFE : std_logic;
+
 begin
     bird : entity work.bird
         port map(
@@ -69,7 +72,8 @@ begin
             O_RGB => P_RGB,
             O_ON => P_ON,
             O_COLLISION => P_COLLISION_ON,
-            O_PIPE_PASSED => P_PIPE_PASSED
+            O_PIPE_PASSED => P_PIPE_PASSED,
+            O_ADD_LIFE => LI_ADD_LIFE
         );
 
     -- Define the Linear Feeback Shift Register
@@ -111,7 +115,7 @@ begin
         port map(
             I_CLK => I_V_SYNC,
             I_RST => I_RST,
-            I_ADD_LIFE => '0',
+            I_ADD_LIFE => LI_ADD_LIFE,
             I_pipePassed => P_PIPE_PASSED,
             I_collision => P_COLLISION_ON,
             O_LIVES => LI_LIVES,
