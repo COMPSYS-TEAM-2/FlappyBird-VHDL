@@ -55,6 +55,7 @@ begin
             I_ENABLE => L_ENABLE,
             I_PIXEL => I_PIXEL,
             I_CLICK => I_M_LEFT,
+            I_GRAVITY => L_GRAVITY_TRIGGER,
             O_BIRD => B_BIRD,
             O_RGB => B_RGB,
             O_ON => B_ON
