@@ -6,47 +6,50 @@ use work.RGBValues.BACKGROUND_RGB;
 
 entity game is
     port (
-        I_CLK : in STD_LOGIC;
-        I_V_SYNC : in STD_LOGIC;
-        I_RST, I_ENABLE : in STD_LOGIC;
-        I_TRAINING : in STD_LOGIC;
+        I_CLK : in std_logic;
+        I_V_SYNC : in std_logic;
+        I_RST, I_ENABLE : in std_logic;
+        I_TRAINING : in std_logic;
         I_PIXEL : in T_RECT;
-        I_M_LEFT : in STD_LOGIC;
-        O_RGB : out STD_LOGIC_VECTOR(11 downto 0);
-        O_LED : out STD_LOGIC
+        I_M_LEFT : in std_logic;
+        O_RGB : out std_logic_vector(11 downto 0);
+        O_LED : out std_logic
     );
 end game;
 
 architecture behavior of game is
-    signal B_RGB : STD_LOGIC_VECTOR(11 downto 0);
-    signal B_ON : STD_LOGIC;
+    signal B_RGB : std_logic_vector(11 downto 0);
+    signal B_ON : std_logic;
     signal B_BIRD : T_RECT;
 
-    signal P_RGB : STD_LOGIC_VECTOR(11 downto 0);
-    signal P_ON : STD_LOGIC;
-    signal P_COLLISION_ON : STD_LOGIC;
-    signal P_PIPE_PASSED : STD_LOGIC;
+    signal P_RGB : std_logic_vector(11 downto 0);
+    signal P_ON : std_logic;
+    signal P_COLLISION_ON : std_logic;
+    signal P_PIPE_PASSED : std_logic;
 
-    signal S_ONES : STD_LOGIC_VECTOR(5 downto 0);
-    signal S_TENS : STD_LOGIC_VECTOR(5 downto 0);
+    signal S_ONES : std_logic_vector(5 downto 0);
+    signal S_TENS : std_logic_vector(5 downto 0);
+    signal PU_SHEILD : std_logic;
 
-    signal S_RGB : STD_LOGIC_VECTOR(11 downto 0);
-    signal S_ON : STD_LOGIC;
+    signal S_RGB : std_logic_vector(11 downto 0);
+    signal S_ON : std_logic;
 
-    signal LI_LIVES : STD_LOGIC_VECTOR(17 downto 0);
-    signal LI_RGB : STD_LOGIC_VECTOR(11 downto 0);
-    signal LI_ON : STD_LOGIC;
-    signal LI_GAME_OVER : STD_LOGIC;
+    signal LI_LIVES : std_logic_vector(17 downto 0);
+    signal LI_RGB : std_logic_vector(11 downto 0);
+    signal LI_ON : std_logic;
+    signal LI_GAME_OVER : std_logic;
 
-    signal LF_RANDOM : STD_LOGIC_VECTOR(7 downto 0);
+    signal LF_RANDOM : std_logic_vector(7 downto 0);
 
-    signal L_BACKGROUND_COLOUR : STD_LOGIC_VECTOR(11 downto 0) := BACKGROUND_RGB;
-    signal L_PLAYING : STD_LOGIC;
-    signal L_ENABLE : STD_LOGIC;
+    signal L_BACKGROUND_COLOUR : std_logic_vector(11 downto 0) := BACKGROUND_RGB;
+    signal L_PLAYING : std_logic;
+    signal L_ENABLE : std_logic;
 
-    signal L_LEVEL : STD_LOGIC_VECTOR(1 downto 0);
-    signal L_GRAVITY_TRIGGER : STD_LOGIC;
-    signal L_S_PIPE : STD_LOGIC;
+    signal L_LEVEL : std_logic_vector(1 downto 0);
+    signal L_GRAVITY_TRIGGER : std_logic;
+    signal L_S_PIPE : std_logic;
+
+    signal LI_ADD_LIFE : std_logic;
 begin
     bird : entity work.bird
         port map(
@@ -57,6 +60,7 @@ begin
             I_PIXEL => I_PIXEL,
             I_CLICK => I_M_LEFT,
             I_GRAVITY => L_GRAVITY_TRIGGER,
+            I_SHEILD => PU_SHEILD,
             O_BIRD => B_BIRD,
             O_RGB => B_RGB,
             O_ON => B_ON
@@ -75,7 +79,9 @@ begin
             O_RGB => P_RGB,
             O_ON => P_ON,
             O_COLLISION => P_COLLISION_ON,
-            O_PIPE_PASSED => P_PIPE_PASSED
+            O_PIPE_PASSED => P_PIPE_PASSED,
+            O_ADD_LIFE => LI_ADD_LIFE,
+            O_SHEILD => PU_SHEILD
         );
 
     -- Define the Linear Feeback Shift Register
@@ -109,7 +115,7 @@ begin
             O_TENS => S_TENS
         );
 
-    score_text : entity work.STRING
+    score_text : entity work.string
         generic map(
             X_CENTER => 639/2,
             Y_CENTER => 24,
@@ -130,14 +136,15 @@ begin
         port map(
             I_CLK => I_V_SYNC,
             I_RST => I_RST,
-            I_ADD_LIFE => '0',
+            I_ADD_LIFE => LI_ADD_LIFE,
             I_pipePassed => P_PIPE_PASSED,
             I_collision => P_COLLISION_ON,
+            I_SHEILD => PU_SHEILD,
             O_LIVES => LI_LIVES,
             O_GAME_OVER => LI_GAME_OVER
         );
 
-    lives_text : entity work.STRING
+    lives_text : entity work.string
         generic map(
             X_CENTER => 52,
             Y_CENTER => 24,

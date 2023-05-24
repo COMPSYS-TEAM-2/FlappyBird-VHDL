@@ -41,7 +41,7 @@ set_global_assignment -name FAMILY "Cyclone V"
 set_global_assignment -name DEVICE 5CEBA4F23C7
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 22.1STD.1
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "11:14:16  APRIL 26, 2023"
-set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Standard Edition"
+set_global_assignment -name LAST_QUARTUS_VERSION "22.1std.1 Lite Edition"
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name BOARD "DE0-CV Development Board"
 set_global_assignment -name EDA_SIMULATION_TOOL "<None>"
@@ -81,24 +81,26 @@ set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name TOP_LEVEL_ENTITY FlappyBird
 set_location_assignment PIN_P22 -to I_RST_N
 set_location_assignment PIN_U13 -to I_ENABLE_N
-set_global_assignment -name VHDL_FILE src/levelOut.vhdl
-set_global_assignment -name VHDL_FILE src/vga_sync.vhd
 set_global_assignment -name VHDL_FILE src/string.vhd
+set_global_assignment -name VHDL_FILE src/powerup.vhd
+set_global_assignment -name VHDL_FILE src/levelOut.vhdl
+set_global_assignment -name VHDL_FILE src/ground.vhd
+set_global_assignment -name VHDL_FILE src/ConstantValues.vhdl
+set_global_assignment -name VHDL_FILE src/char_rom.vhd
+set_global_assignment -name VHDL_FILE src/bird.vhd
 set_global_assignment -name VHDL_FILE src/sprite.vhd
 set_global_assignment -name VHDL_FILE src/score.vhd
 set_global_assignment -name VHDL_FILE src/RGBValues.vhdl
 set_global_assignment -name VHDL_FILE src/Rectangle.vhdl
 set_global_assignment -name VHDL_FILE src/pipe.vhd
 set_global_assignment -name VHDL_FILE src/obstacles.vhd
-set_global_assignment -name VHDL_FILE src/mouse.vhd
 set_global_assignment -name VHDL_FILE src/menubutton.vhdl
 set_global_assignment -name VHDL_FILE src/menu.vhdl
 set_global_assignment -name VHDL_FILE src/lives.vhd
 set_global_assignment -name VHDL_FILE src/lfsr.vhd
 set_global_assignment -name VHDL_FILE src/level.vhd
-set_global_assignment -name VHDL_FILE src/game.vhd
 set_global_assignment -name VHDL_FILE src/FlappyBird.vhdl
-set_global_assignment -name VHDL_FILE src/ConstantValues.vhdl
-set_global_assignment -name VHDL_FILE src/char_rom.vhd
-set_global_assignment -name VHDL_FILE src/bird.vhd
+set_global_assignment -name VHDL_FILE src/vga_sync.vhd
+set_global_assignment -name VHDL_FILE src/mouse.vhd
+set_global_assignment -name VHDL_FILE src/game.vhd
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

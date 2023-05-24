@@ -17,5 +17,7 @@ package RGBValues is
     constant BIRD_RGB : std_logic_vector(11 downto 0) := x"93A";
     constant BIRD_EYE_RGB : std_logic_vector(11 downto 0) := x"000";
     constant BIRD_BEAK_RGB : std_logic_vector(11 downto 0) := x"FF0";
+    constant GROUND_RGB : std_logic_vector(11 downto 0) := x"752";
+    constant GRASS_RGB : std_logic_vector(11 downto 0) := x"8d5";
 
 end package RGBValues;
