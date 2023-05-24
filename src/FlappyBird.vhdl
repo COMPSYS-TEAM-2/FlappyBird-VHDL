@@ -66,7 +66,7 @@ begin
     mouse : entity work.mouse
         port map(
             I_CLK_25Mhz => L_CLK,
-            I_RST => not I_RST_N,
+            I_RST => L_M_RST,
             IO_DATA => IO_DATA,
             IO_MCLK => IO_MCLK,
             O_LEFT => M_LEFT,
@@ -157,4 +157,5 @@ begin
     L_GAME_RST <= (not I_RST_N) or L_GAME_RST_STATE;
     L_GAME_ENABLE <= (not I_ENABLE_N) and L_GAME_ENABLED;
     O_V_SYNC <= V_V_SYNC;
+    L_M_RST <= (not I_RST_N) or G_TO_MENU;
 end architecture;
