@@ -32,13 +32,10 @@ begin
                 G_TRIG := '0';
                 P_TRIG := '1';
 
-            when "11" => -- score 30-40
+            when others => -- score 30-40
                 G_TRIG := '1';
                 P_TRIG := '1';
 
-            when others => -- score 40+
-                G_TRIG := '0';
-                P_TRIG := '0';
         end case;
 
         O_REV_GRAVITY <= G_TRIG;

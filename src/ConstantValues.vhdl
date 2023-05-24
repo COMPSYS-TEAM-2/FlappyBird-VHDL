@@ -9,7 +9,7 @@ package Constantvalues is
     constant GRAVITY : STD_LOGIC_VECTOR(9 downto 0) := conv_std_logic_vector(1, 10);
     constant PLAYER_SIZE : INTEGER := 32;
     constant PIPE_GAP_ONE : STD_LOGIC_VECTOR(9 downto 0) := conv_std_logic_vector(195, 10);
-    constant PIPE_GAP_TWO : STD_LOGIC_VECTOR(9 downto 0) := conv_std_logic_vector(120, 10);
+    constant PIPE_GAP_TWO : STD_LOGIC_VECTOR(9 downto 0) := conv_std_logic_vector(130, 10);
     constant PIPE_WIDTH : INTEGER := 40;
     constant PIPE_ACCELERATION : STD_LOGIC_VECTOR(9 downto 0) := conv_std_logic_vector(1, 10);
     constant MENU_BUTTON_SIZE_X : INTEGER := 160;

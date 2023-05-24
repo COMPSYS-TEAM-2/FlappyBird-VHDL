@@ -118,7 +118,8 @@ begin
 		'0';
 	O_ON <= '1' when ((CheckCollision(I_PIXEL, L_TOP) = '1') or (CheckCollision(I_PIXEL, L_BOTTOM) = '1') or (L_POWERUP_ON = '1')) else
 		'0';
-	O_RGB <= PIPE_RGB when ((CheckCollision(I_PIXEL, L_TOP) or CheckCollision(I_PIXEL, L_BOTTOM)) = '1') else
+	O_RGB <= PIPE_RGB_ONE when (((CheckCollision(I_PIXEL, L_TOP) or CheckCollision(I_PIXEL, L_BOTTOM)) = '1') and I_LEVEL_THREE = '0') else
+		PIPE_RGB_TWO when (((CheckCollision(I_PIXEL, L_TOP) or CheckCollision(I_PIXEL, L_BOTTOM)) = '1') and I_LEVEL_THREE = '1') else
 		HEART_SPRITE_RGB when (L_POWERUP_ON = '1' and POWERUP_TYPE = HEART_POWERUP) else
 		CLOCK_SPRITE_RGB when (L_POWERUP_ON = '1' and POWERUP_TYPE = CLOCK_POWERUP) else
 		SHEILD_SPRITE_RGB when (L_POWERUP_ON = '1' and POWERUP_TYPE = SHEILD_POWERUP);

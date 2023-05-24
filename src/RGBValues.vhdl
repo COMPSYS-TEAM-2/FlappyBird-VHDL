@@ -4,7 +4,8 @@ use IEEE.STD_LOGIC_ARITH.all;
 use IEEE.STD_LOGIC_SIGNED.all;
 
 package RGBValues is
-    constant PIPE_RGB : std_logic_vector(11 downto 0) := x"5E2";
+    constant PIPE_RGB_ONE : std_logic_vector(11 downto 0) := x"5E2";
+	 constant PIPE_RGB_TWO : std_logic_vector(11 downto 0) := x"F00";
     constant BACKGROUND_RGB : std_logic_vector(11 downto 0) := x"2AC";
     constant MOUSE_RGB : std_logic_vector(11 downto 0) := x"000";
     constant MENU_BACKGROUND_RGB : std_logic_vector(11 downto 0) := x"EA4";
