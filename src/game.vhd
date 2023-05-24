@@ -32,6 +32,7 @@ architecture behavior of game is
 
     signal S_ONES : std_logic_vector(5 downto 0);
     signal S_TENS : std_logic_vector(5 downto 0);
+    signal PU_SHEILD : std_logic;
 
     signal S_RGB : std_logic_vector(11 downto 0);
     signal S_ON : std_logic;
@@ -49,6 +50,12 @@ architecture behavior of game is
     signal L_PIPE_ENABLE : std_logic;
     signal L_DEAD : std_logic;
     signal L_M_LEFT : std_logic;
+    signal L_LEVEL : std_logic_vector(1 downto 0);
+    signal L_GRAVITY_TRIGGER : std_logic;
+    signal L_S_PIPE : std_logic;
+
+    signal LI_ADD_LIFE : std_logic;
+
 begin
     bird : entity work.bird
         port map(
@@ -59,6 +66,8 @@ begin
             I_PIXEL => I_PIXEL,
             I_CLICK => L_M_LEFT,
             I_DEAD => L_DEAD,
+            I_GRAVITY => L_GRAVITY_TRIGGER,
+            I_SHEILD => PU_SHEILD,
             O_BIRD => B_BIRD,
             O_RGB => B_RGB,
             O_ON => B_ON
@@ -73,12 +82,14 @@ begin
             I_PIXEL => I_PIXEL,
             I_BIRD => B_BIRD,
             I_RANDOM => LF_RANDOM,
+            I_LEVEL_THREE => L_S_PIPE,
             O_RGB => OB_RGB,
             O_ON => OB_ON,
             O_COLLISION => OB_COLLISION_ON,
             O_PIPE_PASSED => OB_PIPE_PASSED,
             O_ADD_LIFE => OB_ADD_LIFE,
-            O_GAME_OVER => OB_GAME_OVER
+            O_GAME_OVER => OB_GAME_OVER,
+            O_SHEILD => PU_SHEILD
         );
 
     -- Define the Linear Feeback Shift Register
@@ -89,6 +100,19 @@ begin
             O_VAL => LF_RANDOM
         );
 
+    getLevel : entity work.level
+        port map(
+            I_CLK => I_V_SYNC,
+            I_SCORE => S_TENS,
+            O_LEVEL => L_LEVEL
+        );
+    leveltrig_inst : entity work.levelTrig
+        port map(
+            I_CLK => I_CLK,
+            I_LEVEL => L_LEVEL,
+            O_REV_GRAVITY => L_GRAVITY_TRIGGER,
+            O_S_PIPE => L_S_PIPE
+        );
     score : entity work.score
         port map(
             I_CLK => I_V_SYNC,
@@ -123,6 +147,7 @@ begin
             I_ADD_LIFE => OB_ADD_LIFE,
             I_pipePassed => OB_PIPE_PASSED,
             I_collision => OB_COLLISION_ON,
+            I_SHEILD => PU_SHEILD,
             O_LIVES => LI_LIVES,
             O_GAME_OVER => LI_GAME_OVER
         );
@@ -179,5 +204,5 @@ begin
 
     L_PIPE_ENABLE <= L_ENABLE and not L_DEAD;
     L_M_LEFT <= I_M_LEFT and not L_DEAD;
-
+    O_LED <= L_GRAVITY_TRIGGER;
 end architecture;
