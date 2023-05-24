@@ -26,6 +26,7 @@ architecture behavior of game is
     signal P_ON : std_logic;
     signal P_COLLISION_ON : std_logic;
     signal P_PIPE_PASSED : std_logic;
+    signal PU_SHEILD : std_logic;
 
     signal S_ONES : std_logic_vector(5 downto 0);
     signal S_TENS : std_logic_vector(5 downto 0);
@@ -45,7 +46,6 @@ architecture behavior of game is
     signal L_ENABLE : std_logic;
 
     signal LI_ADD_LIFE : std_logic;
-
 begin
     bird : entity work.bird
         port map(
@@ -55,6 +55,7 @@ begin
             I_ENABLE => L_ENABLE,
             I_PIXEL => I_PIXEL,
             I_CLICK => I_M_LEFT,
+            I_SHEILD => PU_SHEILD,
             O_BIRD => B_BIRD,
             O_RGB => B_RGB,
             O_ON => B_ON
@@ -73,7 +74,8 @@ begin
             O_ON => P_ON,
             O_COLLISION => P_COLLISION_ON,
             O_PIPE_PASSED => P_PIPE_PASSED,
-            O_ADD_LIFE => LI_ADD_LIFE
+            O_ADD_LIFE => LI_ADD_LIFE,
+            O_SHEILD => PU_SHEILD
         );
 
     -- Define the Linear Feeback Shift Register
@@ -118,6 +120,7 @@ begin
             I_ADD_LIFE => LI_ADD_LIFE,
             I_pipePassed => P_PIPE_PASSED,
             I_collision => P_COLLISION_ON,
+            I_SHEILD => PU_SHEILD,
             O_LIVES => LI_LIVES,
             O_GAME_OVER => LI_GAME_OVER
         );
