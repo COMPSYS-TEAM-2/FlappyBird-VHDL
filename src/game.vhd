@@ -183,13 +183,18 @@ begin
     end process;
 
     game_over : process (I_V_SYNC)
+        variable M_DOWN : std_logic := '0';
     begin
         if (rising_edge(I_V_SYNC)) then
             O_TO_MENU <= '0';
             if (I_RST = '1') then
+                M_DOWN := '0';
                 L_DEAD <= '0';
             elsif (I_M_LEFT = '1' and L_DEAD = '1' and OB_GAME_OVER = '1') then
+                M_DOWN := '1';
+            elsif (I_M_LEFT = '0' and M_DOWN = '1') then
                 O_TO_MENU <= '1';
+                M_DOWN := '0';
             elsif (OB_GAME_OVER = '1' or LI_GAME_OVER = '1') then
                 L_DEAD <= '1';
             end if;
