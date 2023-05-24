@@ -46,6 +46,7 @@ architecture behavior of game is
 
     signal L_LEVEL : STD_LOGIC_VECTOR(1 downto 0);
     signal L_GRAVITY_TRIGGER : STD_LOGIC;
+    signal L_S_PIPE : STD_LOGIC;
 begin
     bird : entity work.bird
         port map(
@@ -70,6 +71,7 @@ begin
             I_PIXEL => I_PIXEL,
             I_BIRD => B_BIRD,
             I_RANDOM => LF_RANDOM,
+            I_LEVEL_THREE => L_S_PIPE,
             O_RGB => P_RGB,
             O_ON => P_ON,
             O_COLLISION => P_COLLISION_ON,
@@ -94,7 +96,8 @@ begin
         port map(
             I_CLK => I_CLK,
             I_LEVEL => L_LEVEL,
-            O_REV_GRAVITY => L_GRAVITY_TRIGGER
+            O_REV_GRAVITY => L_GRAVITY_TRIGGER,
+            O_S_PIPE => L_S_PIPE
         );
     score : entity work.score
         port map(

@@ -13,6 +13,7 @@ entity obstacles is
         I_PIXEL : in T_RECT;
         I_RANDOM : in STD_LOGIC_VECTOR(7 downto 0);
         I_BIRD : in T_RECT;
+        I_LEVEL_THREE : in STD_LOGIC;
         O_RGB : out STD_LOGIC_VECTOR(11 downto 0);
         O_ON : out STD_LOGIC;
         O_COLLISION : out STD_LOGIC;
@@ -31,6 +32,7 @@ architecture behavior of obstacles is
     signal B_ON : STD_LOGIC;
     signal B_PIPE_PASSED : STD_LOGIC;
 begin
+
     pipe_aye : entity work.pipe
         generic map(
             X_START => CONV_STD_LOGIC_VECTOR(680, 11)
@@ -43,6 +45,7 @@ begin
             I_PIXEL => I_PIXEL,
             I_PIPE_GAP_POSITION => I_RANDOM,
             I_BIRD => I_BIRD,
+            I_LEVEL_THREE => I_LEVEL_THREE,
             O_RGB => A_RGB,
             O_ON => A_ON,
             O_COLLISION => A_COLLISION,
@@ -62,6 +65,7 @@ begin
             I_PIXEL => I_PIXEL,
             I_PIPE_GAP_POSITION => I_RANDOM,
             I_BIRD => I_BIRD,
+            I_LEVEL_THREE => I_LEVEL_THREE,
             O_RGB => B_RGB,
             O_ON => B_ON,
             O_COLLISION => B_COLLISION,

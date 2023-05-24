@@ -8,30 +8,31 @@ use work.RGBValues.all;
 
 entity pipe is
 	generic (
-		X_START : std_logic_vector(10 downto 0)
+		X_START : STD_LOGIC_VECTOR(10 downto 0)
 	);
 	port (
-		I_CLK : in std_logic;
-		I_V_SYNC : in std_logic;
-		I_RST : in std_logic;
-		I_ENABLE : in std_logic;
+		I_CLK : in STD_LOGIC;
+		I_V_SYNC : in STD_LOGIC;
+		I_RST : in STD_LOGIC;
+		I_ENABLE : in STD_LOGIC;
 		I_PIXEL : in T_RECT;
-		I_PIPE_GAP_POSITION : in std_logic_vector(7 downto 0);
+		I_PIPE_GAP_POSITION : in STD_LOGIC_VECTOR(7 downto 0);
 		I_BIRD : in T_RECT;
-		O_RGB : out std_logic_vector(11 downto 0);
-		O_ON : out std_logic;
-		O_COLLISION : out std_logic;
-		O_PIPE_PASSED : out std_logic
+		I_LEVEL_THREE : in STD_LOGIC;
+		O_RGB : out STD_LOGIC_VECTOR(11 downto 0);
+		O_ON : out STD_LOGIC;
+		O_COLLISION : out STD_LOGIC;
+		O_PIPE_PASSED : out STD_LOGIC
 	);
 end pipe;
 
 architecture behavior of pipe is
-	constant INITIAL_SPEED : std_logic_vector(9 downto 0) := CONV_STD_LOGIC_VECTOR(2, 10);
+	constant INITIAL_SPEED : STD_LOGIC_VECTOR(9 downto 0) := CONV_STD_LOGIC_VECTOR(2, 10);
 	signal L_TOP : T_RECT := CreateRect(0, 0, PIPE_WIDTH, 0);
 	signal L_BOTTOM : T_RECT := CreateRect(0, 0, PIPE_WIDTH, 0);
-	signal POWERUP_TYPE : std_logic_vector(5 downto 0);
+	signal POWERUP_TYPE : STD_LOGIC_VECTOR(5 downto 0);
 	signal L_POWERUP : T_RECT := CreateRect(0, 0, PLAYER_SIZE, PLAYER_SIZE);
-	signal L_POWERUP_ON : std_logic;
+	signal L_POWERUP_ON : STD_LOGIC;
 begin
 	spritePowerup : entity work.sprite
 		port map(
@@ -45,10 +46,10 @@ begin
 		);
 
 	Move_Pipes : process (I_V_SYNC)
-		variable X_POS : std_logic_vector(10 downto 0) := X_START;
-		variable X_VEL : std_logic_vector(9 downto 0) := INITIAL_SPEED;
-		variable PIPE_GAP_POSITION : std_logic_vector(9 downto 0);
-		variable Y_POS : std_logic_vector(9 downto 0);
+		variable X_POS : STD_LOGIC_VECTOR(10 downto 0) := X_START;
+		variable X_VEL : STD_LOGIC_VECTOR(9 downto 0) := INITIAL_SPEED;
+		variable PIPE_GAP_POSITION : STD_LOGIC_VECTOR(9 downto 0);
+		variable Y_POS : STD_LOGIC_VECTOR(9 downto 0);
 	begin
 		-- Move pipes once every vertical sync
 		if (rising_edge(I_V_SYNC)) then
@@ -56,28 +57,55 @@ begin
 				X_POS := X_START;
 				X_VEL := INITIAL_SPEED;
 			elsif (I_ENABLE = '1') then
-				if (X_POS >= conv_std_logic_vector(640, 11)) then
-					PIPE_GAP_POSITION := ("00" & I_PIPE_GAP_POSITION) + CONV_STD_LOGIC_VECTOR((480 - 256)/2, 10);
-					L_TOP.HEIGHT <= PIPE_GAP_POSITION - ('0' & PIPE_GAP(9 downto 1));
-					Y_POS := PIPE_GAP_POSITION + ('0' & PIPE_GAP(9 downto 1));
-					L_BOTTOM.Y <= Y_POS;
-					L_BOTTOM.HEIGHT <= conv_std_logic_vector(480, 10) - (Y_POS);
-					case (PIPE_GAP_POSITION(1 downto 0)) is
-						when "01" => POWERUP_TYPE <= CLOCK_POWERUP; -- Clock 
-						when "10" => POWERUP_TYPE <= SHEILD_POWERUP;-- Sheild
-						when others => POWERUP_TYPE <= HEART_POWERUP; -- Heart 
-					end case;
-					-- Powerup should only appear is the random value is within a range
-					if (PIPE_GAP_POSITION(3 downto 0) > 4) then
-						L_POWERUP.Y <= Y_POS - ('0' & PIPE_GAP(9 downto 1));
-					else
-						L_POWERUP.Y <= conv_std_logic_vector(500, 10);
+				if (I_LEVEL_THREE = '1') then
+					if (X_POS >= conv_std_logic_vector(640, 11)) then
+						PIPE_GAP_POSITION := ("00" & I_PIPE_GAP_POSITION) + CONV_STD_LOGIC_VECTOR((480 - 256)/2, 10);
+						L_TOP.HEIGHT <= PIPE_GAP_POSITION - ('0' & PIPE_GAP_TWO(9 downto 1));
+						Y_POS := PIPE_GAP_POSITION + ('0' & PIPE_GAP_TWO(9 downto 1));
+						L_BOTTOM.Y <= Y_POS;
+						L_BOTTOM.HEIGHT <= conv_std_logic_vector(480, 10) - (Y_POS);
+						case (PIPE_GAP_POSITION(1 downto 0)) is
+							when "01" => POWERUP_TYPE <= CLOCK_POWERUP; -- Clock 
+							when "10" => POWERUP_TYPE <= SHEILD_POWERUP;-- Sheild
+							when others => POWERUP_TYPE <= HEART_POWERUP; -- Heart 
+						end case;
+						-- Powerup should only appear is the random value is within a range
+						if (PIPE_GAP_POSITION(3 downto 0) > 4) then
+							L_POWERUP.Y <= Y_POS - ('0' & PIPE_GAP_TWO(9 downto 1));
+						else
+							L_POWERUP.Y <= conv_std_logic_vector(500, 10);
+						end if;
 					end if;
-				end if;
-				X_POS := X_POS - X_VEL;
-				-- If the pipes overflow, place them back at the start
-				if (X_POS <= - CONV_STD_LOGIC_VECTOR(PIPE_WIDTH, 11)) then
-					X_POS := CONV_STD_LOGIC_VECTOR(640, 11);
+					X_POS := X_POS - X_VEL;
+					-- If the pipes overflow, place them back at the start
+					if (X_POS <= - CONV_STD_LOGIC_VECTOR(PIPE_WIDTH, 11)) then
+						X_POS := CONV_STD_LOGIC_VECTOR(640, 11);
+					end if;
+
+				else
+					if (X_POS >= conv_std_logic_vector(640, 11)) then
+						PIPE_GAP_POSITION := ("00" & I_PIPE_GAP_POSITION) + CONV_STD_LOGIC_VECTOR((480 - 256)/2, 10);
+						L_TOP.HEIGHT <= PIPE_GAP_POSITION - ('0' & PIPE_GAP_ONE(9 downto 1));
+						Y_POS := PIPE_GAP_POSITION + ('0' & PIPE_GAP_ONE(9 downto 1));
+						L_BOTTOM.Y <= Y_POS;
+						L_BOTTOM.HEIGHT <= conv_std_logic_vector(480, 10) - (Y_POS);
+						case (PIPE_GAP_POSITION(1 downto 0)) is
+							when "01" => POWERUP_TYPE <= CLOCK_POWERUP; -- Clock 
+							when "10" => POWERUP_TYPE <= SHEILD_POWERUP;-- Sheild
+							when others => POWERUP_TYPE <= HEART_POWERUP; -- Heart 
+						end case;
+						-- Powerup should only appear is the random value is within a range
+						if (PIPE_GAP_POSITION(3 downto 0) > 4) then
+							L_POWERUP.Y <= Y_POS - ('0' & PIPE_GAP_ONE(9 downto 1));
+						else
+							L_POWERUP.Y <= conv_std_logic_vector(500, 10);
+						end if;
+					end if;
+					X_POS := X_POS - X_VEL;
+					-- If the pipes overflow, place them back at the start
+					if (X_POS <= - CONV_STD_LOGIC_VECTOR(PIPE_WIDTH, 11)) then
+						X_POS := CONV_STD_LOGIC_VECTOR(640, 11);
+					end if;
 				end if;
 			end if;
 		end if;
