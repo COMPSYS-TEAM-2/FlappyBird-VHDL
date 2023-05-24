@@ -12,6 +12,7 @@ entity bird is
 		I_V_SYNC, I_CLICK : in std_logic;
 		I_RST, I_ENABLE : in std_logic;
 		I_PIXEL : in T_RECT;
+		I_GRAVITY : in std_logic;
 		I_SHEILD : in std_logic;
 		O_BIRD : out T_RECT;
 		O_RGB : out std_logic_vector(11 downto 0);
@@ -67,20 +68,43 @@ begin
 			if (I_RST = '1') then
 				Y_POS := CONV_STD_LOGIC_VECTOR(150, 10);
 			elsif (I_ENABLE = '1') then
-				if (I_CLICK = '1' and Y_VEL >= CONV_STD_LOGIC_VECTOR(2, 10)) then
+				if (I_CLICK = '1' and Y_VEL >= CONV_STD_LOGIC_VECTOR(2, 10)and I_GRAVITY = '0') then
 					Y_VEL := - CONV_STD_LOGIC_VECTOR(12, 10);
+				elsif (I_CLICK = '1' and Y_VEL <= CONV_STD_LOGIC_VECTOR(-2, 10) and I_GRAVITY = '1') then
+					Y_VEL := CONV_STD_LOGIC_VECTOR(12, 10);
 				else
-					Y_VEL := Y_VEL + GRAVITY;
-					if (Y_VEL > GRAVITY(5 downto 0) & "0000") then
-						Y_VEL := GRAVITY(5 downto 0) & "0000";
-					end if;
-				end if;
+					if (I_GRAVITY = '0') then
+						Y_VEL := Y_VEL + GRAVITY;
+						if (Y_VEL > GRAVITY(5 downto 0) & "0000") then
+							Y_VEL := GRAVITY(5 downto 0) & "0000";
+						end if;
 
-				Y_POS := L_BIRD.Y + Y_VEL;
-				if (Y_POS >= CONV_STD_LOGIC_VECTOR(479 - GROUND_HEIGHT, 10) - L_BIRD.Height) then
-					Y_POS := CONV_STD_LOGIC_VECTOR(479 - GROUND_HEIGHT, 10) - L_BIRD.Height;
-				elsif (Y_POS <= CONV_STD_LOGIC_VECTOR(0, 10)) then
-					Y_POS := CONV_STD_LOGIC_VECTOR(0, 10);
+					else
+						if (I_GRAVITY = '1') then
+							Y_VEL := Y_VEL - GRAVITY;
+							if (Y_VEL <- (GRAVITY(5 downto 0) & "0000")) then
+								Y_VEL := - GRAVITY(5 downto 0) & "0000";
+							end if;
+
+						end if;
+					end if;
+					if I_GRAVITY = '0' then
+						Y_POS := L_BIRD.Y + Y_VEL;
+						if (Y_POS >= CONV_STD_LOGIC_VECTOR(479, 10) - L_BIRD.Height) then
+							Y_POS := CONV_STD_LOGIC_VECTOR(479, 10) - L_BIRD.Height;
+						elsif (Y_POS <= CONV_STD_LOGIC_VECTOR(0, 10)) then
+							Y_POS := CONV_STD_LOGIC_VECTOR(0, 10);
+						end if;
+					else
+						if I_GRAVITY = '1' then
+							Y_POS := L_BIRD.Y + Y_VEL;
+							if (Y_POS >= CONV_STD_LOGIC_VECTOR(479, 10) - L_BIRD.Height) then
+								Y_POS := CONV_STD_LOGIC_VECTOR(479, 10) - L_BIRD.Height;
+							elsif (Y_POS <= CONV_STD_LOGIC_VECTOR(0, 10)) then
+								Y_POS := CONV_STD_LOGIC_VECTOR(0, 10);
+							end if;
+						end if;
+					end if;
 				end if;
 			end if;
 			L_BIRD.Y <= Y_POS;

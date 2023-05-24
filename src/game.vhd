@@ -26,10 +26,10 @@ architecture behavior of game is
     signal P_ON : std_logic;
     signal P_COLLISION_ON : std_logic;
     signal P_PIPE_PASSED : std_logic;
-    signal PU_SHEILD : std_logic;
 
     signal S_ONES : std_logic_vector(5 downto 0);
     signal S_TENS : std_logic_vector(5 downto 0);
+    signal PU_SHEILD : std_logic;
 
     signal S_RGB : std_logic_vector(11 downto 0);
     signal S_ON : std_logic;
@@ -45,6 +45,10 @@ architecture behavior of game is
     signal L_PLAYING : std_logic;
     signal L_ENABLE : std_logic;
 
+    signal L_LEVEL : std_logic_vector(1 downto 0);
+    signal L_GRAVITY_TRIGGER : std_logic;
+    signal L_S_PIPE : std_logic;
+
     signal LI_ADD_LIFE : std_logic;
 begin
     bird : entity work.bird
@@ -55,6 +59,7 @@ begin
             I_ENABLE => L_ENABLE,
             I_PIXEL => I_PIXEL,
             I_CLICK => I_M_LEFT,
+            I_GRAVITY => L_GRAVITY_TRIGGER,
             I_SHEILD => PU_SHEILD,
             O_BIRD => B_BIRD,
             O_RGB => B_RGB,
@@ -70,6 +75,7 @@ begin
             I_PIXEL => I_PIXEL,
             I_BIRD => B_BIRD,
             I_RANDOM => LF_RANDOM,
+            I_LEVEL_THREE => L_S_PIPE,
             O_RGB => P_RGB,
             O_ON => P_ON,
             O_COLLISION => P_COLLISION_ON,
@@ -86,6 +92,19 @@ begin
             O_VAL => LF_RANDOM
         );
 
+    getLevel : entity work.level
+        port map(
+            I_CLK => I_V_SYNC,
+            I_SCORE => S_TENS,
+            O_LEVEL => L_LEVEL
+        );
+    leveltrig_inst : entity work.levelTrig
+        port map(
+            I_CLK => I_CLK,
+            I_LEVEL => L_LEVEL,
+            O_REV_GRAVITY => L_GRAVITY_TRIGGER,
+            O_S_PIPE => L_S_PIPE
+        );
     score : entity work.score
         port map(
             I_CLK => I_V_SYNC,
@@ -160,5 +179,6 @@ begin
         P_RGB when (P_ON = '1') else
         L_BACKGROUND_COLOUR;
     L_ENABLE <= I_ENABLE and L_PLAYING;
-    O_LED <= P_PIPE_PASSED;
+
+    O_LED <= L_GRAVITY_TRIGGER;
 end architecture;
