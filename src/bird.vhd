@@ -10,7 +10,7 @@ entity bird is
 	port (
 		I_CLK : in std_logic;
 		I_V_SYNC, I_CLICK : in std_logic;
-		I_RST, I_ENABLE, I_DEAD : in std_logic;
+		I_RST, I_ENABLE, I_DEAD, I_TRAINING : in std_logic;
 		I_PIXEL : in T_RECT;
 		I_GRAVITY : in std_logic;
 		I_SHEILD : in std_logic;
@@ -72,7 +72,7 @@ begin
 			if (I_RST = '1') then
 				Y_POS := CONV_STD_LOGIC_VECTOR(150, 10);
 			elsif (I_ENABLE = '1') then
-				if (I_CLICK = '1' and Y_VEL >= CONV_STD_LOGIC_VECTOR(2, 10)and L_GRAVITY = '0') then
+				if (I_CLICK = '1' and Y_VEL >= CONV_STD_LOGIC_VECTOR(2, 10) and L_GRAVITY = '0') then
 					Y_VEL := - CONV_STD_LOGIC_VECTOR(12, 10);
 				elsif (I_CLICK = '1' and Y_VEL <= CONV_STD_LOGIC_VECTOR(-2, 10) and L_GRAVITY = '1') then
 					Y_VEL := CONV_STD_LOGIC_VECTOR(12, 10);
@@ -94,8 +94,8 @@ begin
 					end if;
 					if L_GRAVITY = '0' then
 						Y_POS := L_BIRD.Y + Y_VEL;
-						if (Y_POS >= CONV_STD_LOGIC_VECTOR(479, 10) - L_BIRD.Height) then
-							Y_POS := CONV_STD_LOGIC_VECTOR(479, 10) - L_BIRD.Height;
+						if (Y_POS >= CONV_STD_LOGIC_VECTOR(479 - GROUND_HEIGHT, 10) - L_BIRD.Height) then
+							Y_POS := CONV_STD_LOGIC_VECTOR(479 - GROUND_HEIGHT, 10) - L_BIRD.Height;
 						elsif (Y_POS <= CONV_STD_LOGIC_VECTOR(0, 10)) then
 							Y_POS := CONV_STD_LOGIC_VECTOR(0, 10);
 						end if;
@@ -124,7 +124,7 @@ begin
 
 	O_BIRD <= L_BIRD;
 
-	L_GRAVITY <= I_GRAVITY and not I_DEAD;
+	L_GRAVITY <= I_GRAVITY and not I_DEAD and not I_TRAINING;
 
 	O_ON <= L_BIRD_ON or L_BIRD_EYE_ON or L_BIRD_BEAK_ON;
 

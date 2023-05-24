@@ -66,6 +66,7 @@ begin
             I_PIXEL => I_PIXEL,
             I_CLICK => L_M_LEFT,
             I_DEAD => L_DEAD,
+            I_TRAINING => I_TRAINING,
             I_GRAVITY => L_GRAVITY_TRIGGER,
             I_SHEILD => PU_SHEILD,
             O_BIRD => B_BIRD,
@@ -202,7 +203,7 @@ begin
     end process;
 
     O_RGB <= S_RGB when (S_ON = '1') else
-        LI_RGB when (LI_ON = '1' and I_TRAINING /= '1') else
+        LI_RGB when (LI_ON = '1') else
         B_RGB when (B_ON = '1') else
         OB_RGB when (OB_ON = '1') else
         L_BACKGROUND_COLOUR;
