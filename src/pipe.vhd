@@ -86,7 +86,7 @@ begin
 					end case;
 					-- Powerup should only appear is the random value is within a range
 					if (PIPE_GAP_POSITION(3 downto 0) > 4) then
-						L_POWERUP.Y <= Y_POS - ('0' & PIPE_GAP(9 downto 1) - conv_std_logic_vector(PLAYER_SIZE/2, 10));
+						L_POWERUP.Y <= Y_POS - ('0' & PIPE_GAP(9 downto 1) + conv_std_logic_vector(PLAYER_SIZE/2, 10));
 					else
 						L_POWERUP.Y <= conv_std_logic_vector(500, 10);
 					end if;

@@ -100,11 +100,6 @@ begin
                 end if;
                 if (L_SHEILD_A = '1' or L_SHEILD_B = '1') then
                     L_SHEILD_O <= '1';
-                    S_COUNTER := S_COUNTER + conv_std_logic_vector(1, 4);
-                    if (S_COUNTER = conv_std_logic_vector(5, 4)) then
-                        S_COUNTER := conv_std_logic_vector(0, 4);
-                        L_SHEILD_O <= '0';
-                    end if;
                 end if;
                 if (B_PIPE_PASSED = '1') then
                     if (PP_COUNTER = conv_std_logic_vector(10, 4)) then
@@ -112,6 +107,14 @@ begin
                         PP_COUNTER := conv_std_logic_vector(0, 4);
                     else
                         PP_COUNTER := PP_COUNTER + conv_std_logic_vector(1, 4);
+                    end if;
+                    if (L_SHEILD_O = '1') then
+                        if (S_COUNTER = conv_std_logic_vector(10, 4)) then
+                            L_SHEILD_O <= '0';
+                            S_COUNTER := conv_std_logic_vector(0, 4);
+                        else
+                            S_COUNTER := S_COUNTER + conv_std_logic_vector(1, 4);
+                        end if;
                     end if;
                 end if;
             end if;
