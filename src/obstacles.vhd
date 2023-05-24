@@ -99,7 +99,11 @@ begin
                     L_X_VEL <= '0' & L_X_VEL(9 downto 1);
                 end if;
                 if (L_SHEILD_A = '1' or L_SHEILD_B = '1') then
-                    L_SHEILD_O <= '1';
+                    if (L_SHEILD_O = '1') then
+                        S_COUNTER := conv_std_logic_vector(0, 4);
+                    else
+                        L_SHEILD_O <= '1';
+                    end if;
                 end if;
                 if (B_PIPE_PASSED = '1') then
                     if (PP_COUNTER = conv_std_logic_vector(10, 4)) then
