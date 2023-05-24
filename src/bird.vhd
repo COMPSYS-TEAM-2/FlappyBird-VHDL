@@ -10,7 +10,7 @@ entity bird is
 	port (
 		I_CLK : in std_logic;
 		I_V_SYNC, I_CLICK : in std_logic;
-		I_RST, I_ENABLE, I_DEAD, I_TRAINING : in std_logic;
+		I_RST, I_ENABLE, I_DEAD : in std_logic;
 		I_PIXEL : in T_RECT;
 		I_GRAVITY : in std_logic;
 		I_SHEILD : in std_logic;
@@ -124,7 +124,7 @@ begin
 
 	O_BIRD <= L_BIRD;
 
-	L_GRAVITY <= I_GRAVITY and not I_DEAD and not I_TRAINING;
+	L_GRAVITY <= I_GRAVITY and not I_DEAD;
 
 	O_ON <= L_BIRD_ON or L_BIRD_EYE_ON or L_BIRD_BEAK_ON;
 

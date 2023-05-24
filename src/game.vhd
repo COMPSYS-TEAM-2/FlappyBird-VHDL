@@ -66,7 +66,6 @@ begin
             I_PIXEL => I_PIXEL,
             I_CLICK => L_M_LEFT,
             I_DEAD => L_DEAD,
-            I_TRAINING => I_TRAINING,
             I_GRAVITY => L_GRAVITY_TRIGGER,
             I_SHEILD => PU_SHEILD,
             O_BIRD => B_BIRD,
@@ -112,6 +111,7 @@ begin
         port map(
             I_CLK => I_CLK,
             I_LEVEL => L_LEVEL,
+            I_TRAINING => I_TRAINING,
             O_REV_GRAVITY => L_GRAVITY_TRIGGER,
             O_S_PIPE => L_S_PIPE
         );
