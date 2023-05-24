@@ -78,7 +78,7 @@ begin
             I_Y => I_CURSOR.Y,
             I_PIXEL_ROW => I_PIXEL.Y,
             I_PIXEL_COL => I_PIXEL.X,
-            I_INDEX => o"53",
+            I_INDEX => o"56",
             O_ON => S_MOUSE_ON
         );
 
@@ -89,7 +89,7 @@ begin
             I_Y => conv_std_logic_vector(SCREEN_HEIGHT/2, 10),
             I_PIXEL_ROW => I_PIXEL.Y,
             I_PIXEL_COL => I_PIXEL.X,
-            I_INDEX => o"55",
+            I_INDEX => o"60",
             O_ON => LBS_ON
         );
 
@@ -115,7 +115,7 @@ begin
             I_Y => conv_std_logic_vector(SCREEN_HEIGHT/2, 10),
             I_PIXEL_ROW => I_PIXEL.Y,
             I_PIXEL_COL => I_PIXEL.X,
-            I_INDEX => o"54",
+            I_INDEX => o"57",
             O_ON => RBS_ON
         );
 

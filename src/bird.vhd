@@ -10,7 +10,7 @@ entity bird is
 	port (
 		I_CLK : in std_logic;
 		I_V_SYNC, I_CLICK : in std_logic;
-		I_RST, I_ENABLE : in std_logic;
+		I_RST, I_ENABLE, I_DEAD : in std_logic;
 		I_PIXEL : in T_RECT;
 		I_GRAVITY : in std_logic;
 		I_SHEILD : in std_logic;
@@ -25,6 +25,10 @@ architecture behavior of bird is
 	signal L_BIRD_ON : std_logic;
 	signal L_BIRD_EYE_ON : std_logic;
 	signal L_BIRD_BEAK_ON : std_logic;
+	signal L_BIRD_SPRITE : std_logic_vector(5 downto 0);
+	signal L_EYE_SPRITE : std_logic_vector(5 downto 0);
+	signal L_BEAK_SPRITE : std_logic_vector(5 downto 0);
+	signal L_GRAVITY : std_logic;
 
 begin
 	spriteBird : entity work.sprite
@@ -34,7 +38,7 @@ begin
 			I_Y => L_BIRD.Y,
 			I_PIXEL_ROW => I_PIXEL.Y,
 			I_PIXEL_COL => I_PIXEL.X,
-			I_INDEX => o"50",
+			I_INDEX => L_BIRD_SPRITE,
 			O_ON => L_BIRD_ON
 		);
 
@@ -45,7 +49,7 @@ begin
 			I_Y => L_BIRD.Y,
 			I_PIXEL_ROW => I_PIXEL.Y,
 			I_PIXEL_COL => I_PIXEL.X,
-			I_INDEX => o"51",
+			I_INDEX => L_EYE_SPRITE,
 			O_ON => L_BIRD_EYE_ON
 		);
 
@@ -56,7 +60,7 @@ begin
 			I_Y => L_BIRD.Y,
 			I_PIXEL_ROW => I_PIXEL.Y,
 			I_PIXEL_COL => I_PIXEL.X,
-			I_INDEX => o"52",
+			I_INDEX => L_BEAK_SPRITE,
 			O_ON => L_BIRD_BEAK_ON
 		);
 	move_bird : process (I_V_SYNC)
@@ -68,19 +72,19 @@ begin
 			if (I_RST = '1') then
 				Y_POS := CONV_STD_LOGIC_VECTOR(150, 10);
 			elsif (I_ENABLE = '1') then
-				if (I_CLICK = '1' and Y_VEL >= CONV_STD_LOGIC_VECTOR(2, 10)and I_GRAVITY = '0') then
+				if (I_CLICK = '1' and Y_VEL >= CONV_STD_LOGIC_VECTOR(2, 10)and L_GRAVITY = '0') then
 					Y_VEL := - CONV_STD_LOGIC_VECTOR(12, 10);
-				elsif (I_CLICK = '1' and Y_VEL <= CONV_STD_LOGIC_VECTOR(-2, 10) and I_GRAVITY = '1') then
+				elsif (I_CLICK = '1' and Y_VEL <= CONV_STD_LOGIC_VECTOR(-2, 10) and L_GRAVITY = '1') then
 					Y_VEL := CONV_STD_LOGIC_VECTOR(12, 10);
 				else
-					if (I_GRAVITY = '0') then
+					if (L_GRAVITY = '0') then
 						Y_VEL := Y_VEL + GRAVITY;
 						if (Y_VEL > GRAVITY(5 downto 0) & "0000") then
 							Y_VEL := GRAVITY(5 downto 0) & "0000";
 						end if;
 
 					else
-						if (I_GRAVITY = '1') then
+						if (L_GRAVITY = '1') then
 							Y_VEL := Y_VEL - GRAVITY;
 							if (Y_VEL <- (GRAVITY(5 downto 0) & "0000")) then
 								Y_VEL := - GRAVITY(5 downto 0) & "0000";
@@ -88,7 +92,7 @@ begin
 
 						end if;
 					end if;
-					if I_GRAVITY = '0' then
+					if L_GRAVITY = '0' then
 						Y_POS := L_BIRD.Y + Y_VEL;
 						if (Y_POS >= CONV_STD_LOGIC_VECTOR(479, 10) - L_BIRD.Height) then
 							Y_POS := CONV_STD_LOGIC_VECTOR(479, 10) - L_BIRD.Height;
@@ -96,7 +100,7 @@ begin
 							Y_POS := CONV_STD_LOGIC_VECTOR(0, 10);
 						end if;
 					else
-						if I_GRAVITY = '1' then
+						if L_GRAVITY = '1' then
 							Y_POS := L_BIRD.Y + Y_VEL;
 							if (Y_POS >= CONV_STD_LOGIC_VECTOR(479, 10) - L_BIRD.Height) then
 								Y_POS := CONV_STD_LOGIC_VECTOR(479, 10) - L_BIRD.Height;
@@ -110,7 +114,17 @@ begin
 			L_BIRD.Y <= Y_POS;
 		end if;
 	end process move_bird;
+
+	L_BIRD_SPRITE <= o"50" when I_DEAD /= '1' else
+		o"53";
+	L_EYE_SPRITE <= o"51" when I_DEAD /= '1' else
+		o"54";
+	L_BEAK_SPRITE <= o"52" when I_DEAD /= '1' else
+		o"55";
+
 	O_BIRD <= L_BIRD;
+
+	L_GRAVITY <= I_GRAVITY and not I_DEAD;
 
 	O_ON <= L_BIRD_ON or L_BIRD_EYE_ON or L_BIRD_BEAK_ON;
 
