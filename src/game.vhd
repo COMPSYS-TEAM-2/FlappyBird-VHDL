@@ -111,6 +111,7 @@ begin
         port map(
             I_CLK => I_CLK,
             I_LEVEL => L_LEVEL,
+            I_TRAINING => I_TRAINING,
             O_REV_GRAVITY => L_GRAVITY_TRIGGER,
             O_S_PIPE => L_S_PIPE
         );
@@ -202,7 +203,7 @@ begin
     end process;
 
     O_RGB <= S_RGB when (S_ON = '1') else
-        LI_RGB when (LI_ON = '1' and I_TRAINING /= '1') else
+        LI_RGB when (LI_ON = '1') else
         B_RGB when (B_ON = '1') else
         OB_RGB when (OB_ON = '1') else
         L_BACKGROUND_COLOUR;
