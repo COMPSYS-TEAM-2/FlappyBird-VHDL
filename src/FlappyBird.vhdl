@@ -17,7 +17,8 @@ entity FlappyBird is
         O_H_SYNC : out std_logic;
         O_V_SYNC : out std_logic;
 
-        O_LED : out std_logic
+        O_LED : out std_logic;
+		  O_DISP : out std_logic_vector(6 downto 0)
     );
 end entity;
 
@@ -87,6 +88,7 @@ begin
             I_M_LEFT => M_LEFT,
             O_RGB => G_RGB,
             O_TO_MENU => G_TO_MENU,
+				O_DISP => O_DISP,
             O_LED => O_LED
         );
 
