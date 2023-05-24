@@ -89,7 +89,8 @@ begin
             O_PIPE_PASSED => OB_PIPE_PASSED,
             O_ADD_LIFE => OB_ADD_LIFE,
             O_GAME_OVER => OB_GAME_OVER,
-            O_SHEILD => PU_SHEILD
+            O_SHEILD => PU_SHEILD,
+            O_LED => O_LED
         );
 
     -- Define the Linear Feeback Shift Register
@@ -204,5 +205,4 @@ begin
 
     L_PIPE_ENABLE <= L_ENABLE and not L_DEAD;
     L_M_LEFT <= I_M_LEFT and not L_DEAD;
-    O_LED <= L_GRAVITY_TRIGGER;
 end architecture;

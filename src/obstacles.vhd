@@ -21,7 +21,8 @@ entity obstacles is
         O_PIPE_PASSED : out std_logic;
         O_ADD_LIFE : out std_logic;
         O_GAME_OVER : out std_logic;
-        O_SHEILD : out std_logic
+        O_SHEILD : out std_logic;
+        O_LED : out std_logic
     );
 end obstacles;
 
@@ -108,32 +109,46 @@ begin
     process (I_V_SYNC)
         variable PP_COUNTER : std_logic_vector(3 downto 0);
         variable S_COUNTER : std_logic_vector(3 downto 0);
+        variable PIPE_PASSED : std_logic;
     begin
         if (rising_edge(I_V_SYNC)) then
             if (I_RST = '1') then
+                PIPE_PASSED := '0';
+                L_SHEILD_O <= '0';
                 L_X_VEL <= INITIAL_SPEED;
+                PP_COUNTER := conv_std_logic_vector(0, 4);
             elsif (I_ENABLE = '1') then
                 if (L_SLOW_TIME_A = '1' or L_SLOW_TIME_B = '1') then
-                    L_X_VEL <= '0' & L_X_VEL(9 downto 1);
+                    if (L_X_VEL > "1") then
+                        L_X_VEL <= '0' & L_X_VEL(9 downto 1);
+                    end if;
                 end if;
                 if (L_SHEILD_A = '1' or L_SHEILD_B = '1') then
                     L_SHEILD_O <= '1';
                 end if;
-                if (B_PIPE_PASSED = '1') then
-                    if (PP_COUNTER = conv_std_logic_vector(10, 4)) then
-                        L_X_VEL <= L_X_VEL + PIPE_ACCELERATION;
-                        PP_COUNTER := conv_std_logic_vector(0, 4);
-                    else
-                        PP_COUNTER := PP_COUNTER + conv_std_logic_vector(1, 4);
-                    end if;
-                    if (L_SHEILD_O = '1') then
-                        if (S_COUNTER = conv_std_logic_vector(10, 4)) then
-                            L_SHEILD_O <= '0';
-                            S_COUNTER := conv_std_logic_vector(0, 4);
+                O_LED <= '0';
+                if (B_PIPE_PASSED = '1' or A_PIPE_PASSED = '1') then
+                    if (PIPE_PASSED /= '1') then
+                        O_LED <= '1';
+                        PIPE_PASSED := '1';
+                        if (PP_COUNTER >= conv_std_logic_vector(4, 4)) then
+                            L_X_VEL <= L_X_VEL + PIPE_ACCELERATION;
+                            PP_COUNTER := conv_std_logic_vector(0, 4);
                         else
-                            S_COUNTER := S_COUNTER + conv_std_logic_vector(1, 4);
+                            PP_COUNTER := PP_COUNTER + conv_std_logic_vector(1, 4);
+                        end if;
+                        if (L_SHEILD_O = '1') then
+                            -- TODO Make Counter reset on collection
+                            if (S_COUNTER = conv_std_logic_vector(2, 4)) then
+                                L_SHEILD_O <= '0';
+                                S_COUNTER := conv_std_logic_vector(0, 4);
+                            else
+                                S_COUNTER := S_COUNTER + conv_std_logic_vector(1, 4);
+                            end if;
                         end if;
                     end if;
+                else
+                    PIPE_PASSED := '0';
                 end if;
             end if;
         end if;

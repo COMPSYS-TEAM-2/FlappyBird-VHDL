@@ -28,6 +28,7 @@ architecture behavior of bird is
 	signal L_BIRD_SPRITE : std_logic_vector(5 downto 0);
 	signal L_EYE_SPRITE : std_logic_vector(5 downto 0);
 	signal L_BEAK_SPRITE : std_logic_vector(5 downto 0);
+	signal L_GRAVITY : std_logic;
 
 begin
 	spriteBird : entity work.sprite
@@ -71,19 +72,19 @@ begin
 			if (I_RST = '1') then
 				Y_POS := CONV_STD_LOGIC_VECTOR(150, 10);
 			elsif (I_ENABLE = '1') then
-				if (I_CLICK = '1' and Y_VEL >= CONV_STD_LOGIC_VECTOR(2, 10)and I_GRAVITY = '0') then
+				if (I_CLICK = '1' and Y_VEL >= CONV_STD_LOGIC_VECTOR(2, 10)and L_GRAVITY = '0') then
 					Y_VEL := - CONV_STD_LOGIC_VECTOR(12, 10);
-				elsif (I_CLICK = '1' and Y_VEL <= CONV_STD_LOGIC_VECTOR(-2, 10) and I_GRAVITY = '1') then
+				elsif (I_CLICK = '1' and Y_VEL <= CONV_STD_LOGIC_VECTOR(-2, 10) and L_GRAVITY = '1') then
 					Y_VEL := CONV_STD_LOGIC_VECTOR(12, 10);
 				else
-					if (I_GRAVITY = '0') then
+					if (L_GRAVITY = '0') then
 						Y_VEL := Y_VEL + GRAVITY;
 						if (Y_VEL > GRAVITY(5 downto 0) & "0000") then
 							Y_VEL := GRAVITY(5 downto 0) & "0000";
 						end if;
 
 					else
-						if (I_GRAVITY = '1') then
+						if (L_GRAVITY = '1') then
 							Y_VEL := Y_VEL - GRAVITY;
 							if (Y_VEL <- (GRAVITY(5 downto 0) & "0000")) then
 								Y_VEL := - GRAVITY(5 downto 0) & "0000";
@@ -91,7 +92,7 @@ begin
 
 						end if;
 					end if;
-					if I_GRAVITY = '0' then
+					if L_GRAVITY = '0' then
 						Y_POS := L_BIRD.Y + Y_VEL;
 						if (Y_POS >= CONV_STD_LOGIC_VECTOR(479, 10) - L_BIRD.Height) then
 							Y_POS := CONV_STD_LOGIC_VECTOR(479, 10) - L_BIRD.Height;
@@ -99,7 +100,7 @@ begin
 							Y_POS := CONV_STD_LOGIC_VECTOR(0, 10);
 						end if;
 					else
-						if I_GRAVITY = '1' then
+						if L_GRAVITY = '1' then
 							Y_POS := L_BIRD.Y + Y_VEL;
 							if (Y_POS >= CONV_STD_LOGIC_VECTOR(479, 10) - L_BIRD.Height) then
 								Y_POS := CONV_STD_LOGIC_VECTOR(479, 10) - L_BIRD.Height;
@@ -122,6 +123,8 @@ begin
 		o"55";
 
 	O_BIRD <= L_BIRD;
+
+	L_GRAVITY <= I_GRAVITY and not I_DEAD;
 
 	O_ON <= L_BIRD_ON or L_BIRD_EYE_ON or L_BIRD_BEAK_ON;
 
