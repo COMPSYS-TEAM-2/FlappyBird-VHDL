@@ -32,13 +32,13 @@ begin
     begin
         if (rising_edge(I_V_SYNC)) then
             case L_STATE is
-                when "00" =>
+                when "00" => -- Default
                     L_M_UP <= '0';
                     L_M_DOWN <= '0';
                     if (I_M_LEFT = '1' and CheckCollision(RECT, I_CURSOR) = '1') then
                         L_STATE <= "01";
                     end if;
-                when "01" =>
+                when "01" => -- Mouse Down and Over Button
                     L_M_UP <= '0';
                     L_M_DOWN <= '1';
                     if (I_M_LEFT = '0' and CheckCollision(RECT, I_CURSOR) = '1') then
@@ -46,7 +46,7 @@ begin
                     elsif (CheckCollision(RECT, I_CURSOR) = '0') then
                         L_STATE <= "00";
                     end if;
-                when "10" =>
+                when "10" => -- Mouse Up and Over Button
                     L_M_UP <= '1';
                     L_M_DOWN <= '0';
                     L_STATE <= "00";
