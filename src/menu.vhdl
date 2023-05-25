@@ -12,6 +12,7 @@ entity menu is
         I_CLK : in std_logic;
         I_V_SYNC : in std_logic;
         I_PIXEL : in T_RECT;
+        I_HIGH_SCORE : in std_logic_vector(11 downto 0);
 
         I_M_LEFT : in std_logic;
         I_CURSOR : in T_RECT;
@@ -45,6 +46,9 @@ architecture behavior of menu is
     signal N_RGB : std_logic_vector(11 downto 0);
     signal N_ON : std_logic;
 
+    signal H_RGB : std_logic_vector(11 downto 0);
+    signal H_ON : std_logic;
+
     signal PT_RGB : std_logic_vector(11 downto 0);
     signal PT_ON : std_logic;
 
@@ -69,6 +73,25 @@ begin
             I_CHARS => o"1725123131424413223315",
             O_RGB => TI_RGB,
             O_ON => TI_ON
+        );
+
+    high_score : entity work.string
+        generic map(
+            X_CENTER => SCREEN_WIDTH/2,
+            Y_CENTER => 100,
+            SCALE => 2,
+            NUM_CHARS => 13,
+            COLOR => x"FFF",
+            GAP => 1
+        )
+        port map(
+            I_CLK => I_CLK,
+            I_PIXEL_ROW => I_PIXEL.Y,
+            I_PIXEL_COL => I_PIXEL.X(9 downto 0),
+            --           H I G H _ S C O R E : _
+            I_CHARS => o"2122202144341430331662" & I_HIGH_SCORE,
+            O_RGB => H_RGB,
+            O_ON => H_ON
         );
 
     spriteMouse : entity work.sprite
@@ -215,6 +238,7 @@ begin
     end process;
 
     O_RGB <= MOUSE_RGB when S_MOUSE_ON = '1' else
+        H_RGB when (H_ON = '1') else
         TI_RGB when TI_ON = '1' else
         PT_RGB when PT_ON = '1' else
         P_RGB when P_ON = '1' else

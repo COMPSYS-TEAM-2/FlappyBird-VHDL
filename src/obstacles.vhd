@@ -119,7 +119,7 @@ begin
                 PP_COUNTER := conv_std_logic_vector(0, 4);
             elsif (I_ENABLE = '1') then
                 if (L_SLOW_TIME_A = '1' or L_SLOW_TIME_B = '1') then
-                    if (L_X_VEL > "1") then
+                    if (L_X_VEL > "01") then
                         L_X_VEL <= '0' & L_X_VEL(9 downto 1);
                     end if;
                 end if;
