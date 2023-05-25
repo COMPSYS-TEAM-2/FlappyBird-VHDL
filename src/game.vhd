@@ -47,6 +47,8 @@ architecture behavior of game is
 
     signal CTS_RGB : std_logic_vector(11 downto 0);
     signal CTS_ON : std_logic;
+    signal PA_RGB : std_logic_vector(11 downto 0);
+    signal PA_ON : std_logic;
 
     signal L_BACKGROUND_COLOUR : std_logic_vector(11 downto 0) := BACKGROUND_RGB;
     signal L_PLAYING : std_logic;
@@ -195,6 +197,24 @@ begin
             O_ON => CTS_ON
         );
 
+    pause : entity work.string
+        generic map(
+            X_CENTER => 610,
+            Y_CENTER => 24,
+            SCALE => 3,
+            NUM_CHARS => 1,
+            COLOR => x"FFF",
+            GAP => 0
+        )
+        port map(
+            I_CLK => I_CLK,
+            I_PIXEL_ROW => I_PIXEL.Y,
+            I_PIXEL_COL => I_PIXEL.X(9 downto 0),
+            I_CHARS => o"61",
+            O_RGB => PA_RGB,
+            O_ON => PA_ON
+        );
+
     playing : process (I_V_SYNC)
     begin
         if (rising_edge(I_V_SYNC)) then
@@ -225,14 +245,15 @@ begin
         end if;
     end process;
 
-    O_RGB <= CTS_RGB when (CTS_ON = '1' and L_PLAYING = '0') else
+    O_RGB <= PA_RGB when (PA_ON = '1' and I_ENABLE = '0') else
+        CTS_RGB when (CTS_ON = '1' and L_PLAYING = '0') else
         S_RGB when (S_ON = '1') else
         LI_RGB when (LI_ON = '1') else
         B_RGB when (B_ON = '1') else
         OB_RGB when (OB_ON = '1') else
         L_BACKGROUND_COLOUR;
-    L_ENABLE <= I_ENABLE and L_PLAYING;
 
+    L_ENABLE <= I_ENABLE and L_PLAYING;
     L_PIPE_ENABLE <= L_ENABLE and not L_DEAD;
     L_M_LEFT <= I_M_LEFT and not L_DEAD;
 end architecture;
