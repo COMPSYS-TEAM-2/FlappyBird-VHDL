@@ -17,7 +17,8 @@ entity FlappyBird is
         O_H_SYNC : out std_logic;
         O_V_SYNC : out std_logic;
 
-        O_LED : out std_logic
+        O_LED : out std_logic;
+        O_DISP : out std_logic_vector(6 downto 0)
     );
 end entity;
 
@@ -33,6 +34,8 @@ architecture behavioral of FlappyBird is
 
     signal G_RGB : std_logic_vector(11 downto 0);
     signal G_TO_MENU : std_logic;
+    signal G_DISP : std_logic_vector(6 downto 0);
+
     signal T_RGB : std_logic_vector(11 downto 0);
     signal T_BUTTON : std_logic_vector(1 downto 0);
 
@@ -87,6 +90,7 @@ begin
             I_M_LEFT => M_LEFT,
             O_RGB => G_RGB,
             O_TO_MENU => G_TO_MENU,
+            O_DISP => G_DISP,
             O_LED => O_LED
         );
 
@@ -159,4 +163,6 @@ begin
     L_GAME_ENABLE <= (not I_ENABLE_N) and L_GAME_ENABLED;
     O_V_SYNC <= V_V_SYNC;
     L_M_RST <= (not I_RST_N) or G_TO_MENU;
+    O_DISP <= G_DISP when L_GAME_ENABLED = '1' else
+        "1111111";
 end architecture;

@@ -15,7 +15,8 @@ entity game is
         I_M_LEFT : in std_logic;
         O_RGB : out std_logic_vector(11 downto 0);
         O_TO_MENU : out std_logic;
-        O_LED : out std_logic
+        O_LED : out std_logic;
+        O_DISP : out std_logic_vector(6 downto 0)
     );
 end game;
 
@@ -42,14 +43,12 @@ architecture behavior of game is
     signal LI_RGB : std_logic_vector(11 downto 0);
     signal LI_ON : std_logic;
     signal LI_GAME_OVER : std_logic;
-
+    signal LI_ADD_LIFE : std_logic;
     signal LF_RANDOM : std_logic_vector(7 downto 0);
-
     signal CTS_RGB : std_logic_vector(11 downto 0);
     signal CTS_ON : std_logic;
     signal PA_RGB : std_logic_vector(11 downto 0);
     signal PA_ON : std_logic;
-
     signal L_BACKGROUND_COLOUR : std_logic_vector(11 downto 0) := BACKGROUND_RGB;
     signal L_PLAYING : std_logic;
     signal L_ENABLE : std_logic;
@@ -59,9 +58,7 @@ architecture behavior of game is
     signal L_LEVEL : std_logic_vector(1 downto 0);
     signal L_GRAVITY_TRIGGER : std_logic;
     signal L_S_PIPE : std_logic;
-
-    signal LI_ADD_LIFE : std_logic;
-
+    signal L_ONES_DISPLAY : std_logic_vector(6 downto 0);
 begin
     bird : entity work.bird
         port map(
@@ -77,6 +74,13 @@ begin
             O_BIRD => B_BIRD,
             O_RGB => B_RGB,
             O_ON => B_ON
+        );
+
+    level_to_seven_seg_inst : entity work.LEVEL_TO_SEVEN_SEG
+        port map(
+            I_REV_GRAVITY => L_GRAVITY_TRIGGER,
+            I_S_PIPE => L_S_PIPE,
+            O_DISPLAY => L_ONES_DISPLAY
         );
 
     obstacles : entity work.obstacles
@@ -256,4 +260,6 @@ begin
     L_ENABLE <= I_ENABLE and L_PLAYING;
     L_PIPE_ENABLE <= L_ENABLE and not L_DEAD;
     L_M_LEFT <= I_M_LEFT and not L_DEAD;
+    O_DISP <= L_ONES_DISPLAY;
+
 end architecture;
