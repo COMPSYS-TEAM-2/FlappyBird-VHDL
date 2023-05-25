@@ -25,3 +25,11 @@ How to play:
 3. Click play to be taken into the game
 
 4. Click to make the player jump
+
+5. Extra inputs
+
+  Pause: Dip switch 0
+  
+  Reset: FPGA_Reset
+  
+  
