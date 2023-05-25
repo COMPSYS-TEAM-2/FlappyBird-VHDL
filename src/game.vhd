@@ -16,6 +16,7 @@ entity game is
         O_RGB : out std_logic_vector(11 downto 0);
         O_TO_MENU : out std_logic;
         O_LED : out std_logic;
+        O_SCORE : out std_logic_vector(11 downto 0);
         O_DISP : out std_logic_vector(6 downto 0)
     );
 end game;
@@ -234,6 +235,7 @@ begin
         variable M_DOWN : std_logic := '0';
     begin
         if (rising_edge(I_V_SYNC)) then
+            O_SCORE <= (others => '0');
             O_TO_MENU <= '0';
             if (I_RST = '1') then
                 M_DOWN := '0';
@@ -242,6 +244,9 @@ begin
                 M_DOWN := '1';
             elsif (I_M_LEFT = '0' and M_DOWN = '1') then
                 O_TO_MENU <= '1';
+                if (I_TRAINING = '0') then
+                    O_SCORE <= S_TENS & S_ONES;
+                end if;
                 M_DOWN := '0';
             elsif (OB_GAME_OVER = '1' or LI_GAME_OVER = '1') then
                 L_DEAD <= '1';

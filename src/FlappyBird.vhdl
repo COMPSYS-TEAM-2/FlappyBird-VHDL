@@ -32,6 +32,8 @@ architecture behavioral of FlappyBird is
     signal M_CURSOR_ROW : std_logic_vector(9 downto 0);
     signal M_CURSOR_COL : std_logic_vector(9 downto 0);
 
+    signal G_SCORE : std_logic_vector(11 downto 0) := (others => '0');
+
     signal G_RGB : std_logic_vector(11 downto 0);
     signal G_TO_MENU : std_logic;
     signal G_DISP : std_logic_vector(6 downto 0);
@@ -51,6 +53,7 @@ architecture behavioral of FlappyBird is
     signal L_MENU_ENABLED : std_logic := '0';
     signal L_TRAINING : std_logic := '0';
     signal L_M_RST : std_logic := '0';
+    signal L_HIGH_SCORE : std_logic_vector(11 downto 0) := (others => '0');
 begin
 
     video : entity work.VGA_SYNC
@@ -89,6 +92,7 @@ begin
             I_PIXEL => L_PIXEL,
             I_M_LEFT => M_LEFT,
             O_RGB => G_RGB,
+            O_SCORE => G_SCORE,
             O_TO_MENU => G_TO_MENU,
             O_DISP => G_DISP,
             O_LED => O_LED
@@ -100,7 +104,7 @@ begin
             I_CLK => L_CLK,
             I_V_SYNC => V_V_SYNC,
             I_PIXEL => L_PIXEL,
-
+            I_HIGH_SCORE => L_HIGH_SCORE,
             I_M_LEFT => M_LEFT,
             I_CURSOR => L_CURSOR,
 
@@ -150,6 +154,17 @@ begin
     begin
         if (rising_edge(I_CLK)) then
             L_CLK <= not L_CLK;
+        end if;
+    end process;
+
+    high_score : process (V_V_SYNC)
+    begin
+        if (rising_edge(V_V_SYNC)) then
+            if (G_SCORE > L_HIGH_SCORE) then
+                L_HIGH_SCORE <= G_SCORE;
+            else
+                L_HIGH_SCORE <= L_HIGH_SCORE;
+            end if;
         end if;
     end process;
 
