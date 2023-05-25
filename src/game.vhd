@@ -244,7 +244,7 @@ begin
                 M_DOWN := '1';
             elsif (I_M_LEFT = '0' and M_DOWN = '1') then
                 O_TO_MENU <= '1';
-                if (I_TRAINING = '1') then
+                if (I_TRAINING = '0') then
                     O_SCORE <= S_TENS & S_ONES;
                 end if;
                 M_DOWN := '0';
