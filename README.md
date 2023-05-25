@@ -8,19 +8,19 @@ How to play:
   
       4 different game levels
       
-      Normal pipes, normal gravity
+      1: Normal pipes, normal gravity
       
-      Normal pipes, flipped gravity
+      2: Normal pipes, flipped gravity
       
-      Small pipes, normal gravity
+      3: Small pipes, normal gravity
       
-      Small pipes, flipped gravity
+      4: Small pipes, flipped gravity
       
   1.2 Training:
   
       1 game level
       
-      Normal pipes, normal gravity
+      1: Normal pipes, normal gravity
       
 3. Click play to be taken into the game
 
