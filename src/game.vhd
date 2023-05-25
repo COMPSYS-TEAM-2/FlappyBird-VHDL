@@ -6,55 +6,58 @@ use work.RGBValues.BACKGROUND_RGB;
 
 entity game is
     port (
-        I_CLK : in std_logic;
-        I_V_SYNC : in std_logic;
-        I_RST, I_ENABLE : in std_logic;
-        I_TRAINING : in std_logic;
+        I_CLK : in STD_LOGIC;
+        I_V_SYNC : in STD_LOGIC;
+        I_RST, I_ENABLE : in STD_LOGIC;
+        I_TRAINING : in STD_LOGIC;
         I_PIXEL : in T_RECT;
-        I_M_LEFT : in std_logic;
-        O_RGB : out std_logic_vector(11 downto 0);
-        O_TO_MENU : out std_logic;
-        O_LED : out std_logic
+        I_M_LEFT : in STD_LOGIC;
+        O_RGB : out STD_LOGIC_VECTOR(11 downto 0);
+        O_TO_MENU : out STD_LOGIC;
+        O_LED : out STD_LOGIC;
+        O_DISP : out STD_LOGIC_VECTOR(6 downto 0)
     );
 end game;
 
 architecture behavior of game is
-    signal B_RGB : std_logic_vector(11 downto 0);
-    signal B_ON : std_logic;
+    signal B_RGB : STD_LOGIC_VECTOR(11 downto 0);
+    signal B_ON : STD_LOGIC;
     signal B_BIRD : T_RECT;
 
-    signal OB_RGB : std_logic_vector(11 downto 0);
-    signal OB_ON : std_logic;
-    signal OB_COLLISION_ON : std_logic;
-    signal OB_PIPE_PASSED : std_logic;
-    signal OB_ADD_LIFE : std_logic;
-    signal OB_GAME_OVER : std_logic;
+    signal OB_RGB : STD_LOGIC_VECTOR(11 downto 0);
+    signal OB_ON : STD_LOGIC;
+    signal OB_COLLISION_ON : STD_LOGIC;
+    signal OB_PIPE_PASSED : STD_LOGIC;
+    signal OB_ADD_LIFE : STD_LOGIC;
+    signal OB_GAME_OVER : STD_LOGIC;
 
-    signal S_ONES : std_logic_vector(5 downto 0);
-    signal S_TENS : std_logic_vector(5 downto 0);
-    signal PU_SHEILD : std_logic;
+    signal S_ONES : STD_LOGIC_VECTOR(5 downto 0);
+    signal S_TENS : STD_LOGIC_VECTOR(5 downto 0);
+    signal PU_SHEILD : STD_LOGIC;
 
-    signal S_RGB : std_logic_vector(11 downto 0);
-    signal S_ON : std_logic;
+    signal S_RGB : STD_LOGIC_VECTOR(11 downto 0);
+    signal S_ON : STD_LOGIC;
 
-    signal LI_LIVES : std_logic_vector(17 downto 0);
-    signal LI_RGB : std_logic_vector(11 downto 0);
-    signal LI_ON : std_logic;
-    signal LI_GAME_OVER : std_logic;
+    signal LI_LIVES : STD_LOGIC_VECTOR(17 downto 0);
+    signal LI_RGB : STD_LOGIC_VECTOR(11 downto 0);
+    signal LI_ON : STD_LOGIC;
+    signal LI_GAME_OVER : STD_LOGIC;
 
-    signal LF_RANDOM : std_logic_vector(7 downto 0);
+    signal LF_RANDOM : STD_LOGIC_VECTOR(7 downto 0);
 
-    signal L_BACKGROUND_COLOUR : std_logic_vector(11 downto 0) := BACKGROUND_RGB;
-    signal L_PLAYING : std_logic;
-    signal L_ENABLE : std_logic;
-    signal L_PIPE_ENABLE : std_logic;
-    signal L_DEAD : std_logic;
-    signal L_M_LEFT : std_logic;
-    signal L_LEVEL : std_logic_vector(1 downto 0);
-    signal L_GRAVITY_TRIGGER : std_logic;
-    signal L_S_PIPE : std_logic;
+    signal L_BACKGROUND_COLOUR : STD_LOGIC_VECTOR(11 downto 0) := BACKGROUND_RGB;
+    signal L_PLAYING : STD_LOGIC;
+    signal L_ENABLE : STD_LOGIC;
+    signal L_PIPE_ENABLE : STD_LOGIC;
+    signal L_DEAD : STD_LOGIC;
+    signal L_M_LEFT : STD_LOGIC;
+    signal L_LEVEL : STD_LOGIC_VECTOR(1 downto 0);
+    signal L_GRAVITY_TRIGGER : STD_LOGIC;
+    signal L_S_PIPE : STD_LOGIC;
 
-    signal LI_ADD_LIFE : std_logic;
+    signal L_ONES_DISPLAY : STD_LOGIC_VECTOR(6 downto 0);
+
+    signal LI_ADD_LIFE : STD_LOGIC;
 
 begin
     bird : entity work.bird
@@ -71,6 +74,13 @@ begin
             O_BIRD => B_BIRD,
             O_RGB => B_RGB,
             O_ON => B_ON
+        );
+
+    level_to_seven_seg_inst : entity work.LEVEL_TO_SEVEN_SEG
+        port map(
+            I_REV_GRAVITY => L_GRAVITY_TRIGGER,
+            I_S_PIPE => L_S_PIPE,
+            O_DISPLAY => L_ONES_DISPLAY
         );
 
     obstacles : entity work.obstacles
@@ -125,7 +135,7 @@ begin
             O_TENS => S_TENS
         );
 
-    score_text : entity work.string
+    score_text : entity work.STRING
         generic map(
             X_CENTER => 639/2,
             Y_CENTER => 24,
@@ -154,7 +164,7 @@ begin
             O_GAME_OVER => LI_GAME_OVER
         );
 
-    lives_text : entity work.string
+    lives_text : entity work.STRING
         generic map(
             X_CENTER => 52,
             Y_CENTER => 24,
@@ -184,7 +194,7 @@ begin
     end process;
 
     game_over : process (I_V_SYNC)
-        variable M_DOWN : std_logic := '0';
+        variable M_DOWN : STD_LOGIC := '0';
     begin
         if (rising_edge(I_V_SYNC)) then
             O_TO_MENU <= '0';
@@ -211,4 +221,6 @@ begin
 
     L_PIPE_ENABLE <= L_ENABLE and not L_DEAD;
     L_M_LEFT <= I_M_LEFT and not L_DEAD;
+    O_DISP <= L_ONES_DISPLAY;
+
 end architecture;
