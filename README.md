@@ -3,6 +3,7 @@ A Flappy Bird like game developed in VHDL developed for the DEO-CV development b
 
 How to play:
 1. Select your desired game mode (Normal or Training)
+
   1.1 Normal:
       4 different game levels
       Normal pipes, normal gravity
