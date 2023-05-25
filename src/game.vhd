@@ -2,63 +2,63 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.Rectangle.all;
+use work.ConstantValues.all;
 use work.RGBValues.BACKGROUND_RGB;
 
 entity game is
     port (
-        I_CLK : in STD_LOGIC;
-        I_V_SYNC : in STD_LOGIC;
-        I_RST, I_ENABLE : in STD_LOGIC;
-        I_TRAINING : in STD_LOGIC;
+        I_CLK : in std_logic;
+        I_V_SYNC : in std_logic;
+        I_RST, I_ENABLE : in std_logic;
+        I_TRAINING : in std_logic;
         I_PIXEL : in T_RECT;
-        I_M_LEFT : in STD_LOGIC;
-        O_RGB : out STD_LOGIC_VECTOR(11 downto 0);
-        O_TO_MENU : out STD_LOGIC;
-        O_LED : out STD_LOGIC;
-        O_DISP : out STD_LOGIC_VECTOR(6 downto 0)
+        I_M_LEFT : in std_logic;
+        O_RGB : out std_logic_vector(11 downto 0);
+        O_TO_MENU : out std_logic;
+        O_LED : out std_logic;
+        O_DISP : out std_logic_vector(6 downto 0)
     );
 end game;
 
 architecture behavior of game is
-    signal B_RGB : STD_LOGIC_VECTOR(11 downto 0);
-    signal B_ON : STD_LOGIC;
+    signal B_RGB : std_logic_vector(11 downto 0);
+    signal B_ON : std_logic;
     signal B_BIRD : T_RECT;
 
-    signal OB_RGB : STD_LOGIC_VECTOR(11 downto 0);
-    signal OB_ON : STD_LOGIC;
-    signal OB_COLLISION_ON : STD_LOGIC;
-    signal OB_PIPE_PASSED : STD_LOGIC;
-    signal OB_ADD_LIFE : STD_LOGIC;
-    signal OB_GAME_OVER : STD_LOGIC;
+    signal OB_RGB : std_logic_vector(11 downto 0);
+    signal OB_ON : std_logic;
+    signal OB_COLLISION_ON : std_logic;
+    signal OB_PIPE_PASSED : std_logic;
+    signal OB_ADD_LIFE : std_logic;
+    signal OB_GAME_OVER : std_logic;
 
-    signal S_ONES : STD_LOGIC_VECTOR(5 downto 0);
-    signal S_TENS : STD_LOGIC_VECTOR(5 downto 0);
-    signal PU_SHEILD : STD_LOGIC;
+    signal S_ONES : std_logic_vector(5 downto 0);
+    signal S_TENS : std_logic_vector(5 downto 0);
+    signal PU_SHEILD : std_logic;
 
-    signal S_RGB : STD_LOGIC_VECTOR(11 downto 0);
-    signal S_ON : STD_LOGIC;
+    signal S_RGB : std_logic_vector(11 downto 0);
+    signal S_ON : std_logic;
 
-    signal LI_LIVES : STD_LOGIC_VECTOR(17 downto 0);
-    signal LI_RGB : STD_LOGIC_VECTOR(11 downto 0);
-    signal LI_ON : STD_LOGIC;
-    signal LI_GAME_OVER : STD_LOGIC;
-
-    signal LF_RANDOM : STD_LOGIC_VECTOR(7 downto 0);
-
-    signal L_BACKGROUND_COLOUR : STD_LOGIC_VECTOR(11 downto 0) := BACKGROUND_RGB;
-    signal L_PLAYING : STD_LOGIC;
-    signal L_ENABLE : STD_LOGIC;
-    signal L_PIPE_ENABLE : STD_LOGIC;
-    signal L_DEAD : STD_LOGIC;
-    signal L_M_LEFT : STD_LOGIC;
-    signal L_LEVEL : STD_LOGIC_VECTOR(1 downto 0);
-    signal L_GRAVITY_TRIGGER : STD_LOGIC;
-    signal L_S_PIPE : STD_LOGIC;
-
-    signal L_ONES_DISPLAY : STD_LOGIC_VECTOR(6 downto 0);
-
-    signal LI_ADD_LIFE : STD_LOGIC;
-
+    signal LI_LIVES : std_logic_vector(17 downto 0);
+    signal LI_RGB : std_logic_vector(11 downto 0);
+    signal LI_ON : std_logic;
+    signal LI_GAME_OVER : std_logic;
+    signal LI_ADD_LIFE : std_logic;
+    signal LF_RANDOM : std_logic_vector(7 downto 0);
+    signal CTS_RGB : std_logic_vector(11 downto 0);
+    signal CTS_ON : std_logic;
+    signal PA_RGB : std_logic_vector(11 downto 0);
+    signal PA_ON : std_logic;
+    signal L_BACKGROUND_COLOUR : std_logic_vector(11 downto 0) := BACKGROUND_RGB;
+    signal L_PLAYING : std_logic;
+    signal L_ENABLE : std_logic;
+    signal L_PIPE_ENABLE : std_logic;
+    signal L_DEAD : std_logic;
+    signal L_M_LEFT : std_logic;
+    signal L_LEVEL : std_logic_vector(1 downto 0);
+    signal L_GRAVITY_TRIGGER : std_logic;
+    signal L_S_PIPE : std_logic;
+    signal L_ONES_DISPLAY : std_logic_vector(6 downto 0);
 begin
     bird : entity work.bird
         port map(
@@ -135,7 +135,7 @@ begin
             O_TENS => S_TENS
         );
 
-    score_text : entity work.STRING
+    score_text : entity work.string
         generic map(
             X_CENTER => 639/2,
             Y_CENTER => 24,
@@ -164,7 +164,7 @@ begin
             O_GAME_OVER => LI_GAME_OVER
         );
 
-    lives_text : entity work.STRING
+    lives_text : entity work.string
         generic map(
             X_CENTER => 52,
             Y_CENTER => 24,
@@ -182,6 +182,43 @@ begin
             O_ON => LI_ON
         );
 
+    click_to_start : entity work.string
+        generic map(
+            X_CENTER => SCREEN_WIDTH/2,
+            Y_CENTER => 400,
+            SCALE => 3,
+            NUM_CHARS => 14,
+            COLOR => x"FFF",
+            GAP => 1
+        )
+        port map(
+            I_CLK => I_CLK,
+            I_PIXEL_ROW => I_PIXEL.Y,
+            I_PIXEL_COL => I_PIXEL.X(9 downto 0),
+            --           C L I C K _ T O _ S T A R T
+            I_CHARS => o"1425221424443530443435123335",
+            O_RGB => CTS_RGB,
+            O_ON => CTS_ON
+        );
+
+    pause : entity work.string
+        generic map(
+            X_CENTER => 610,
+            Y_CENTER => 24,
+            SCALE => 3,
+            NUM_CHARS => 1,
+            COLOR => x"FFF",
+            GAP => 0
+        )
+        port map(
+            I_CLK => I_CLK,
+            I_PIXEL_ROW => I_PIXEL.Y,
+            I_PIXEL_COL => I_PIXEL.X(9 downto 0),
+            I_CHARS => o"61",
+            O_RGB => PA_RGB,
+            O_ON => PA_ON
+        );
+
     playing : process (I_V_SYNC)
     begin
         if (rising_edge(I_V_SYNC)) then
@@ -194,7 +231,7 @@ begin
     end process;
 
     game_over : process (I_V_SYNC)
-        variable M_DOWN : STD_LOGIC := '0';
+        variable M_DOWN : std_logic := '0';
     begin
         if (rising_edge(I_V_SYNC)) then
             O_TO_MENU <= '0';
@@ -212,13 +249,15 @@ begin
         end if;
     end process;
 
-    O_RGB <= S_RGB when (S_ON = '1') else
+    O_RGB <= PA_RGB when (PA_ON = '1' and I_ENABLE = '0') else
+        CTS_RGB when (CTS_ON = '1' and L_PLAYING = '0') else
+        S_RGB when (S_ON = '1') else
         LI_RGB when (LI_ON = '1') else
         B_RGB when (B_ON = '1') else
         OB_RGB when (OB_ON = '1') else
         L_BACKGROUND_COLOUR;
-    L_ENABLE <= I_ENABLE and L_PLAYING;
 
+    L_ENABLE <= I_ENABLE and L_PLAYING;
     L_PIPE_ENABLE <= L_ENABLE and not L_DEAD;
     L_M_LEFT <= I_M_LEFT and not L_DEAD;
     O_DISP <= L_ONES_DISPLAY;

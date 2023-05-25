@@ -34,12 +34,15 @@ architecture behavior of pipe is
 	signal L_X_VEL : std_logic_vector(9 downto 0) := I_X_VEL;
 	signal L_TOP : T_RECT := CreateRect(0, 0, PIPE_WIDTH, 0);
 	signal L_BOTTOM : T_RECT := CreateRect(0, 0, PIPE_WIDTH, 0);
+	signal L_TOP_TIP : T_RECT := CreateRect(0, 0, PIPE_TIP_WIDTH, PIPE_TIP_HEIGHT);
+	signal L_BOTTOM_TIP : T_RECT := CreateRect(0, 0, PIPE_TIP_WIDTH, PIPE_TIP_HEIGHT);
 	signal L_POWERUP_TYPE : std_logic_vector(5 downto 0);
 	signal L_POWERUP : T_RECT := CreateRect(0, 0, PLAYER_SIZE, PLAYER_SIZE);
 	signal L_POWERUP_ON : std_logic;
 	signal L_ADD_LIFE : std_logic;
 	signal L_SLOW_TIME : std_logic;
 	signal L_SHEILD : std_logic;
+	signal L_PIPE : std_logic;
 	signal PU_COLLISION : std_logic;
 begin
 	spritePowerup : entity work.sprite
@@ -79,8 +82,10 @@ begin
 					if (X_POS >= conv_std_logic_vector(640, 11)) then
 						PIPE_GAP_POSITION := ("00" & I_PIPE_GAP_POSITION) + CONV_STD_LOGIC_VECTOR((480 - 256)/2, 10);
 						L_TOP.HEIGHT <= PIPE_GAP_POSITION - ('0' & PIPE_GAP_TWO(9 downto 1));
+						L_TOP_TIP.Y <= PIPE_GAP_POSITION - ('0' & PIPE_GAP_TWO(9 downto 1)) - conv_std_logic_vector(PIPE_TIP_HEIGHT, 10);
 						Y_POS := PIPE_GAP_POSITION + ('0' & PIPE_GAP_TWO(9 downto 1));
 						L_BOTTOM.Y <= Y_POS;
+						L_BOTTOM_TIP.Y <= Y_POS;
 						L_BOTTOM.HEIGHT <= conv_std_logic_vector(480, 10) - (Y_POS);
 						case (PIPE_GAP_POSITION(1 downto 0)) is
 							when "01" => L_POWERUP_TYPE <= CLOCK_POWERUP; -- Clock 
@@ -104,8 +109,10 @@ begin
 					if (X_POS >= conv_std_logic_vector(640, 11)) then
 						PIPE_GAP_POSITION := ("00" & I_PIPE_GAP_POSITION) + CONV_STD_LOGIC_VECTOR((480 - 256)/2, 10);
 						L_TOP.HEIGHT <= PIPE_GAP_POSITION - ('0' & PIPE_GAP_ONE(9 downto 1));
+						L_TOP_TIP.Y <= PIPE_GAP_POSITION - ('0' & PIPE_GAP_ONE(9 downto 1)) - conv_std_logic_vector(PIPE_TIP_HEIGHT, 10);
 						Y_POS := PIPE_GAP_POSITION + ('0' & PIPE_GAP_ONE(9 downto 1));
 						L_BOTTOM.Y <= Y_POS;
+						L_BOTTOM_TIP.Y <= Y_POS;
 						L_BOTTOM.HEIGHT <= conv_std_logic_vector(480, 10) - (Y_POS);
 						case (PIPE_GAP_POSITION(1 downto 0)) is
 							when "01" => L_POWERUP_TYPE <= CLOCK_POWERUP; -- Clock 
@@ -128,19 +135,23 @@ begin
 			end if;
 		end if;
 		L_TOP.X <= X_POS;
+		L_TOP_TIP.X <= X_POS - CONV_STD_LOGIC_VECTOR(2, 10);
 		L_BOTTOM.X <= X_POS;
+		L_BOTTOM_TIP.X <= X_POS - CONV_STD_LOGIC_VECTOR(2, 10);
 		L_POWERUP.X <= X_POS + conv_std_logic_vector(2, 11);
 		if (PU_COLLISION = '1') then
 			L_POWERUP.Y <= conv_std_logic_vector(500, 10);
 		end if;
 	end process;
-
+	L_PIPE <= '1' when (CheckCollision(I_PIXEL, L_TOP) = '1') or (CheckCollision(I_PIXEL, L_BOTTOM) = '1')
+		or (CheckCollision(I_PIXEL, L_BOTTOM_TIP) = '1') or (CheckCollision(I_PIXEL, L_TOP_TIP) = '1') else
+		'0';
 	O_PIPE_PASSED <= '1' when ((I_BIRD.X >= L_TOP.X + L_TOP.WIDTH) and (I_BIRD.X <= L_TOP.X + L_TOP.WIDTH + L_TOP.WIDTH)) else
 		'0';
-	O_ON <= '1' when ((CheckCollision(I_PIXEL, L_TOP) = '1') or (CheckCollision(I_PIXEL, L_BOTTOM) = '1') or (L_POWERUP_ON = '1')) else
+	O_ON <= '1' when (L_PIPE = '1' or (L_POWERUP_ON = '1')) else
 		'0';
-	O_RGB <= PIPE_RGB_ONE when (((CheckCollision(I_PIXEL, L_TOP) or CheckCollision(I_PIXEL, L_BOTTOM)) = '1') and I_LEVEL_THREE = '0') else
-		PIPE_RGB_TWO when (((CheckCollision(I_PIXEL, L_TOP) or CheckCollision(I_PIXEL, L_BOTTOM)) = '1') and I_LEVEL_THREE = '1') else
+	O_RGB <= PIPE_RGB_ONE when ((L_PIPE = '1') and I_LEVEL_THREE = '0') else
+		PIPE_RGB_TWO when ((L_PIPE = '1') and I_LEVEL_THREE = '1') else
 		HEART_SPRITE_RGB when (L_POWERUP_ON = '1' and L_POWERUP_TYPE = HEART_POWERUP) else
 		CLOCK_SPRITE_RGB when (L_POWERUP_ON = '1' and L_POWERUP_TYPE = CLOCK_POWERUP) else
 		SHEILD_SPRITE_RGB when (L_POWERUP_ON = '1' and L_POWERUP_TYPE = SHEILD_POWERUP);

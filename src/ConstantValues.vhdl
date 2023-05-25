@@ -22,5 +22,7 @@ package Constantvalues is
     constant HEART_POWERUP : std_logic_vector(5 downto 0) := o"47";
     constant GROUND_HEIGHT : integer := 10;
     constant GRASS_HEIGHT : integer := 6;
+    constant PIPE_TIP_WIDTH : integer := PIPE_WIDTH + 4;
+    constant PIPE_TIP_HEIGHT : integer := 16;
 
 end package Constantvalues;
