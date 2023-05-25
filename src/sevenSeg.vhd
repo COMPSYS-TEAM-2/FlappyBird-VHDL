@@ -12,9 +12,9 @@ end entity;
 architecture arc1 of LEVEL_TO_SEVEN_SEG is
 begin
     O_DISPLAY <= "1001111" when (I_S_PIPE = '0' and I_REV_GRAVITY = '0') else -- 1
-        "0110000" when (I_S_PIPE = '1' and I_REV_GRAVITY = '0') else -- 2
-        "0110000" when (I_S_PIPE = '0' and I_REV_GRAVITY = '1') else -- 3
-        "0011001" when (I_S_PIPE = '1' and I_REV_GRAVITY = '1') else -- 4
-        "1000000"; -- 0 
+        "0010010" when (I_S_PIPE = '1' and I_REV_GRAVITY = '0') else -- 2
+        "0000110" when (I_S_PIPE = '0' and I_REV_GRAVITY = '1') else -- 3
+        "1001100" when (I_S_PIPE = '1' and I_REV_GRAVITY = '1') else -- 4
+        "0000001"; -- 0 
 
 end architecture arc1;
