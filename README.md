@@ -28,8 +28,8 @@ How to play:
 
 5. Extra inputs
 
-  Pause: Dip switch 0
+  Pause: SW0, dip switch
   
-  Reset: FPGA_Reset
+  Reset: FPGA_RESET, button
   
   
