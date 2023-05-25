@@ -2,6 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.Rectangle.all;
+use work.ConstantValues.all;
 use work.RGBValues.BACKGROUND_RGB;
 
 entity game is
@@ -43,6 +44,9 @@ architecture behavior of game is
     signal LI_GAME_OVER : std_logic;
 
     signal LF_RANDOM : std_logic_vector(7 downto 0);
+
+    signal CTS_RGB : std_logic_vector(11 downto 0);
+    signal CTS_ON : std_logic;
 
     signal L_BACKGROUND_COLOUR : std_logic_vector(11 downto 0) := BACKGROUND_RGB;
     signal L_PLAYING : std_logic;
@@ -172,6 +176,25 @@ begin
             O_ON => LI_ON
         );
 
+    click_to_start : entity work.string
+        generic map(
+            X_CENTER => SCREEN_WIDTH/2,
+            Y_CENTER => 400,
+            SCALE => 3,
+            NUM_CHARS => 14,
+            COLOR => x"FFF",
+            GAP => 1
+        )
+        port map(
+            I_CLK => I_CLK,
+            I_PIXEL_ROW => I_PIXEL.Y,
+            I_PIXEL_COL => I_PIXEL.X(9 downto 0),
+            --           C L I C K _ T O _ S T A R T
+            I_CHARS => o"1425221424443530443435123335",
+            O_RGB => CTS_RGB,
+            O_ON => CTS_ON
+        );
+
     playing : process (I_V_SYNC)
     begin
         if (rising_edge(I_V_SYNC)) then
@@ -202,7 +225,8 @@ begin
         end if;
     end process;
 
-    O_RGB <= S_RGB when (S_ON = '1') else
+    O_RGB <= CTS_RGB when (CTS_ON = '1' and L_PLAYING = '0') else
+        S_RGB when (S_ON = '1') else
         LI_RGB when (LI_ON = '1') else
         B_RGB when (B_ON = '1') else
         OB_RGB when (OB_ON = '1') else
