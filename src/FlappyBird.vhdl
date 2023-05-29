@@ -23,6 +23,7 @@ entity FlappyBird is
 end entity;
 
 architecture behavioral of FlappyBird is
+    type STATE is (MENU, NORMAL, TRAINING);
     signal V_V_SYNC : std_logic;
     signal V_PIXEL_ROW : std_logic_vector(9 downto 0);
     signal V_PIXEL_COL : std_logic_vector(9 downto 0);
@@ -42,7 +43,7 @@ architecture behavioral of FlappyBird is
     signal T_BUTTON : std_logic_vector(1 downto 0);
 
     signal L_CLK : std_logic := '1';
-    signal L_STATE : std_logic_vector(1 downto 0) := "00";
+    signal L_STATE : STATE := MENU;
     signal L_RGB : std_logic_vector(11 downto 0);
     signal L_CURSOR : T_RECT := CreateRect(0, 0, 0, 0);
     signal L_PIXEL : T_RECT := CreateRect(0, 0, 0, 0);
@@ -120,7 +121,7 @@ begin
         end if;
     end process;
 
-    state : process (V_V_SYNC)
+    state_machine : process (V_V_SYNC)
     begin
         if (rising_edge(V_V_SYNC)) then
             L_MENU_ENABLED <= '0';
@@ -128,23 +129,33 @@ begin
             L_TRAINING <= '0';
             L_GAME_RST_STATE <= '0';
             if (I_RST_N = '0') then
-                L_STATE <= "00";
-            elsif (G_TO_MENU = '1') then
-                L_STATE <= "00";
+                L_STATE <= MENU;
             else
-
                 case L_STATE is
-                    when "00" =>
-                        L_STATE <= T_BUTTON;
+                    when MENU =>
                         L_MENU_ENABLED <= '1';
                         L_GAME_RST_STATE <= '1';
-                    when "01" =>
+
+                        if (T_BUTTON = "01") then
+                            L_STATE <= NORMAL;
+                        elsif (T_BUTTON = "10") then
+                            L_STATE <= TRAINING;
+                        end if;
+                    when NORMAL =>
                         L_GAME_ENABLED <= '1';
-                    when "10" =>
+
+                        if (G_TO_MENU = '1') then
+                            L_STATE <= MENU;
+                        end if;
+                    when TRAINING =>
                         L_GAME_ENABLED <= '1';
                         L_TRAINING <= '1';
+
+                        if (G_TO_MENU = '1') then
+                            L_STATE <= MENU;
+                        end if;
                     when others =>
-                        L_STATE <= "00";
+                        L_STATE <= MENU;
                 end case;
             end if;
         end if;
@@ -168,8 +179,8 @@ begin
         end if;
     end process;
 
-    L_RGB <= T_RGB when L_STATE = "00" else
-        G_RGB when (L_STATE = "01" or L_STATE = "10") else
+    L_RGB <= T_RGB when L_STATE = MENU else
+        G_RGB when (L_STATE = NORMAL or L_STATE = TRAINING) else
         (others => '0');
 
     L_PIXEL.X <= '0' & V_PIXEL_COL;
